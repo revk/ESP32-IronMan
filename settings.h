@@ -102,11 +102,20 @@ struct revk_settings_bits_s {
  uint8_t meshroot:1;
 #endif
 };
-extern revk_gpio_t eyeleft;	// Left eye
-extern revk_gpio_t eyeright;	// Right eye
-extern revk_gpio_t visorpwr;	// Visor servo power
-extern revk_gpio_t visorpwm;	// Visor service PWM
+extern revk_gpio_t left;	// Left eye
+extern revk_gpio_t right;	// Right eye
+extern revk_gpio_t pwr;	// Visor servo power
+extern revk_gpio_t pwm;	// Visor service PWM
+extern revk_gpio_t button1;	// Activation button1
+extern revk_gpio_t button2;	// Activation button2
 extern revk_gpio_t rgb;	// RGB LED chain
+extern uint8_t leds;	// Number of LEDs
+extern uint8_t ledleft;	// LED number for left eye
+extern uint8_t ledright;	// LED number for right eye
+extern uint8_t ledpwr;	// LED number for servo PWR
+extern uint8_t ledprm;	// LED number for servo PWM
+extern uint8_t ledbutton1;	// LED number for button1
+extern uint8_t ledbutton2;	// LED number for button2
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 extern char* password;	// Settings password (this is not sent securely so use with care on local networks you control)
 #endif
@@ -196,6 +205,6 @@ enum {
 #define	REVK_SETTINGS_HAS_BLOB
 #define	REVK_SETTINGS_HAS_STRING
 #define	REVK_SETTINGS_HAS_OCTET
-typedef uint8_t revk_setting_bits_t[8];
+typedef uint8_t revk_setting_bits_t[9];
 typedef uint8_t revk_setting_group_t[2];
 extern const char revk_settings_secret[];
