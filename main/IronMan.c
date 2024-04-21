@@ -13,7 +13,6 @@ static const char __attribute__((unused)) TAG[] = "IronMan";
 #include "esp_crt_bundle.h"
 #include <hal/spi_types.h>
 #include <driver/gpio.h>
-#include <math.h>
 
 const char *
 app_callback (int client, const char *prefix, const char *target, const char *suffix, jo_t j)
@@ -31,7 +30,6 @@ app_callback (int client, const char *prefix, const char *target, const char *su
    }
    if (client || !prefix || target || strcmp (prefix, prefixcommand) || !suffix)
       return NULL;              //Not for us or not a command from main MQTT
-
    return NULL;
 }
 
@@ -40,8 +38,11 @@ app_main ()
 {
    revk_boot (&app_callback);
    revk_start ();
+   revk_gpio_output (eyeleft, 0);
+   revk_gpio_output (eyeright, 0);
+   revk_gpio_output (visorpwr, 0);
+   revk_gpio_output (visorpwm, 0);
+
    while (1)
-   {
       sleep (1);
-   }
 }
