@@ -12,3 +12,5 @@ u8	led.pwr						// LED number for servo PWR
 u8	led.prm						// LED number for servo PWM
 u8	led.button1					// LED number for button1
 u8	led.button2					// LED number for button2
+s8	visor.close					// Angle (degrees) visor close
+s8	visor.open					// Angle (degrees) visor open

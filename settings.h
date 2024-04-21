@@ -116,6 +116,8 @@ extern uint8_t ledpwr;	// LED number for servo PWR
 extern uint8_t ledprm;	// LED number for servo PWM
 extern uint8_t ledbutton1;	// LED number for button1
 extern uint8_t ledbutton2;	// LED number for button2
+extern int8_t visorclose;	// Angle (degrees) visor close
+extern int8_t visoropen;	// Angle (degrees) visor open
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 extern char* password;	// Settings password (this is not sent securely so use with care on local networks you control)
 #endif
@@ -191,6 +193,7 @@ extern char* meshpass;
 #endif
 extern revk_settings_bits_t revk_settings_bits;
 enum {
+ REVK_SETTINGS_SIGNED,
  REVK_SETTINGS_UNSIGNED,
  REVK_SETTINGS_BIT,
  REVK_SETTINGS_BLOB,
@@ -200,11 +203,12 @@ enum {
 #define	REVK_SETTINGS_HAS_COMMENT
 #define	REVK_SETTINGS_HAS_GPIO
 #define	REVK_SETTINGS_HAS_NUMERIC
+#define	REVK_SETTINGS_HAS_SIGNED
 #define	REVK_SETTINGS_HAS_UNSIGNED
 #define	REVK_SETTINGS_HAS_BIT
 #define	REVK_SETTINGS_HAS_BLOB
 #define	REVK_SETTINGS_HAS_STRING
 #define	REVK_SETTINGS_HAS_OCTET
-typedef uint8_t revk_setting_bits_t[9];
+typedef uint8_t revk_setting_bits_t[10];
 typedef uint8_t revk_setting_group_t[2];
 extern const char revk_settings_secret[];
