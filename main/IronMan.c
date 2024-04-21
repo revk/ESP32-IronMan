@@ -15,7 +15,6 @@ static const char __attribute__((unused)) TAG[] = "IronMan";
 #include <driver/gpio.h>
 #include <math.h>
 
-
 const char *
 app_callback (int client, const char *prefix, const char *target, const char *suffix, jo_t j)
 {
@@ -40,9 +39,9 @@ void
 app_main ()
 {
    revk_boot (&app_callback);
-      revk_start ();
- while(1)
- {
-	 sleep(1);
- }
+   revk_start ();
+   while (1)
+   {
+      sleep (1);
+   }
 }

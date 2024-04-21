@@ -36,10 +36,11 @@ issue:
 	cp $(PROJECT_NAME)*.bin release
 	git commit -a -m Release
 	git push
-set:    s3
+
+set:    settings.h s3
 
 s3:
-	components/ESP32-RevK/setbuildsuffix -S3-MINI-N4-R2-GFXNONE
+	components/ESP32-RevK/setbuildsuffix -S3-MINI-N4-R2
 	@make
 
 flash:
