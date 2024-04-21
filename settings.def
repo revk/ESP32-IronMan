@@ -1,0 +1,5 @@
+gpio	eye.left					// Left eye
+gpio	eye.right					// Right eye
+gpio	visor.pwr					// Visor servo power
+gpio	visor.pwm					// Visor service PWM
+gpio	rgb						// RGB LED chain
