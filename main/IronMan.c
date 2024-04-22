@@ -18,16 +18,28 @@ static const char __attribute__((unused)) TAG[] = "IronMan";
 led_strip_handle_t strip = NULL;
 #define SERVO_TIMEBASE_RESOLUTION_HZ 1000000    // 1MHz, 1us per tick
 #define SERVO_TIMEBASE_PERIOD        20000      // 20000 ticks, 20ms
-#define SERVO_MIN_PULSEWIDTH_US 500     // Minimum pulse width in microsecond
-#define SERVO_MAX_PULSEWIDTH_US 2500    // Maximum pulse width in microsecond
-#define SERVO_MIN_DEGREE        -90     // Minimum angle
+#define SERVO_MIN_PULSEWIDTH_US 1000    // Minimum pulse width in microsecond
+#define SERVO_MAX_PULSEWIDTH_US 2000    // Maximum pulse width in microsecond
 #define SERVO_MAX_DEGREE        90      // Maximum angle
+
+struct
+{
+   uint8_t init:1;              // Startup
+   uint8_t lowpower:1;          // WiFI off
+   uint8_t changed:1;           // Changed setting
+   uint8_t eyes:1;              // Eyes on
+   uint8_t pwr:1;               // Servo power on
+   uint8_t open:1;              // Visor open
+   uint8_t connect:1;           // WiFi connect
+   uint8_t connected:1;         // WiFi connected
+   uint8_t pushed1:1;           // Pushed button1
+   uint8_t pushed2:1;           // Pushed button2
+} b;
 
 static inline uint32_t
 angle_to_compare (int angle)
 {
-   return (angle - SERVO_MIN_DEGREE) * (SERVO_MAX_PULSEWIDTH_US - SERVO_MIN_PULSEWIDTH_US) / (SERVO_MAX_DEGREE - SERVO_MIN_DEGREE) +
-      SERVO_MIN_PULSEWIDTH_US;
+   return angle * (SERVO_MAX_PULSEWIDTH_US - SERVO_MIN_PULSEWIDTH_US) / SERVO_MAX_DEGREE + SERVO_MIN_PULSEWIDTH_US;
 }
 
 const char *
@@ -46,6 +58,8 @@ app_callback (int client, const char *prefix, const char *target, const char *su
    }
    if (client || !prefix || target || strcmp (prefix, prefixcommand) || !suffix)
       return NULL;              //Not for us or not a command from main MQTT
+   if (!strcmp (suffix, "connect"))
+      b.connect = 1;
    return NULL;
 }
 
@@ -56,8 +70,8 @@ app_main ()
    revk_start ();
    revk_gpio_input (button1);
    revk_gpio_input (button2);
-   revk_gpio_output (left, 0);
-   revk_gpio_output (right, 0);
+   revk_gpio_output (eye1, 0);
+   revk_gpio_output (eye2, 0);
    revk_gpio_output (pwr, 0);
    if (rgb.set && leds)
    {
@@ -102,7 +116,7 @@ app_main ()
       mcpwm_gen_handle_t generator = NULL;
       mcpwm_generator_config_t generator_config = {
          .gen_gpio_num = pwm.num,
-	 .flags.invert_pwm = pwm.invert,
+         .flags.invert_pwm = pwm.invert,
       };
       ESP_ERROR_CHECK (mcpwm_new_generator (oper, &generator_config, &generator));
       ESP_ERROR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (0)));
@@ -116,13 +130,89 @@ app_main ()
       ESP_ERROR_CHECK (mcpwm_timer_start_stop (timer, MCPWM_TIMER_START_NO_STOP));
    }
 
-   revk_gpio_output (pwr, 1);
+   b.pwr = 1;
+   b.eyes = 1;
+   b.init = 1;
 
-
+   uint32_t last1 = 0,
+      last2 = 0;                // Last button
    while (1)
    {
-      sleep (1);
-      ESP_ERROR_CHECK (mcpwm_comparator_set_compare_value
-                       (comparator, angle_to_compare (revk_gpio_get (button1) ? visoropen : visorclose)));
+      usleep (100000);
+      uint32_t up = uptime ();
+      // Main button
+      uint8_t push = revk_gpio_get (button1);
+      if (b.init || push != b.pushed1)
+      {
+         b.pushed1 = push;
+         if (ledbutton1)
+            revk_led (strip, ledbutton1, 255, revk_rgb (push ? 'R' : 'G'));
+         if (push)
+         {
+            if (up - last1 < 2)
+            {                   // Double press
+               b.eyes = 0;
+               b.pwr = 0;
+               b.open = 1 - b.open;     // Reverse the visor toggle
+            } else
+            {                   // Single press
+               b.pwr = 1;
+               b.eyes = 1;
+               b.open = 1 - b.open;     // Simple visor toggle
+            }
+            b.changed = 1;
+         }
+         last1 = up;
+      }
+      // Second button
+      push = revk_gpio_get (button2);
+      if (b.init || push != b.pushed2)
+      {
+         b.pushed2 = push;
+         if (ledbutton2)
+            revk_led (strip, ledbutton2, 255, revk_rgb (push ? 'R' : 'G'));
+         if (push)
+         {
+            if (up - last2 < 2)
+            {                   // Double press
+            } else
+            {                   // Single press
+            }
+            b.changed = 1;
+         }
+         last2 = up;
+      }
+
+      if (b.connect)
+      {
+         b.connected = 1;
+         b.connect = 0;
+         revk_command ("upgrade", NULL);
+      }
+      if (!b.lowpower && up > (b.connected ? 300 : 60))
+      {
+         b.lowpower = 1;
+         revk_disable_wifi ();
+      }
+      if (b.init || b.changed)
+      {
+         b.changed = 0;
+         ESP_ERROR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
+         ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose, angle_to_compare (b.open ? visoropen : visorclose));
+         if (ledpwm)
+            revk_led (strip, ledpwm, 255, revk_rgb (b.open ? 'G' : 'R'));
+         revk_gpio_set (pwr, b.pwr);
+         if (ledpwr)
+            revk_led (strip, ledpwr, 255, revk_rgb (b.pwr ? 'G' : 'R'));
+         revk_gpio_set (eye1, b.eyes);
+         if (ledeye1)
+            revk_led (strip, ledeye1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+         revk_gpio_set (eye2, b.eyes);
+         if (ledeye2)
+            revk_led (strip, ledeye2, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+      }
+      revk_led (strip, 0, 255, revk_blinker ());
+      led_strip_refresh (strip);
+      b.init = 0;
    }
 }

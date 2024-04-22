@@ -10,22 +10,22 @@ revk_settings_bits_t revk_settings_bits={0};
 #define	str(s)	#s
 #define	quote(s)	str(s)
 revk_settings_t const revk_settings[]={
- {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="left",.comment="Left eye",.len=4,.ptr=&left,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
- {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="right",.comment="Right eye",.len=5,.ptr=&right,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
+ {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="eye1",.comment="Left eye",.len=4,.ptr=&eye1,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
+ {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="eye2",.comment="Right eye",.len=4,.ptr=&eye2,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="pwr",.comment="Visor servo power",.len=3,.ptr=&pwr,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="pwm",.comment="Visor service PWM",.len=3,.ptr=&pwm,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="button1",.comment="Activation button1",.len=7,.ptr=&button1,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="button2",.comment="Activation button2",.len=7,.ptr=&button2,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="rgb",.comment="RGB LED chain",.len=3,.ptr=&rgb,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.name="leds",.comment="Number of LEDs",.len=4,.ptr=&leds,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledleft",.comment="LED number for left eye",.group=1,.len=7,.dot=3,.ptr=&ledleft,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledright",.comment="LED number for right eye",.group=1,.len=8,.dot=3,.ptr=&ledright,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye1",.comment="LED number for eye 1",.group=1,.len=7,.dot=3,.ptr=&ledeye1,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye2",.comment="LED number for eye 2",.group=1,.len=7,.dot=3,.ptr=&ledeye2,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwr",.comment="LED number for servo PWR",.group=1,.len=6,.dot=3,.ptr=&ledpwr,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledprm",.comment="LED number for servo PWM",.group=1,.len=6,.dot=3,.ptr=&ledprm,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwm",.comment="LED number for servo PWM",.group=1,.len=6,.dot=3,.ptr=&ledpwm,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton1",.comment="LED number for button1",.group=1,.len=10,.dot=3,.ptr=&ledbutton1,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton2",.comment="LED number for button2",.group=1,.len=10,.dot=3,.ptr=&ledbutton2,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_SIGNED,.name="visorclose",.comment="Angle (degrees) visor close",.group=2,.len=10,.dot=5,.ptr=&visorclose,.size=sizeof(int8_t)},
- {.type=REVK_SETTINGS_SIGNED,.name="visoropen",.comment="Angle (degrees) visor open",.group=2,.len=9,.dot=5,.ptr=&visoropen,.size=sizeof(int8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="visorclose",.comment="Angle (degrees) visor close",.group=2,.len=10,.dot=5,.ptr=&visorclose,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="visoropen",.comment="Angle (degrees) visor open",.group=2,.len=9,.dot=5,.ptr=&visoropen,.size=sizeof(uint8_t),.live=1},
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
  {.type=REVK_SETTINGS_STRING,.name="password",.comment="Settings password (this is not sent securely so use with care on local networks you control)",.len=8,.ptr=&password,.malloc=1,.revk=1,.secret=1},
 #endif
@@ -102,22 +102,22 @@ revk_settings_t const revk_settings[]={
 {0}};
 #undef quote
 #undef str
-revk_gpio_t left={0};
-revk_gpio_t right={0};
+revk_gpio_t eye1={0};
+revk_gpio_t eye2={0};
 revk_gpio_t pwr={0};
 revk_gpio_t pwm={0};
 revk_gpio_t button1={0};
 revk_gpio_t button2={0};
 revk_gpio_t rgb={0};
 uint8_t leds=0;
-uint8_t ledleft=0;
-uint8_t ledright=0;
+uint8_t ledeye1=0;
+uint8_t ledeye2=0;
 uint8_t ledpwr=0;
-uint8_t ledprm=0;
+uint8_t ledpwm=0;
 uint8_t ledbutton1=0;
 uint8_t ledbutton2=0;
-int8_t visorclose=0;
-int8_t visoropen=0;
+uint8_t visorclose=0;
+uint8_t visoropen=0;
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 char* password=NULL;
 #endif

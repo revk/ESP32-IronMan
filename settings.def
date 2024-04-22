@@ -1,16 +1,16 @@
-gpio	left						// Left eye
-gpio	right						// Right eye
+gpio	eye1						// Left eye
+gpio	eye2						// Right eye
 gpio	pwr						// Visor servo power
 gpio	pwm						// Visor service PWM
 gpio	button1						// Activation button1
 gpio	button2						// Activation button2
 gpio	rgb						// RGB LED chain
 u8	leds						// Number of LEDs
-u8	led.left					// LED number for left eye
-u8	led.right					// LED number for right eye
+u8	led.eye1					// LED number for eye 1
+u8	led.eye2					// LED number for eye 2
 u8	led.pwr						// LED number for servo PWR
-u8	led.prm						// LED number for servo PWM
+u8	led.pwm						// LED number for servo PWM
 u8	led.button1					// LED number for button1
 u8	led.button2					// LED number for button2
-s8	visor.close					// Angle (degrees) visor close
-s8	visor.open					// Angle (degrees) visor open
+u8	visor.close	.live=1				// Angle (degrees) visor close
+u8	visor.open	.live=1				// Angle (degrees) visor open
