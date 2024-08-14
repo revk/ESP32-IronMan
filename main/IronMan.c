@@ -56,7 +56,7 @@ app_callback (int client, const char *prefix, const char *target, const char *su
       if (len > sizeof (value))
          return "Too long";
    }
-   if (client || !prefix || target || strcmp (prefix, prefixcommand) || !suffix)
+   if (client || !prefix || target || strcmp (prefix, topiccommand) || !suffix)
       return NULL;              //Not for us or not a command from main MQTT
    if (!strcmp (suffix, "connect"))
       b.connect = 1;
@@ -212,7 +212,7 @@ app_main ()
             revk_led (strip, ledeye2, 255, revk_rgb (b.eyes ? 'C' : 'R'));
       }
       revk_led (strip, 0, 255, revk_blinker ());
-      led_strip_refresh (strip);
+      if(strip)led_strip_refresh (strip);
       b.init = 0;
    }
 }

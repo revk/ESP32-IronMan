@@ -11,6 +11,7 @@ struct revk_settings_s {
  const char name[16];
  const char *def;
  const char *flags;
+ const char *old;
  const char *comment;
  uint16_t size;
  uint8_t group;
@@ -23,6 +24,7 @@ struct revk_settings_s {
  uint8_t malloc:1;
  uint8_t revk:1;
  uint8_t live:1;
+ uint8_t hide:1;
  uint8_t fix:1;
  uint8_t set:1;
  uint8_t hex:1;
@@ -53,7 +55,8 @@ enum {
  REVK_SETTINGS_BITFIELD_otaauto,
  REVK_SETTINGS_BITFIELD_otabeta,
  REVK_SETTINGS_BITFIELD_prefixapp,
-#ifdef	CONFIG_REVK_BLINK_LIB
+ REVK_SETTINGS_BITFIELD_prefixhost,
+#ifdef	CONFIG_REVK_BLINK_DEF
 #endif
 #ifdef  CONFIG_REVK_APMODE
 #ifdef	CONFIG_REVK_APCONFIG
@@ -80,8 +83,9 @@ struct revk_settings_bits_s {
 #endif
  uint8_t otaauto:1;	// OTA auto upgrade
  uint8_t otabeta:1;	// OTA from beta release
- uint8_t prefixapp:1;	// MQTT includes appname
-#ifdef	CONFIG_REVK_BLINK_LIB
+ uint8_t prefixapp:1;	// MQTT use appname/ in front of hostname in topic
+ uint8_t prefixhost:1;	// MQTT use (appname/)hostname/topic instead of topic/(appname/)hostname
+#ifdef	CONFIG_REVK_BLINK_DEF
 #endif
 #ifdef  CONFIG_REVK_APMODE
 #ifdef	CONFIG_REVK_APCONFIG
@@ -98,8 +102,8 @@ struct revk_settings_bits_s {
  uint8_t aphide:1;	// AP hide SSID
 #endif
 #ifdef	CONFIG_REVK_MESH
- uint8_t meshlr:1;
- uint8_t meshroot:1;
+ uint8_t meshlr:1;	// Mesh use LR mode
+ uint8_t meshroot:1;	// This is preferred mesh root
 #endif
 };
 extern revk_gpio_t eye1;	// Left eye
@@ -122,7 +126,7 @@ extern uint8_t visoropen;	// Angle (degrees) visor open
 extern char* password;	// Settings password (this is not sent securely so use with care on local networks you control)
 #endif
 extern char* hostname;	// Host name
-extern char* appname;
+extern char* appname;	// Application name
 extern char* otahost;	// OTA hostname
 extern uint8_t otadays;	// OTA auto load (days)
 extern uint16_t otastart;	// OTA check after startup (min seconds)
@@ -132,18 +136,20 @@ extern revk_settings_blob_t* otacert;	// OTA cert of otahost
 extern char* ntphost;	// NTP host
 extern char* tz;	// Timezone (<a href='https://gist.github.com/alwynallan/24d96091655391107939' target=_blank>info</a>)
 extern uint32_t watchdogtime;	// Watchdog (seconds)
-extern char* prefixcommand;	// MQTT Prefix for commands (simple text, no / included)
-extern char* prefixsetting;	// MQTT Prefix for settings (simple text, no / included)
-extern char* prefixstate;	// MQTT Prefix for state
-extern char* prefixevent;	// MQTT Prefix for event
-extern char* prefixinfo;	// MQTT Prefix for info
-extern char* prefixerror;	// MQTT Prefix for error
+extern char* topicgroup[2];	// MQTT Alternative hostname accepted for commands
+extern char* topiccommand;	// MQTT Topic for commands
+extern char* topicsetting;	// MQTT Topic for settings
+extern char* topicstate;	// MQTT Topic for state
+extern char* topicevent;	// MQTT Topic for event
+extern char* topicinfo;	// MQTT Topic for info
+extern char* topicerror;	// MQTT Topic for error
 #define	prefixapp	revk_settings_bits.prefixapp
-#ifdef	CONFIG_REVK_BLINK_LIB
+#define	prefixhost	revk_settings_bits.prefixhost
+#ifdef	CONFIG_REVK_BLINK_DEF
 extern revk_gpio_t blink[3];	// LED array
 #endif
-extern revk_settings_blob_t* clientkey;
-extern revk_settings_blob_t* clientcert;
+extern revk_settings_blob_t* clientkey;	// Client Key (OTA and MQTT TLS)
+extern revk_settings_blob_t* clientcert;	// Client certificate (OTA and MQTT TLS)
 #ifdef  CONFIG_REVK_APMODE
 #ifdef	CONFIG_REVK_APCONFIG
 extern uint16_t apport;	// TCP port for config web pages on AP
@@ -153,14 +159,14 @@ extern uint32_t apwait;	// Wait off line before starting AP (seconds)
 extern revk_gpio_t apgpio;	// Start AP on GPIO
 #endif
 #ifdef  CONFIG_REVK_MQTT
-extern char* mqtthost[CONFIG_REVK_MQTT_CLIENTS];
-extern uint16_t mqttport[CONFIG_REVK_MQTT_CLIENTS];
-extern char* mqttuser[CONFIG_REVK_MQTT_CLIENTS];
-extern char* mqttpass[CONFIG_REVK_MQTT_CLIENTS];
-extern revk_settings_blob_t* mqttcert[CONFIG_REVK_MQTT_CLIENTS];
+extern char* mqtthost[CONFIG_REVK_MQTT_CLIENTS];	// MQTT hostname
+extern uint16_t mqttport[CONFIG_REVK_MQTT_CLIENTS];	// MQTT port
+extern char* mqttuser[CONFIG_REVK_MQTT_CLIENTS];	// MQTT username
+extern char* mqttpass[CONFIG_REVK_MQTT_CLIENTS];	// MQTT password
+extern revk_settings_blob_t* mqttcert[CONFIG_REVK_MQTT_CLIENTS];	// MQTT certificate
 #endif
 #if     defined(CONFIG_REVK_WIFI) || defined(CONFIG_REVK_MESH)
-extern uint16_t wifireset;
+extern uint16_t wifireset;	// Restart if WiFi off for this long (seconds)
 extern char* wifissid;	// WiFI SSID (name)
 extern char* wifipass;	// WiFi password
 extern char* wifiip;	// WiFi Fixed IP
@@ -168,26 +174,27 @@ extern char* wifigw;	// WiFi Fixed gateway
 extern char* wifidns[3];	// WiFi fixed DNS
 extern uint8_t wifibssid[6];	// WiFI BSSID
 extern uint8_t wifichan;	// WiFI channel
+extern uint16_t wifiuptime;	// WiFI turns off after this many seconds
 #define	wifips	revk_settings_bits.wifips
 #define	wifimaxps	revk_settings_bits.wifimaxps
 #endif
 #ifndef	CONFIG_REVK_MESH
 extern char* apssid;	// AP mode SSID (name)
 extern char* appass;	// AP mode password
-extern uint8_t apmax;
+extern uint8_t apmax;	// AP max clients
 extern char* apip;	// AP mode block
 #define	aplr	revk_settings_bits.aplr
 #define	aphide	revk_settings_bits.aphide
 #endif
 #ifdef	CONFIG_REVK_MESH
-extern char* nodename;
-extern uint16_t meshreset;
-extern uint8_t meshid[6];
-extern uint8_t meshkey[16];
-extern uint16_t meshwidth;
-extern uint16_t meshdepth;
-extern uint16_t meshmax;
-extern char* meshpass;
+extern char* nodename;	// Mesh node name
+extern uint16_t meshreset;	// Reset if mesh off for this long (seconds)
+extern uint8_t meshid[6];	// Mesh ID (hex)
+extern uint8_t meshkey[16];	// Mesh key
+extern uint16_t meshwidth;	// Mesh width
+extern uint16_t meshdepth;	// Mesh depth
+extern uint16_t meshmax;	// Mesh max devices
+extern char* meshpass;	// Mesh AP password
 #define	meshlr	revk_settings_bits.meshlr
 #define	meshroot	revk_settings_bits.meshroot
 #endif
@@ -199,6 +206,7 @@ enum {
  REVK_SETTINGS_STRING,
  REVK_SETTINGS_OCTET,
 };
+#define	REVK_SETTINGS_HAS_OLD
 #define	REVK_SETTINGS_HAS_COMMENT
 #define	REVK_SETTINGS_HAS_GPIO
 #define	REVK_SETTINGS_HAS_NUMERIC
