@@ -22,6 +22,23 @@ led_strip_handle_t strip = NULL;
 #define SERVO_MAX_PULSEWIDTH_US 2000    // Maximum pulse width in microsecond
 #define SERVO_MAX_DEGREE        90      // Maximum angle
 
+const uint8_t cos8[256] =
+   { 255, 255, 255, 255, 255, 255, 254, 254, 253, 252, 252, 251, 250, 249, 248, 247, 246, 245, 243, 242, 240, 239, 237, 236, 234,
+   232, 230, 228, 226, 224, 222, 220, 218, 216, 213, 211, 209, 206, 204, 201, 199, 196, 193, 191, 188, 185, 182, 179, 176, 174, 171,
+   168, 165, 162, 159,
+   156, 152, 149, 146, 143, 140, 137, 134, 131, 127, 124, 121, 118, 115, 112, 109, 106, 103, 99, 96, 93, 90, 87, 84, 81, 79, 76, 73,
+   70, 67, 64, 62, 59,
+   56, 54, 51, 49, 46, 44, 42, 39, 37, 35, 33, 31, 29, 27, 25, 23, 21, 19, 18, 16, 15, 13, 12, 10, 9, 8, 7, 6, 5, 4, 3, 3, 2, 1, 1,
+   0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 1, 1, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 16, 18, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 42, 44, 46, 49,
+   51, 54, 56, 59, 62,
+   64, 67, 70, 73, 76, 79, 81, 84, 87, 90, 93, 96, 99, 103, 106, 109, 112, 115, 118, 121, 124, 127, 131, 134, 137, 140, 143, 146,
+   149, 152, 156, 159, 162,
+   165, 168, 171, 174, 176, 179, 182, 185, 188, 191, 193, 196, 199, 201, 204, 206, 209, 211, 213, 216, 218, 220, 222, 224, 226, 228,
+   230, 232, 234, 236,
+   237, 239, 240, 242, 243, 245, 246, 247, 248, 249, 250, 251, 252, 252, 253, 254, 254, 255, 255, 255, 255, 255
+};
+
 struct
 {
    uint8_t init:1;              // Startup
@@ -136,9 +153,13 @@ app_main ()
    b.eyes = 1;
    b.init = 1;
 
+   if (ledarc && strip)
+      for (int i = ledarc; i < ledarc + ledarcs; i++)
+         revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? 'C' : 'R'));
+
    while (1)
    {
-      usleep (100000);
+      usleep (50000);
       uint32_t up = uptime ();
       // Main button
       uint8_t push = revk_gpio_get (button1);
@@ -150,21 +171,21 @@ app_main ()
             press1++;
          push1 = 1;
          b.pushed1 = push;
-         if (ledbutton1)
+         if (ledbutton1 && ledbutton1 <= leds)
             revk_led (strip, ledbutton1, 255, revk_rgb (push ? 'R' : 'G'));
       } else if (push1 && push1++ >= 10)
       {                         // Action
          push1 = 0;
          if (press1 == 1)
          {
-	    if(b.pwr)
-            b.open = 1 - b.open;        // Simple visor toggle
-            b.pwr = 1;	// Power on
-            b.eyes = 1;	// Eyes on
+            if (b.pwr)
+               b.open = 1 - b.open;     // Simple visor toggle
+            b.pwr = 1;          // Power on
+            b.eyes = 1;         // Eyes on
          } else if (press1 == 2)
          {                      // off
-            b.eyes = 0;	// Eyes off
-            b.pwr = 0;	// power off
+            b.eyes = 0;         // Eyes off
+            b.pwr = 0;          // power off
          } else if (press1 == 3)
             revk_restart (1, "Reboot");
          b.changed = 1;
@@ -180,7 +201,7 @@ app_main ()
             press2++;
          push2 = 1;
          b.pushed2 = push;
-         if (ledbutton2)
+         if (ledbutton2 && ledbutton2 <= leds)
             revk_led (strip, ledbutton2, 255, revk_rgb (push ? 'R' : 'G'));
       } else if (push2 && push2++ >= 10)
       {                         // Action
@@ -189,7 +210,6 @@ app_main ()
          b.changed = 1;
          press2 = 0;
       }
-
       if (b.connect)
       {
          b.connected = 1;
@@ -229,6 +249,11 @@ app_main ()
             // ARC
 
          }
+	 static uint8_t cycle=0;
+	 cycle+=10;
+         if (ledpulse && strip)
+            for (int i = ledpulse; i < ledpulse + ledpulses; i++)
+               revk_led (strip, i - 1, cos8[cycle]/2, revk_rgb('R'));
          led_strip_refresh (strip);
       }
       if (blink[0].num != rgb.num)

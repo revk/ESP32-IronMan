@@ -14,5 +14,7 @@ u8	led.button1					// LED number for button1
 u8	led.button2					// LED number for button2
 u8	led.arc						// LED number start of arc ring
 u8	led.arcs					// How many LED in arc ring
+u8	led.pulse					// LED number start of pulsing
+u8	led.pulses					// How many LED in pusling
 u8	visor.close	.live=1				// Angle (degrees) visor close
 u8	visor.open	.live=1				// Angle (degrees) visor open

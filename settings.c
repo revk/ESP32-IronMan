@@ -26,6 +26,8 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton2",.comment="LED number for button2",.group=1,.len=10,.dot=3,.ptr=&ledbutton2,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledarc",.comment="LED number start of arc ring",.group=1,.len=6,.dot=3,.ptr=&ledarc,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledarcs",.comment="How many LED in arc ring",.group=1,.len=7,.dot=3,.ptr=&ledarcs,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulse",.comment="LED number start of pulsing",.group=1,.len=8,.dot=3,.ptr=&ledpulse,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulses",.comment="How many LED in pusling",.group=1,.len=9,.dot=3,.ptr=&ledpulses,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visorclose",.comment="Angle (degrees) visor close",.group=2,.len=10,.dot=5,.ptr=&visorclose,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visoropen",.comment="Angle (degrees) visor open",.group=2,.len=9,.dot=5,.ptr=&visoropen,.size=sizeof(uint8_t),.live=1},
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
@@ -123,6 +125,8 @@ uint8_t ledbutton1=0;
 uint8_t ledbutton2=0;
 uint8_t ledarc=0;
 uint8_t ledarcs=0;
+uint8_t ledpulse=0;
+uint8_t ledpulses=0;
 uint8_t visorclose=0;
 uint8_t visoropen=0;
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD

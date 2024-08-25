@@ -122,6 +122,8 @@ extern uint8_t ledbutton1;	// LED number for button1
 extern uint8_t ledbutton2;	// LED number for button2
 extern uint8_t ledarc;	// LED number start of arc ring
 extern uint8_t ledarcs;	// How many LED in arc ring
+extern uint8_t ledpulse;	// LED number start of pulsing
+extern uint8_t ledpulses;	// How many LED in pusling
 extern uint8_t visorclose;	// Angle (degrees) visor close
 extern uint8_t visoropen;	// Angle (degrees) visor open
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
