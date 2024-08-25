@@ -170,7 +170,6 @@ app_main ()
    while (1)
    {
       usleep (50000);
-      uint32_t up = uptime ();
       // Main button
       uint8_t push = revk_gpio_get (button1);
       static uint8_t push1 = 0;
@@ -225,11 +224,6 @@ app_main ()
          b.connected = 1;
          b.connect = 0;
          revk_command ("upgrade", NULL);
-      }
-      if (!b.lowpower && up > (b.connected ? 300 : 60))
-      {
-         b.lowpower = 1;
-         revk_disable_wifi ();
       }
       if (strip)
       {
