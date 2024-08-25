@@ -157,15 +157,16 @@ app_main ()
          push1 = 0;
          if (press1 == 1)
          {
-            b.pwr = 1;
-            b.eyes = 1;
+	    if(b.pwr)
             b.open = 1 - b.open;        // Simple visor toggle
-         }
-         if (press1 == 2)
+            b.pwr = 1;	// Power on
+            b.eyes = 1;	// Eyes on
+         } else if (press1 == 2)
          {                      // off
-            b.eyes = 0;
-            b.pwr = 0;
-         }
+            b.eyes = 0;	// Eyes off
+            b.pwr = 0;	// power off
+         } else if (press1 == 3)
+            revk_restart (1, "Reboot");
          b.changed = 1;
          press1 = 0;
       }
@@ -207,25 +208,25 @@ app_main ()
          if (b.init || b.changed)
          {
             b.changed = 0;
-	    // PWM
+            // PWM
             REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
             ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose,
                       angle_to_compare (b.open ? visoropen : visorclose));
             if (ledpwm && ledpwm <= leds)
                revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
-	    // PWR
+            // PWR
             revk_gpio_set (pwr, b.pwr);
             if (ledpwr && ledpwr <= leds)
                revk_led (strip, ledpwr - 1, 255, revk_rgb (b.pwr ? 'G' : 'R'));
-	    // Eye 1
+            // Eye 1
             revk_gpio_set (eye1, b.eyes);
             if (ledeye1 && ledeye2 <= leds)
                revk_led (strip, ledeye1 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
-	    // Eye 2
+            // Eye 2
             revk_gpio_set (eye2, b.eyes);
             if (ledeye2 && ledeye2 <= leds)
                revk_led (strip, ledeye2 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
-	    // ARC
+            // ARC
 
          }
          led_strip_refresh (strip);
