@@ -16,5 +16,11 @@ u8	led.arc						// LED number start of arc ring
 u8	led.arcs					// How many LED in arc ring
 u8	led.pulse					// LED number start of pulsing
 u8	led.pulses					// How many LED in pusling
+u8	led.blue					// LED number start of blue LEDs
+u8	led.blues					// How many LED in blue LED
+u8	led.green					// LED number start of green LEDs
+u8	led.greens					// How many LED in green LED
+u8	led.red						// LED number start of red LEDs
+u8	led.reds					// How many LED in red LED
 u8	visor.close	.live=1				// Angle (degrees) visor close
 u8	visor.open	.live=1				// Angle (degrees) visor open

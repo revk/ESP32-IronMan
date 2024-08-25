@@ -153,9 +153,19 @@ app_main ()
    b.eyes = 1;
    b.init = 1;
 
+   // Static LEDs
    if (ledarc && strip)
       for (int i = ledarc; i < ledarc + ledarcs; i++)
          revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? 'C' : 'R'));
+   if (ledblue && strip)
+      for (int i = ledblue; i < ledblue + ledblues; i++)
+         revk_led (strip, i - 1, 255, 'B');
+   if (ledred && strip)
+      for (int i = ledred; i < ledred + ledreds; i++)
+         revk_led (strip, i - 1, 255, 'R');
+   if (ledgreen && strip)
+      for (int i = ledgreen; i < ledgreen + ledgreens; i++)
+         revk_led (strip, i - 1, 255, 'G');
 
    while (1)
    {
@@ -249,11 +259,11 @@ app_main ()
             // ARC
 
          }
-	 static uint8_t cycle=0;
-	 cycle+=10;
+         static uint8_t cycle = 0;
+         cycle += 8;
          if (ledpulse && strip)
             for (int i = ledpulse; i < ledpulse + ledpulses; i++)
-               revk_led (strip, i - 1, cos8[cycle]/2, revk_rgb('R'));
+               revk_led (strip, i - 1, 64 + cos8[cycle] / 2, revk_rgb ('R'));
          led_strip_refresh (strip);
       }
       if (blink[0].num != rgb.num)

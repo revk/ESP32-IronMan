@@ -124,6 +124,12 @@ extern uint8_t ledarc;	// LED number start of arc ring
 extern uint8_t ledarcs;	// How many LED in arc ring
 extern uint8_t ledpulse;	// LED number start of pulsing
 extern uint8_t ledpulses;	// How many LED in pusling
+extern uint8_t ledblue;	// LED number start of blue LEDs
+extern uint8_t ledblues;	// How many LED in blue LED
+extern uint8_t ledgreen;	// LED number start of green LEDs
+extern uint8_t ledgreens;	// How many LED in green LED
+extern uint8_t ledred;	// LED number start of red LEDs
+extern uint8_t ledreds;	// How many LED in red LED
 extern uint8_t visorclose;	// Angle (degrees) visor close
 extern uint8_t visoropen;	// Angle (degrees) visor open
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
@@ -219,6 +225,6 @@ enum {
 #define	REVK_SETTINGS_HAS_BLOB
 #define	REVK_SETTINGS_HAS_STRING
 #define	REVK_SETTINGS_HAS_OCTET
-typedef uint8_t revk_setting_bits_t[10];
+typedef uint8_t revk_setting_bits_t[11];
 typedef uint8_t revk_setting_group_t[2];
 extern const char revk_settings_secret[];

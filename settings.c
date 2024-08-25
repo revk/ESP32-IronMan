@@ -28,6 +28,12 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledarcs",.comment="How many LED in arc ring",.group=1,.len=7,.dot=3,.ptr=&ledarcs,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulse",.comment="LED number start of pulsing",.group=1,.len=8,.dot=3,.ptr=&ledpulse,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulses",.comment="How many LED in pusling",.group=1,.len=9,.dot=3,.ptr=&ledpulses,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledblue",.comment="LED number start of blue LEDs",.group=1,.len=7,.dot=3,.ptr=&ledblue,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledblues",.comment="How many LED in blue LED",.group=1,.len=8,.dot=3,.ptr=&ledblues,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledgreen",.comment="LED number start of green LEDs",.group=1,.len=8,.dot=3,.ptr=&ledgreen,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledgreens",.comment="How many LED in green LED",.group=1,.len=9,.dot=3,.ptr=&ledgreens,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledred",.comment="LED number start of red LEDs",.group=1,.len=6,.dot=3,.ptr=&ledred,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledreds",.comment="How many LED in red LED",.group=1,.len=7,.dot=3,.ptr=&ledreds,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visorclose",.comment="Angle (degrees) visor close",.group=2,.len=10,.dot=5,.ptr=&visorclose,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visoropen",.comment="Angle (degrees) visor open",.group=2,.len=9,.dot=5,.ptr=&visoropen,.size=sizeof(uint8_t),.live=1},
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
@@ -127,6 +133,12 @@ uint8_t ledarc=0;
 uint8_t ledarcs=0;
 uint8_t ledpulse=0;
 uint8_t ledpulses=0;
+uint8_t ledblue=0;
+uint8_t ledblues=0;
+uint8_t ledgreen=0;
+uint8_t ledgreens=0;
+uint8_t ledred=0;
+uint8_t ledreds=0;
 uint8_t visorclose=0;
 uint8_t visoropen=0;
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
