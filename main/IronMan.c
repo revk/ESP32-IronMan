@@ -68,6 +68,8 @@ app_main ()
 {
    revk_boot (&app_callback);
    revk_start ();
+   if (blink[0].num != rgb.num)
+      revk_blink_init ();       // Library blink
    revk_gpio_input (button1);
    revk_gpio_input (button2);
    revk_gpio_output (eye1, 0);
@@ -134,53 +136,57 @@ app_main ()
    b.eyes = 1;
    b.init = 1;
 
-   uint32_t last1 = 0,
-      last2 = 0;                // Last button
    while (1)
    {
       usleep (100000);
       uint32_t up = uptime ();
       // Main button
       uint8_t push = revk_gpio_get (button1);
+      static uint8_t push1 = 0;
+      static uint8_t press1 = 0;
       if (b.init || push != b.pushed1)
       {
+         if (push)
+            press1++;
+         push1 = 1;
          b.pushed1 = push;
          if (ledbutton1)
             revk_led (strip, ledbutton1, 255, revk_rgb (push ? 'R' : 'G'));
-         if (push)
+      } else if (push1 && push1++ >= 10)
+      {                         // Action
+         push1 = 0;
+         if (press1 == 1)
          {
-            if (up - last1 < 2)
-            {                   // Double press
-               b.eyes = 0;
-               b.pwr = 0;
-               b.open = 1 - b.open;     // Reverse the visor toggle
-            } else
-            {                   // Single press
-               b.pwr = 1;
-               b.eyes = 1;
-               b.open = 1 - b.open;     // Simple visor toggle
-            }
-            b.changed = 1;
+            b.pwr = 1;
+            b.eyes = 1;
+            b.open = 1 - b.open;        // Simple visor toggle
          }
-         last1 = up;
+         if (press1 == 2)
+         {                      // off
+            b.eyes = 0;
+            b.pwr = 0;
+         }
+         b.changed = 1;
+         press1 = 0;
       }
       // Second button
       push = revk_gpio_get (button2);
+      static uint8_t push2 = 0;
+      static uint8_t press2 = 0;
       if (b.init || push != b.pushed2)
       {
+         if (push)
+            press2++;
+         push2 = 1;
          b.pushed2 = push;
          if (ledbutton2)
             revk_led (strip, ledbutton2, 255, revk_rgb (push ? 'R' : 'G'));
-         if (push)
-         {
-            if (up - last2 < 2)
-            {                   // Double press
-            } else
-            {                   // Single press
-            }
-            b.changed = 1;
-         }
-         last2 = up;
+      } else if (push2 && push2++ >= 10)
+      {                         // Action
+         push2 = 0;
+         // No action for now
+         b.changed = 1;
+         press2 = 0;
       }
 
       if (b.connect)
@@ -194,25 +200,32 @@ app_main ()
          b.lowpower = 1;
          revk_disable_wifi ();
       }
-      if (b.init || b.changed)
+      if (strip)
       {
-         b.changed = 0;
-         REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
-         ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose, angle_to_compare (b.open ? visoropen : visorclose));
-         if (ledpwm)
-            revk_led (strip, ledpwm, 255, revk_rgb (b.open ? 'G' : 'R'));
-         revk_gpio_set (pwr, b.pwr);
-         if (ledpwr)
-            revk_led (strip, ledpwr, 255, revk_rgb (b.pwr ? 'G' : 'R'));
-         revk_gpio_set (eye1, b.eyes);
-         if (ledeye1)
-            revk_led (strip, ledeye1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
-         revk_gpio_set (eye2, b.eyes);
-         if (ledeye2)
-            revk_led (strip, ledeye2, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+         if (blink[0].num == rgb.num)
+            revk_led (strip, 0, 255, revk_blinker ());
+         if (b.init || b.changed)
+         {
+            b.changed = 0;
+            REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
+            ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose,
+                      angle_to_compare (b.open ? visoropen : visorclose));
+            if (ledpwm)
+               revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
+            revk_gpio_set (pwr, b.pwr);
+            if (ledpwr)
+               revk_led (strip, ledpwr - 1, 255, revk_rgb (b.pwr ? 'G' : 'R'));
+            revk_gpio_set (eye1, b.eyes);
+            if (ledeye1)
+               revk_led (strip, ledeye1 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+            revk_gpio_set (eye2, b.eyes);
+            if (ledeye2)
+               revk_led (strip, ledeye2 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+         }
+         led_strip_refresh (strip);
       }
-      revk_led (strip, 0, 255, revk_blinker ());
-      if(strip)led_strip_refresh (strip);
+      if (blink[0].num != rgb.num)
+         revk_blink_do ();      // Library blink
       b.init = 0;
    }
 }
