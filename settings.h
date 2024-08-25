@@ -113,13 +113,15 @@ extern revk_gpio_t pwm;	// Visor service PWM
 extern revk_gpio_t button1;	// Activation button1
 extern revk_gpio_t button2;	// Activation button2
 extern revk_gpio_t rgb;	// RGB LED chain
-extern uint8_t leds;	// Number of LEDs
+extern uint8_t leds;	// Number of LEDs in chain
 extern uint8_t ledeye1;	// LED number for eye 1
 extern uint8_t ledeye2;	// LED number for eye 2
 extern uint8_t ledpwr;	// LED number for servo PWR
 extern uint8_t ledpwm;	// LED number for servo PWM
 extern uint8_t ledbutton1;	// LED number for button1
 extern uint8_t ledbutton2;	// LED number for button2
+extern uint8_t ledarc;	// LED number start of arc ring
+extern uint8_t ledarcs;	// How many LED in arc ring
 extern uint8_t visorclose;	// Angle (degrees) visor close
 extern uint8_t visoropen;	// Angle (degrees) visor open
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD

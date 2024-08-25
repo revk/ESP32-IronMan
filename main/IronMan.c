@@ -207,20 +207,26 @@ app_main ()
          if (b.init || b.changed)
          {
             b.changed = 0;
+	    // PWM
             REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
             ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose,
                       angle_to_compare (b.open ? visoropen : visorclose));
-            if (ledpwm)
+            if (ledpwm && ledpwm <= leds)
                revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
+	    // PWR
             revk_gpio_set (pwr, b.pwr);
-            if (ledpwr)
+            if (ledpwr && ledpwr <= leds)
                revk_led (strip, ledpwr - 1, 255, revk_rgb (b.pwr ? 'G' : 'R'));
+	    // Eye 1
             revk_gpio_set (eye1, b.eyes);
-            if (ledeye1)
+            if (ledeye1 && ledeye2 <= leds)
                revk_led (strip, ledeye1 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+	    // Eye 2
             revk_gpio_set (eye2, b.eyes);
-            if (ledeye2)
+            if (ledeye2 && ledeye2 <= leds)
                revk_led (strip, ledeye2 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+	    // ARC
+
          }
          led_strip_refresh (strip);
       }

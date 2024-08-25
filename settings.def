@@ -5,12 +5,14 @@ gpio	pwm						// Visor service PWM
 gpio	button1						// Activation button1
 gpio	button2						// Activation button2
 gpio	rgb						// RGB LED chain
-u8	leds						// Number of LEDs
+u8	leds						// Number of LEDs in chain
 u8	led.eye1					// LED number for eye 1
 u8	led.eye2					// LED number for eye 2
 u8	led.pwr						// LED number for servo PWR
 u8	led.pwm						// LED number for servo PWM
 u8	led.button1					// LED number for button1
 u8	led.button2					// LED number for button2
+u8	led.arc						// LED number start of arc ring
+u8	led.arcs					// How many LED in arc ring
 u8	visor.close	.live=1				// Angle (degrees) visor close
 u8	visor.open	.live=1				// Angle (degrees) visor open
