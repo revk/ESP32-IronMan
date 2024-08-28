@@ -232,10 +232,12 @@ app_main ()
          if (b.init || b.changed)
          {
             b.changed = 0;
-            // PWM
-            REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
-            ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose,
-                      angle_to_compare (b.open ? visoropen : visorclose));
+            if (pwm.set)
+            {                   // PWM
+               REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
+               ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose,
+                         angle_to_compare (b.open ? visoropen : visorclose));
+            }
             if (ledpwm && ledpwm <= leds)
                revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
             // PWR
