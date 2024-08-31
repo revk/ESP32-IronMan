@@ -43,10 +43,10 @@ struct
 {
    uint8_t init:1;              // Startup
    uint8_t lowpower:1;          // WiFI off
-   uint8_t changed:1;           // Changed setting
    uint8_t eyes:1;              // Eyes on
    uint8_t pwr:1;               // Servo power on
    uint8_t open:1;              // Visor open
+   uint8_t wasopen:1;           // Visor was open
    uint8_t connect:1;           // WiFi connect
    uint8_t cylon:1;             // Cylon effect
    uint8_t connected:1;         // WiFi connected
@@ -78,6 +78,36 @@ app_callback (int client, const char *prefix, const char *target, const char *su
       return NULL;              //Not for us or not a command from main MQTT
    if (!strcmp (suffix, "connect"))
       b.connect = 1;
+   if (!strcmp (suffix, "up"))
+   {
+      b.open = 1;               // Open
+      b.pwr = 1;                // Power on
+      return NULL;
+   }
+   if (!strcmp (suffix, "down"))
+   {
+      b.open = 0;               // Closed
+      b.pwr = 1;                // Power on
+      return NULL;
+   }
+   if (!strcmp (suffix, "cylon"))
+   {
+      b.eyes = 0;               // Eyes off
+      b.cylon = 1;
+      return NULL;
+   }
+   if (!strcmp (suffix, "eyes"))
+   {
+      b.eyes = 1;               // Eyes on
+      b.cylon = 0;
+      return NULL;
+   }
+   if (!strcmp (suffix, "dark"))
+   {
+      b.eyes = 0;               // Eyes off
+      b.cylon = 0;
+      return NULL;
+   }
    return NULL;
 }
 
@@ -154,20 +184,6 @@ app_main ()
    b.eyes = 1;
    b.init = 1;
 
-   // Static LEDs
-   if (ledarc && ledarcs && strip)
-      for (int i = ledarc; i < ledarc + ledarcs; i++)
-         revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? 'C' : 'R'));
-   if (ledblue && ledblues && strip)
-      for (int i = ledblue; i < ledblue + ledblues; i++)
-         revk_led (strip, i - 1, 255, revk_rgb ('B'));
-   if (ledred && ledreds && strip)
-      for (int i = ledred; i < ledred + ledreds; i++)
-         revk_led (strip, i - 1, 255, revk_rgb ('R'));
-   if (ledgreen && ledgreens && strip)
-      for (int i = ledgreen; i < ledgreen + ledgreens; i++)
-         revk_led (strip, i - 1, 255, revk_rgb ('G'));
-
    while (1)
    {
       usleep (50000);
@@ -199,8 +215,12 @@ app_main ()
             b.pwr = 0;          // power off
             b.cylon = 1;
          } else if (press1 == 3)
+         {
+            b.eyes = 0;         // Eyes off
+            b.pwr = 0;          // power off
+            b.cylon = 0;        // Cylon off
             revk_restart (1, "Reboot");
-         b.changed = 1;
+         }
          press1 = 0;
       }
       // Second button
@@ -219,7 +239,6 @@ app_main ()
       {                         // Action
          push2 = 0;
          // No action for now
-         b.changed = 1;
          press2 = 0;
       }
       if (b.connect)
@@ -230,20 +249,34 @@ app_main ()
       }
       if (strip)
       {
-         for (int i = 0; i < leds; i++)
-            revk_led (strip, i, 255, 0);        // Clear
-         if (blink[0].num == rgb.num)
-            revk_led (strip, 0, 255, revk_blinker ());
-         if (b.init || b.changed)
+         if (b.init || b.open != b.wasopen)
          {
-            b.changed = 0;
             if (pwm.set)
             {                   // PWM
                REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
                ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose,
                          angle_to_compare (b.open ? visoropen : visorclose));
             }
+            b.wasopen = b.open;
          }
+         for (int i = 0; i < leds; i++)
+            revk_led (strip, i, 255, 0);        // Clear
+         if (blink[0].num == rgb.num)
+            revk_led (strip, 0, 255, revk_blinker ());
+         // Static LEDs
+         if (ledarc && ledarcs && strip)
+            for (int i = ledarc; i < ledarc + ledarcs; i++)
+               revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? 'C' : 'R'));
+         if (ledblue && ledblues && strip)
+            for (int i = ledblue; i < ledblue + ledblues; i++)
+               revk_led (strip, i - 1, 255, revk_rgb ('B'));
+         if (ledred && ledreds && strip)
+            for (int i = ledred; i < ledred + ledreds; i++)
+               revk_led (strip, i - 1, 255, revk_rgb ('R'));
+         if (ledgreen && ledgreens && strip)
+            for (int i = ledgreen; i < ledgreen + ledgreens; i++)
+               revk_led (strip, i - 1, 255, revk_rgb ('G'));
+
          if (ledpwm && ledpwm <= leds)
             revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
          // PWR
