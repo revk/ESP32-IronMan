@@ -20,6 +20,7 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="leds",.comment="Number of LEDs in chain",.len=4,.ptr=&leds,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye1",.comment="LED number for eye 1",.group=1,.len=7,.dot=3,.ptr=&ledeye1,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye2",.comment="LED number for eye 2",.group=1,.len=7,.dot=3,.ptr=&ledeye2,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledeyes",.comment="How many LEDs in eye",.group=1,.len=7,.dot=3,.def="1",.ptr=&ledeyes,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwr",.comment="LED number for servo PWR",.group=1,.len=6,.dot=3,.ptr=&ledpwr,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwm",.comment="LED number for servo PWM",.group=1,.len=6,.dot=3,.ptr=&ledpwm,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton1",.comment="LED number for button1",.group=1,.len=10,.dot=3,.ptr=&ledbutton1,.size=sizeof(uint8_t)},
@@ -34,6 +35,8 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledgreens",.comment="How many LED in green LED",.group=1,.len=9,.dot=3,.ptr=&ledgreens,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledred",.comment="LED number start of red LEDs",.group=1,.len=6,.dot=3,.ptr=&ledred,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledreds",.comment="How many LED in red LED",.group=1,.len=7,.dot=3,.ptr=&ledreds,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylon",.comment="LED number start of cylon LEDs",.group=1,.len=8,.dot=3,.ptr=&ledcylon,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylons",.comment="How many LED in cylon LED",.group=1,.len=9,.dot=3,.ptr=&ledcylons,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visorclose",.comment="Angle (degrees) visor close",.group=2,.len=10,.dot=5,.ptr=&visorclose,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visoropen",.comment="Angle (degrees) visor open",.group=2,.len=9,.dot=5,.ptr=&visoropen,.size=sizeof(uint8_t),.live=1},
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
@@ -125,6 +128,7 @@ revk_gpio_t rgb={0};
 uint8_t leds=0;
 uint8_t ledeye1=0;
 uint8_t ledeye2=0;
+uint8_t ledeyes=0;
 uint8_t ledpwr=0;
 uint8_t ledpwm=0;
 uint8_t ledbutton1=0;
@@ -139,6 +143,8 @@ uint8_t ledgreen=0;
 uint8_t ledgreens=0;
 uint8_t ledred=0;
 uint8_t ledreds=0;
+uint8_t ledcylon=0;
+uint8_t ledcylons=0;
 uint8_t visorclose=0;
 uint8_t visoropen=0;
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD

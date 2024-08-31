@@ -116,6 +116,7 @@ extern revk_gpio_t rgb;	// RGB LED chain
 extern uint8_t leds;	// Number of LEDs in chain
 extern uint8_t ledeye1;	// LED number for eye 1
 extern uint8_t ledeye2;	// LED number for eye 2
+extern uint8_t ledeyes;	// How many LEDs in eye
 extern uint8_t ledpwr;	// LED number for servo PWR
 extern uint8_t ledpwm;	// LED number for servo PWM
 extern uint8_t ledbutton1;	// LED number for button1
@@ -130,6 +131,8 @@ extern uint8_t ledgreen;	// LED number start of green LEDs
 extern uint8_t ledgreens;	// How many LED in green LED
 extern uint8_t ledred;	// LED number start of red LEDs
 extern uint8_t ledreds;	// How many LED in red LED
+extern uint8_t ledcylon;	// LED number start of cylon LEDs
+extern uint8_t ledcylons;	// How many LED in cylon LED
 extern uint8_t visorclose;	// Angle (degrees) visor close
 extern uint8_t visoropen;	// Angle (degrees) visor open
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
@@ -225,6 +228,6 @@ enum {
 #define	REVK_SETTINGS_HAS_BLOB
 #define	REVK_SETTINGS_HAS_STRING
 #define	REVK_SETTINGS_HAS_OCTET
-typedef uint8_t revk_setting_bits_t[11];
+typedef uint8_t revk_setting_bits_t[12];
 typedef uint8_t revk_setting_group_t[2];
 extern const char revk_settings_secret[];

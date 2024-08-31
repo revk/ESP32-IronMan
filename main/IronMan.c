@@ -48,6 +48,7 @@ struct
    uint8_t pwr:1;               // Servo power on
    uint8_t open:1;              // Visor open
    uint8_t connect:1;           // WiFi connect
+   uint8_t cylon:1;             // Cylon effect
    uint8_t connected:1;         // WiFi connected
    uint8_t pushed1:1;           // Pushed button1
    uint8_t pushed2:1;           // Pushed button2
@@ -154,18 +155,18 @@ app_main ()
    b.init = 1;
 
    // Static LEDs
-   if (ledarc && strip)
+   if (ledarc && ledarcs && strip)
       for (int i = ledarc; i < ledarc + ledarcs; i++)
          revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? 'C' : 'R'));
-   if (ledblue && strip)
+   if (ledblue && ledblues && strip)
       for (int i = ledblue; i < ledblue + ledblues; i++)
-         revk_led (strip, i - 1, 255, 'B');
-   if (ledred && strip)
+         revk_led (strip, i - 1, 255, revk_rgb ('B'));
+   if (ledred && ledreds && strip)
       for (int i = ledred; i < ledred + ledreds; i++)
-         revk_led (strip, i - 1, 255, 'R');
-   if (ledgreen && strip)
+         revk_led (strip, i - 1, 255, revk_rgb ('R'));
+   if (ledgreen && ledgreens && strip)
       for (int i = ledgreen; i < ledgreen + ledgreens; i++)
-         revk_led (strip, i - 1, 255, 'G');
+         revk_led (strip, i - 1, 255, revk_rgb ('G'));
 
    while (1)
    {
@@ -191,10 +192,12 @@ app_main ()
                b.open = 1 - b.open;     // Simple visor toggle
             b.pwr = 1;          // Power on
             b.eyes = 1;         // Eyes on
+            b.cylon = 0;
          } else if (press1 == 2)
          {                      // off
             b.eyes = 0;         // Eyes off
             b.pwr = 0;          // power off
+            b.cylon = 1;
          } else if (press1 == 3)
             revk_restart (1, "Reboot");
          b.changed = 1;
@@ -227,6 +230,8 @@ app_main ()
       }
       if (strip)
       {
+         for (int i = 0; i < leds; i++)
+            revk_led (strip, i, 255, 0);        // Clear
          if (blink[0].num == rgb.num)
             revk_led (strip, 0, 255, revk_blinker ());
          if (b.init || b.changed)
@@ -238,28 +243,42 @@ app_main ()
                ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose,
                          angle_to_compare (b.open ? visoropen : visorclose));
             }
-            if (ledpwm && ledpwm <= leds)
-               revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
-            // PWR
-            revk_gpio_set (pwr, b.pwr);
-            if (ledpwr && ledpwr <= leds)
-               revk_led (strip, ledpwr - 1, 255, revk_rgb (b.pwr ? 'G' : 'R'));
-            // Eye 1
-            revk_gpio_set (eye1, b.eyes);
-            if (ledeye1 && ledeye2 <= leds)
-               revk_led (strip, ledeye1 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
-            // Eye 2
-            revk_gpio_set (eye2, b.eyes);
-            if (ledeye2 && ledeye2 <= leds)
-               revk_led (strip, ledeye2 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
-            // ARC
-
          }
-         static uint8_t cycle = 0;
-         cycle += 8;
-         if (ledpulse && strip)
-            for (int i = ledpulse; i < ledpulse + ledpulses; i++)
+         if (ledpwm && ledpwm <= leds)
+            revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
+         // PWR
+         revk_gpio_set (pwr, b.pwr);
+         if (ledpwr && ledpwr <= leds)
+            revk_led (strip, ledpwr - 1, 255, revk_rgb (b.pwr ? 'G' : 'R'));
+         // Eye 1
+         revk_gpio_set (eye1, b.eyes);
+         if (ledeye1 && ledeye2 <= leds)
+            for (int i = 0; i < ledeyes; i++)
+               revk_led (strip, i + ledeye1 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+         // Eye 2
+         revk_gpio_set (eye2, b.eyes);
+         if (ledeye2 && ledeye2 <= leds)
+            for (int i = 0; i < ledeyes; i++)
+               revk_led (strip, i + ledeye2 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+         if (ledpulse && ledpulses && strip)
+         {
+            static uint8_t cycle = 0;
+            cycle += 8;
+            for (int i = ledpulse; i < ledpulse + ledpulses && i <= leds; i++)
                revk_led (strip, i - 1, 64 + cos8[cycle] / 2, revk_rgb ('R'));
+         }
+         if (b.cylon && ledcylon && ledcylons && strip)
+         {                      // Cylon
+            static int8_t cycle = 0,
+               dir = 1;
+            for (int i = ledcylon; i < ledcylon + ledcylons && i <= leds; i++)
+               revk_led (strip, i - 1, 255, revk_rgb (i == ledcylon + cycle ? 'R' : 'K'));
+            if (cycle == ledcylons - 1)
+               dir = -1;
+            else if (!cycle)
+               dir = 1;
+            cycle += dir;
+         }
          led_strip_refresh (strip);
       }
       if (blink[0].num != rgb.num)
