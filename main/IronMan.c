@@ -205,15 +205,12 @@ app_main ()
          if (press1 == 1)
          {
             if (b.pwr)
-               b.open = 1 - b.open;     // Simple visor toggle
-            b.pwr = 1;          // Power on
-            b.eyes = 1;         // Eyes on
-            b.cylon = 0;
+               b.open ^= 1;
          } else if (press1 == 2)
          {                      // off
-            b.eyes = 0;         // Eyes off
-            b.pwr = 0;          // power off
-            b.cylon = 1;
+            if (b.pwr)
+               b.eyes ^= 1;     // Eyes off
+            b.cylon = ~b.eyes;
          } else if (press1 == 3)
          {
             b.eyes = 0;         // Eyes off
