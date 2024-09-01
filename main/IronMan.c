@@ -46,7 +46,6 @@ struct
    uint8_t eyes:1;              // Eyes on
    uint8_t pwr:1;               // Servo power on
    uint8_t open:1;              // Visor open
-   uint8_t wasopen:1;           // Visor was open
    uint8_t connect:1;           // WiFi connect
    uint8_t cylon:1;             // Cylon effect
    uint8_t connected:1;         // WiFi connected
@@ -246,15 +245,16 @@ app_main ()
       }
       if (strip)
       {
-         if (b.init || b.open != b.wasopen)
+         int angle = b.open ? visoropen : visorclose;
+         static int wasangle = -1;
+         if (b.init || angle != wasangle)
          {
             if (pwm.set)
             {                   // PWM
-               REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
-               ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose,
-                         angle_to_compare (b.open ? visoropen : visorclose));
+               REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (angle)));
+               ESP_LOGE (TAG, "Angle %d-%d value %ld", wasangle, angle, angle_to_compare (angle));
             }
-            b.wasopen = b.open;
+            wasangle = angle;
          }
          for (int i = 0; i < leds; i++)
             revk_led (strip, i, 255, 0);        // Clear
