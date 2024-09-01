@@ -52,7 +52,7 @@ struct
    uint8_t connected:1;         // WiFi connected
    uint8_t pushed1:1;           // Pushed button1
    uint8_t pushed2:1;           // Pushed button2
-} b;
+} b = { 0 };
 
 static inline uint32_t
 angle_to_compare (int angle)

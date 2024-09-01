@@ -20,7 +20,7 @@ c1	led.arcc1	C				// Arc LED colour (bright)
 c1	led.arcc2	R				// Arc LED colour (dim)
 u8	led.pulse					// LED number start of pulsing
 u8	led.pulses					// How many LED in pusling
-c1	led.pulsec	R				// Pulse LED colour
+c1	led.pulsec	W				// Pulse LED colour
 u8	led.fixed					// LED number start of fixed LEDs
 u8	led.fixeds					// How many LED in fixed LED
 c1	led.fixedc	C				// fixed LED colour

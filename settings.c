@@ -32,7 +32,7 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_STRING,.name="ledarcc2",.comment="Arc LED colour (dim)",.group=1,.len=8,.dot=3,.def="R",.ptr=&ledarcc2,.size=sizeof(char[2])},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulse",.comment="LED number start of pulsing",.group=1,.len=8,.dot=3,.ptr=&ledpulse,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulses",.comment="How many LED in pusling",.group=1,.len=9,.dot=3,.ptr=&ledpulses,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_STRING,.name="ledpulsec",.comment="Pulse LED colour",.group=1,.len=9,.dot=3,.def="R",.ptr=&ledpulsec,.size=sizeof(char[2])},
+ {.type=REVK_SETTINGS_STRING,.name="ledpulsec",.comment="Pulse LED colour",.group=1,.len=9,.dot=3,.def="W",.ptr=&ledpulsec,.size=sizeof(char[2])},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledfixed",.comment="LED number start of fixed LEDs",.group=1,.len=8,.dot=3,.ptr=&ledfixed,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledfixeds",.comment="How many LED in fixed LED",.group=1,.len=9,.dot=3,.ptr=&ledfixeds,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_STRING,.name="ledfixedc",.comment="fixed LED colour",.group=1,.len=9,.dot=3,.def="C",.ptr=&ledfixedc,.size=sizeof(char[2])},
