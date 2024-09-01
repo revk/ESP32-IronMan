@@ -33,12 +33,9 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulse",.comment="LED number start of pulsing",.group=1,.len=8,.dot=3,.ptr=&ledpulse,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulses",.comment="How many LED in pusling",.group=1,.len=9,.dot=3,.ptr=&ledpulses,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_STRING,.name="ledpulsec",.comment="Pulse LED colour",.group=1,.len=9,.dot=3,.def="R",.ptr=&ledpulsec,.size=sizeof(char[2])},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledblue",.comment="LED number start of blue LEDs",.group=1,.len=7,.dot=3,.ptr=&ledblue,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledblues",.comment="How many LED in blue LED",.group=1,.len=8,.dot=3,.ptr=&ledblues,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledgreen",.comment="LED number start of green LEDs",.group=1,.len=8,.dot=3,.ptr=&ledgreen,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledgreens",.comment="How many LED in green LED",.group=1,.len=9,.dot=3,.ptr=&ledgreens,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledred",.comment="LED number start of red LEDs",.group=1,.len=6,.dot=3,.ptr=&ledred,.size=sizeof(uint8_t)},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledreds",.comment="How many LED in red LED",.group=1,.len=7,.dot=3,.ptr=&ledreds,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledfixed",.comment="LED number start of fixed LEDs",.group=1,.len=8,.dot=3,.ptr=&ledfixed,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledfixeds",.comment="How many LED in fixed LED",.group=1,.len=9,.dot=3,.ptr=&ledfixeds,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_STRING,.name="ledfixedc",.comment="fixed LED colour",.group=1,.len=9,.dot=3,.def="C",.ptr=&ledfixedc,.size=sizeof(char[2])},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylon",.comment="LED number start of cylon LEDs",.group=1,.len=8,.dot=3,.ptr=&ledcylon,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylons",.comment="How many LED in cylon LED",.group=1,.len=9,.dot=3,.ptr=&ledcylons,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_STRING,.name="ledcylonc",.comment="cylon LED colour",.group=1,.len=9,.dot=3,.def="R",.ptr=&ledcylonc,.size=sizeof(char[2])},
@@ -146,12 +143,9 @@ char ledarcc2[2]="";
 uint8_t ledpulse=0;
 uint8_t ledpulses=0;
 char ledpulsec[2]="";
-uint8_t ledblue=0;
-uint8_t ledblues=0;
-uint8_t ledgreen=0;
-uint8_t ledgreens=0;
-uint8_t ledred=0;
-uint8_t ledreds=0;
+uint8_t ledfixed=0;
+uint8_t ledfixeds=0;
+char ledfixedc[2]="";
 uint8_t ledcylon=0;
 uint8_t ledcylons=0;
 char ledcylonc[2]="";

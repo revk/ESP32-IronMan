@@ -21,12 +21,9 @@ c1	led.arcc2	R				// Arc LED colour (dim)
 u8	led.pulse					// LED number start of pulsing
 u8	led.pulses					// How many LED in pusling
 c1	led.pulsec	R				// Pulse LED colour
-u8	led.blue					// LED number start of blue LEDs
-u8	led.blues					// How many LED in blue LED
-u8	led.green					// LED number start of green LEDs
-u8	led.greens					// How many LED in green LED
-u8	led.red						// LED number start of red LEDs
-u8	led.reds					// How many LED in red LED
+u8	led.fixed					// LED number start of fixed LEDs
+u8	led.fixeds					// How many LED in fixed LED
+c1	led.fixedc	C				// fixed LED colour
 u8	led.cylon					// LED number start of cylon LEDs
 u8	led.cylons					// How many LED in cylon LED
 c1	led.cylonc	R				// cylon LED colour

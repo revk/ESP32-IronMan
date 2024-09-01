@@ -129,12 +129,9 @@ extern char ledarcc2[2];	// Arc LED colour (dim)
 extern uint8_t ledpulse;	// LED number start of pulsing
 extern uint8_t ledpulses;	// How many LED in pusling
 extern char ledpulsec[2];	// Pulse LED colour
-extern uint8_t ledblue;	// LED number start of blue LEDs
-extern uint8_t ledblues;	// How many LED in blue LED
-extern uint8_t ledgreen;	// LED number start of green LEDs
-extern uint8_t ledgreens;	// How many LED in green LED
-extern uint8_t ledred;	// LED number start of red LEDs
-extern uint8_t ledreds;	// How many LED in red LED
+extern uint8_t ledfixed;	// LED number start of fixed LEDs
+extern uint8_t ledfixeds;	// How many LED in fixed LED
+extern char ledfixedc[2];	// fixed LED colour
 extern uint8_t ledcylon;	// LED number start of cylon LEDs
 extern uint8_t ledcylons;	// How many LED in cylon LED
 extern char ledcylonc[2];	// cylon LED colour

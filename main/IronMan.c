@@ -266,15 +266,9 @@ app_main ()
             if (ledarc && ledarcs && strip)
                for (int i = ledarc; i < ledarc + ledarcs; i++)
                   revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? *ledarcc1 : *ledarcc2));
-            if (ledblue && ledblues && strip)
-               for (int i = ledblue; i < ledblue + ledblues; i++)
-                  revk_led (strip, i - 1, 255, revk_rgb ('B'));
-            if (ledred && ledreds && strip)
-               for (int i = ledred; i < ledred + ledreds; i++)
-                  revk_led (strip, i - 1, 255, revk_rgb ('R'));
-            if (ledgreen && ledgreens && strip)
-               for (int i = ledgreen; i < ledgreen + ledgreens; i++)
-                  revk_led (strip, i - 1, 255, revk_rgb ('G'));
+            if (ledfixed && ledfixeds && strip)
+               for (int i = ledfixed; i < ledfixed + ledfixeds; i++)
+                  revk_led (strip, i - 1, 255, revk_rgb (*ledfixedc));
 
             if (ledpwm && ledpwm <= leds)
                revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
