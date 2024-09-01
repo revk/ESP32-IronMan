@@ -117,14 +117,18 @@ extern uint8_t leds;	// Number of LEDs in chain
 extern uint8_t ledeye1;	// LED number for eye 1
 extern uint8_t ledeye2;	// LED number for eye 2
 extern uint8_t ledeyes;	// How many LEDs in eye
+extern char ledeyec[2];	// Eye LED colour
 extern uint8_t ledpwr;	// LED number for servo PWR
 extern uint8_t ledpwm;	// LED number for servo PWM
 extern uint8_t ledbutton1;	// LED number for button1
 extern uint8_t ledbutton2;	// LED number for button2
 extern uint8_t ledarc;	// LED number start of arc ring
 extern uint8_t ledarcs;	// How many LED in arc ring
+extern char ledarcc1[2];	// Arc LED colour (bright)
+extern char ledarcc2[2];	// Arc LED colour (dim)
 extern uint8_t ledpulse;	// LED number start of pulsing
 extern uint8_t ledpulses;	// How many LED in pusling
+extern char ledpulsec[2];	// Pulse LED colour
 extern uint8_t ledblue;	// LED number start of blue LEDs
 extern uint8_t ledblues;	// How many LED in blue LED
 extern uint8_t ledgreen;	// LED number start of green LEDs
@@ -133,6 +137,7 @@ extern uint8_t ledred;	// LED number start of red LEDs
 extern uint8_t ledreds;	// How many LED in red LED
 extern uint8_t ledcylon;	// LED number start of cylon LEDs
 extern uint8_t ledcylons;	// How many LED in cylon LED
+extern char ledcylonc[2];	// cylon LED colour
 extern uint8_t visorclose;	// Angle (degrees) visor close
 extern uint8_t visoropen;	// Angle (degrees) visor open
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD

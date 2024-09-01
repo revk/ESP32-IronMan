@@ -8,15 +8,19 @@ gpio	rgb						// RGB LED chain
 u8	leds						// Number of LEDs in chain
 u8	led.eye1					// LED number for eye 1
 u8	led.eye2					// LED number for eye 2
-u8	led.eyes	1					// How many LEDs in eye
+u8	led.eyes	1				// How many LEDs in eye
+c1	led.eyec	C				// Eye LED colour
 u8	led.pwr						// LED number for servo PWR
 u8	led.pwm						// LED number for servo PWM
 u8	led.button1					// LED number for button1
 u8	led.button2					// LED number for button2
 u8	led.arc						// LED number start of arc ring
 u8	led.arcs					// How many LED in arc ring
+c1	led.arcc1	C				// Arc LED colour (bright)
+c1	led.arcc2	R				// Arc LED colour (dim)
 u8	led.pulse					// LED number start of pulsing
 u8	led.pulses					// How many LED in pusling
+c1	led.pulsec	R				// Pulse LED colour
 u8	led.blue					// LED number start of blue LEDs
 u8	led.blues					// How many LED in blue LED
 u8	led.green					// LED number start of green LEDs
@@ -25,5 +29,6 @@ u8	led.red						// LED number start of red LEDs
 u8	led.reds					// How many LED in red LED
 u8	led.cylon					// LED number start of cylon LEDs
 u8	led.cylons					// How many LED in cylon LED
+c1	led.cylonc	R				// cylon LED colour
 u8	visor.close	.live=1				// Angle (degrees) visor close
 u8	visor.open	.live=1				// Angle (degrees) visor open

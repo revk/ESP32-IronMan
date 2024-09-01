@@ -265,7 +265,7 @@ app_main ()
             // Static LEDs
             if (ledarc && ledarcs && strip)
                for (int i = ledarc; i < ledarc + ledarcs; i++)
-                  revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? 'C' : 'R'));
+                  revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? *ledarcc1 : *ledarcc2));
             if (ledblue && ledblues && strip)
                for (int i = ledblue; i < ledblue + ledblues; i++)
                   revk_led (strip, i - 1, 255, revk_rgb ('B'));
@@ -286,25 +286,25 @@ app_main ()
             revk_gpio_set (eye1, b.eyes);
             if (ledeye1 && ledeye2 <= leds)
                for (int i = 0; i < ledeyes; i++)
-                  revk_led (strip, i + ledeye1 - 1, 255, revk_rgb (b.eyes ? 'C' : 'K'));
+                  revk_led (strip, i + ledeye1 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
             // Eye 2
             revk_gpio_set (eye2, b.eyes);
             if (ledeye2 && ledeye2 <= leds)
                for (int i = 0; i < ledeyes; i++)
-                  revk_led (strip, i + ledeye2 - 1, 255, revk_rgb (b.eyes ? 'C' : 'K'));
+                  revk_led (strip, i + ledeye2 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
             if (ledpulse && ledpulses && strip)
             {
                static uint8_t cycle = 0;
                cycle += 8;
                for (int i = ledpulse; i < ledpulse + ledpulses && i <= leds; i++)
-                  revk_led (strip, i - 1, 64 + cos8[cycle] / 2, revk_rgb ('R'));
+                  revk_led (strip, i - 1, 64 + cos8[cycle] / 2, revk_rgb (*ledpulsec));
             }
             if (b.cylon && ledcylon && ledcylons && strip)
             {                   // Cylon
                static int8_t cycle = 0,
                   dir = 1;
                for (int i = ledcylon; i < ledcylon + ledcylons && i <= leds; i++)
-                  revk_led (strip, i - 1, 255, revk_rgb (i == ledcylon + cycle ? 'R' : 'K'));
+                  revk_led (strip, i - 1, 255, revk_rgb (i == ledcylon + cycle ? *ledcylonc : 'K'));
                if (cycle == ledcylons - 1)
                   dir = -1;
                else if (!cycle)

@@ -21,14 +21,18 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye1",.comment="LED number for eye 1",.group=1,.len=7,.dot=3,.ptr=&ledeye1,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye2",.comment="LED number for eye 2",.group=1,.len=7,.dot=3,.ptr=&ledeye2,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeyes",.comment="How many LEDs in eye",.group=1,.len=7,.dot=3,.def="1",.ptr=&ledeyes,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_STRING,.name="ledeyec",.comment="Eye LED colour",.group=1,.len=7,.dot=3,.def="C",.ptr=&ledeyec,.size=sizeof(char[2])},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwr",.comment="LED number for servo PWR",.group=1,.len=6,.dot=3,.ptr=&ledpwr,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwm",.comment="LED number for servo PWM",.group=1,.len=6,.dot=3,.ptr=&ledpwm,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton1",.comment="LED number for button1",.group=1,.len=10,.dot=3,.ptr=&ledbutton1,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton2",.comment="LED number for button2",.group=1,.len=10,.dot=3,.ptr=&ledbutton2,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledarc",.comment="LED number start of arc ring",.group=1,.len=6,.dot=3,.ptr=&ledarc,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledarcs",.comment="How many LED in arc ring",.group=1,.len=7,.dot=3,.ptr=&ledarcs,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_STRING,.name="ledarcc1",.comment="Arc LED colour (bright)",.group=1,.len=8,.dot=3,.def="C",.ptr=&ledarcc1,.size=sizeof(char[2])},
+ {.type=REVK_SETTINGS_STRING,.name="ledarcc2",.comment="Arc LED colour (dim)",.group=1,.len=8,.dot=3,.def="R",.ptr=&ledarcc2,.size=sizeof(char[2])},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulse",.comment="LED number start of pulsing",.group=1,.len=8,.dot=3,.ptr=&ledpulse,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulses",.comment="How many LED in pusling",.group=1,.len=9,.dot=3,.ptr=&ledpulses,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_STRING,.name="ledpulsec",.comment="Pulse LED colour",.group=1,.len=9,.dot=3,.def="R",.ptr=&ledpulsec,.size=sizeof(char[2])},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledblue",.comment="LED number start of blue LEDs",.group=1,.len=7,.dot=3,.ptr=&ledblue,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledblues",.comment="How many LED in blue LED",.group=1,.len=8,.dot=3,.ptr=&ledblues,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledgreen",.comment="LED number start of green LEDs",.group=1,.len=8,.dot=3,.ptr=&ledgreen,.size=sizeof(uint8_t)},
@@ -37,6 +41,7 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledreds",.comment="How many LED in red LED",.group=1,.len=7,.dot=3,.ptr=&ledreds,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylon",.comment="LED number start of cylon LEDs",.group=1,.len=8,.dot=3,.ptr=&ledcylon,.size=sizeof(uint8_t)},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylons",.comment="How many LED in cylon LED",.group=1,.len=9,.dot=3,.ptr=&ledcylons,.size=sizeof(uint8_t)},
+ {.type=REVK_SETTINGS_STRING,.name="ledcylonc",.comment="cylon LED colour",.group=1,.len=9,.dot=3,.def="R",.ptr=&ledcylonc,.size=sizeof(char[2])},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visorclose",.comment="Angle (degrees) visor close",.group=2,.len=10,.dot=5,.ptr=&visorclose,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visoropen",.comment="Angle (degrees) visor open",.group=2,.len=9,.dot=5,.ptr=&visoropen,.size=sizeof(uint8_t),.live=1},
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
@@ -129,14 +134,18 @@ uint8_t leds=0;
 uint8_t ledeye1=0;
 uint8_t ledeye2=0;
 uint8_t ledeyes=0;
+char ledeyec[2]="";
 uint8_t ledpwr=0;
 uint8_t ledpwm=0;
 uint8_t ledbutton1=0;
 uint8_t ledbutton2=0;
 uint8_t ledarc=0;
 uint8_t ledarcs=0;
+char ledarcc1[2]="";
+char ledarcc2[2]="";
 uint8_t ledpulse=0;
 uint8_t ledpulses=0;
+char ledpulsec[2]="";
 uint8_t ledblue=0;
 uint8_t ledblues=0;
 uint8_t ledgreen=0;
@@ -145,6 +154,7 @@ uint8_t ledred=0;
 uint8_t ledreds=0;
 uint8_t ledcylon=0;
 uint8_t ledcylons=0;
+char ledcylonc[2]="";
 uint8_t visorclose=0;
 uint8_t visoropen=0;
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
