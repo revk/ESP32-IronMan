@@ -24,6 +24,7 @@ beta:
 issue:
 	-git pull
 	-git submodule update --recursive
+	make -C PCB
 	-git commit -a
 	@make set
 	cp $(PROJECT_NAME)*.bin betarelease
