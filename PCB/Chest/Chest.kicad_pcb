@@ -7098,7 +7098,7 @@
 		(descr "USB Type C CMT R/A PCB  Mount Socket 16pin Power+Data")
 		(tags "USB-C")
 		(property "Reference" "J5"
-			(at 0 -6.51 360)
+			(at 0 -6.51 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "ea65f36c-8c37-457f-8f40-d28661ae1959")
@@ -7110,7 +7110,7 @@
 			)
 		)
 		(property "Value" "USB-C-Socket-H"
-			(at 0 -3.71 360)
+			(at 0 -3.71 0)
 			(layer "F.Fab")
 			(uuid "9e9ba5ee-a030-408f-bbd0-a8eed4660804")
 			(effects
@@ -13010,7 +13010,7 @@
 			)
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "f7b013d0-9872-46f5-b98e-2b897f400e84")
 			(effects
@@ -14416,7 +14416,7 @@
 		(uuid "c2b444bf-17c6-4ff3-952b-d6121c19481e")
 		(at 90.75 104 180)
 		(property "Reference" "C2"
-			(at 0 -0.8 360)
+			(at 0 -0.8 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "b96a9f26-4efc-4fbf-94f9-61459c23d73a")
@@ -14428,7 +14428,7 @@
 			)
 		)
 		(property "Value" "10uF 6.3V"
-			(at 0 1 360)
+			(at 0 1 0)
 			(layer "F.Fab")
 			(uuid "e4e5efee-edba-478c-8561-cfb1c8498b02")
 			(effects
@@ -14694,7 +14694,7 @@
 			)
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 -1 360)
+			(at 0 -1 0)
 			(layer "F.Fab")
 			(uuid "b795abb0-0fbc-4702-bedb-9ce2b574a380")
 			(effects
@@ -15000,7 +15000,7 @@
 		(descr "Capacitor SMD 1210 (3225 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "capacitor")
 		(property "Reference" "C7"
-			(at 0 -2.3 360)
+			(at 0 -2.3 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "6bda58e8-cb4c-4fe2-80f6-71f1dd9e9060")
@@ -15012,7 +15012,7 @@
 			)
 		)
 		(property "Value" "22uF 35V"
-			(at 0 2.3 360)
+			(at 0 2.3 0)
 			(layer "F.Fab")
 			(uuid "700dcc1d-79ba-43d9-8e32-82c3d463307c")
 			(effects
@@ -15023,7 +15023,7 @@
 			)
 		)
 		(property "Footprint" "RevK:C_1210"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "4f199cba-de94-4252-a014-f4f0bd0398a8")
@@ -15035,7 +15035,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "32bd5d05-88b2-4a47-bd94-995ea19c89e1")
@@ -15047,7 +15047,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "13792ec7-14bd-429e-a0eb-48591e68a072")
@@ -15144,7 +15144,7 @@
 			(uuid "9030a932-0b06-4221-be16-a13d3bb8a676")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "1f2aa2a5-5ddc-4621-9516-01a8335ce108")
 			(effects
@@ -15632,7 +15632,7 @@
 		(descr "Capacitor SMD 1210 (3225 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "capacitor")
 		(property "Reference" "C8"
-			(at 0 -2.3 360)
+			(at 0 -2.3 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a06576e5-d775-406b-8c6f-bc8748384479")
@@ -15644,7 +15644,7 @@
 			)
 		)
 		(property "Value" "22uF 35V"
-			(at 0 2.3 360)
+			(at 0 2.3 0)
 			(layer "F.Fab")
 			(uuid "8041406a-bfc6-41df-bc64-e1a2062940b6")
 			(effects
@@ -15655,7 +15655,7 @@
 			)
 		)
 		(property "Footprint" "RevK:C_1210"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "93689240-8413-45ab-99cd-ea5d23d29bd4")
@@ -15667,7 +15667,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "0b5a6cbf-75c7-4eb5-b1b8-997b0b859575")
@@ -15679,7 +15679,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "93640449-8276-4513-9f79-7aceb58352fe")
@@ -15776,7 +15776,7 @@
 			(uuid "ff6cca1b-d3c1-423c-92de-f4e78a23fce3")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "caad202e-3025-451b-a2a3-98d619d806b4")
 			(effects
@@ -17819,7 +17819,7 @@
 		(descr "Capacitor SMD 1210 (3225 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "capacitor")
 		(property "Reference" "C6"
-			(at 0 -2.3 360)
+			(at 0 -2.3 0)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "3c6f30fa-48a3-4ff4-9072-60aeeb4fa959")
@@ -17831,7 +17831,7 @@
 			)
 		)
 		(property "Value" "22uF 35V"
-			(at 0 2.3 360)
+			(at 0 2.3 0)
 			(layer "F.Fab")
 			(uuid "c16c1912-c3bf-4ff8-8812-169fd3ce6577")
 			(effects
@@ -17842,7 +17842,7 @@
 			)
 		)
 		(property "Footprint" "RevK:C_1210"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "8a41fa0e-9f04-4b25-8f87-5bae67eda457")
@@ -17854,7 +17854,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "c298f1c0-da7b-4ece-92cd-6e54ad246c69")
@@ -17866,7 +17866,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "68f546cf-0b70-4c47-99bf-204d98822a76")
@@ -17963,7 +17963,7 @@
 			(uuid "c75f6331-e116-4d67-b58e-b426a3e63159")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "dfca4f31-6b24-448f-b60a-81d26e47df84")
 			(effects
