@@ -43,15 +43,15 @@ struct
 {
    uint8_t init:1;              // Startup
    uint8_t lowpower:1;          // WiFI off
-   uint8_t changed:1;           // Changed setting
    uint8_t eyes:1;              // Eyes on
    uint8_t pwr:1;               // Servo power on
    uint8_t open:1;              // Visor open
    uint8_t connect:1;           // WiFi connect
+   uint8_t cylon:1;             // Cylon effect
    uint8_t connected:1;         // WiFi connected
    uint8_t pushed1:1;           // Pushed button1
    uint8_t pushed2:1;           // Pushed button2
-} b;
+} b = { 0 };
 
 static inline uint32_t
 angle_to_compare (int angle)
@@ -77,6 +77,36 @@ app_callback (int client, const char *prefix, const char *target, const char *su
       return NULL;              //Not for us or not a command from main MQTT
    if (!strcmp (suffix, "connect"))
       b.connect = 1;
+   if (!strcmp (suffix, "up"))
+   {
+      b.open = 1;               // Open
+      b.pwr = 1;                // Power on
+      return NULL;
+   }
+   if (!strcmp (suffix, "down"))
+   {
+      b.open = 0;               // Closed
+      b.pwr = 1;                // Power on
+      return NULL;
+   }
+   if (!strcmp (suffix, "cylon"))
+   {
+      b.eyes = 0;               // Eyes off
+      b.cylon = 1;
+      return NULL;
+   }
+   if (!strcmp (suffix, "eyes"))
+   {
+      b.eyes = 1;               // Eyes on
+      b.cylon = 0;
+      return NULL;
+   }
+   if (!strcmp (suffix, "dark"))
+   {
+      b.eyes = 0;               // Eyes off
+      b.cylon = 0;
+      return NULL;
+   }
    return NULL;
 }
 
@@ -138,7 +168,7 @@ app_main ()
          .flags.invert_pwm = pwm.invert,
       };
       ESP_ERROR_CHECK (mcpwm_new_generator (oper, &generator_config, &generator));
-      ESP_ERROR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (0)));
+      ESP_ERROR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (visorclose)));
       ESP_ERROR_CHECK (mcpwm_generator_set_action_on_timer_event (generator,
                                                                   MCPWM_GEN_TIMER_EVENT_ACTION (MCPWM_TIMER_DIRECTION_UP,
                                                                                                 MCPWM_TIMER_EVENT_EMPTY,
@@ -153,14 +183,9 @@ app_main ()
    b.eyes = 1;
    b.init = 1;
 
-   if (ledarc && strip)
-      for (int i = ledarc; i < ledarc + ledarcs; i++)
-         revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? 'C' : 'R'));
-
    while (1)
    {
       usleep (50000);
-      uint32_t up = uptime ();
       // Main button
       uint8_t push = revk_gpio_get (button1);
       static uint8_t push1 = 0;
@@ -179,16 +204,19 @@ app_main ()
          if (press1 == 1)
          {
             if (b.pwr)
-               b.open = 1 - b.open;     // Simple visor toggle
-            b.pwr = 1;          // Power on
-            b.eyes = 1;         // Eyes on
+               b.open ^= 1;
          } else if (press1 == 2)
          {                      // off
+            if (b.pwr)
+               b.eyes ^= 1;     // Eyes off
+            b.cylon = ~b.eyes;
+         } else if (press1 == 3)
+         {
             b.eyes = 0;         // Eyes off
             b.pwr = 0;          // power off
-         } else if (press1 == 3)
+            b.cylon = 0;        // Cylon off
             revk_restart (1, "Reboot");
-         b.changed = 1;
+         }
          press1 = 0;
       }
       // Second button
@@ -207,7 +235,6 @@ app_main ()
       {                         // Action
          push2 = 0;
          // No action for now
-         b.changed = 1;
          press2 = 0;
       }
       if (b.connect)
@@ -216,22 +243,33 @@ app_main ()
          b.connect = 0;
          revk_command ("upgrade", NULL);
       }
-      if (!b.lowpower && up > (b.connected ? 300 : 60))
-      {
-         b.lowpower = 1;
-         revk_disable_wifi ();
-      }
       if (strip)
       {
+         int angle = b.open ? visoropen : visorclose;
+         static int wasangle = -1;
+         if (b.init || angle != wasangle)
+         {
+            if (pwm.set)
+            {                   // PWM
+               REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (angle)));
+               ESP_LOGE (TAG, "Angle %d-%d value %ld", wasangle, angle, angle_to_compare (angle));
+            }
+            wasangle = angle;
+         }
+         for (int i = 0; i < leds; i++)
+            revk_led (strip, i, 255, 0);        // Clear
          if (blink[0].num == rgb.num)
             revk_led (strip, 0, 255, revk_blinker ());
-         if (b.init || b.changed)
+         if (!revk_shutting_down (NULL))
          {
-            b.changed = 0;
-            // PWM
-            REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (b.open ? visoropen : visorclose)));
-            ESP_LOGE (TAG, "Angle %d value %ld", b.open ? visoropen : visorclose,
-                      angle_to_compare (b.open ? visoropen : visorclose));
+            // Static LEDs
+            if (ledarc && ledarcs && strip)
+               for (int i = ledarc; i < ledarc + ledarcs; i++)
+                  revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? *ledarcc1 : *ledarcc2));
+            if (ledfixed && ledfixeds && strip)
+               for (int i = ledfixed; i < ledfixed + ledfixeds; i++)
+                  revk_led (strip, i - 1, 255, revk_rgb (*ledfixedc));
+
             if (ledpwm && ledpwm <= leds)
                revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
             // PWR
@@ -241,19 +279,33 @@ app_main ()
             // Eye 1
             revk_gpio_set (eye1, b.eyes);
             if (ledeye1 && ledeye2 <= leds)
-               revk_led (strip, ledeye1 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
+               for (int i = 0; i < ledeyes; i++)
+                  revk_led (strip, i + ledeye1 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
             // Eye 2
             revk_gpio_set (eye2, b.eyes);
             if (ledeye2 && ledeye2 <= leds)
-               revk_led (strip, ledeye2 - 1, 255, revk_rgb (b.eyes ? 'C' : 'R'));
-            // ARC
-
+               for (int i = 0; i < ledeyes; i++)
+                  revk_led (strip, i + ledeye2 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
+            if (ledpulse && ledpulses && strip)
+            {
+               static uint8_t cycle = 0;
+               cycle += 8;
+               for (int i = ledpulse; i < ledpulse + ledpulses && i <= leds; i++)
+                  revk_led (strip, i - 1, 64 + cos8[cycle] / 2, revk_rgb (*ledpulsec));
+            }
+            if (b.cylon && ledcylon && ledcylons && strip)
+            {                   // Cylon
+               static int8_t cycle = 0,
+                  dir = 1;
+               for (int i = ledcylon; i < ledcylon + ledcylons && i <= leds; i++)
+                  revk_led (strip, i - 1, 255, revk_rgb (i == ledcylon + cycle ? *ledcylonc : 'K'));
+               if (cycle == ledcylons - 1)
+                  dir = -1;
+               else if (!cycle)
+                  dir = 1;
+               cycle += dir;
+            }
          }
-	 static uint8_t cycle=0;
-	 cycle+=10;
-         if (ledpulse && strip)
-            for (int i = ledpulse; i < ledpulse + ledpulses; i++)
-               revk_led (strip, i - 1, cos8[cycle]/2, revk_rgb('R'));
          led_strip_refresh (strip);
       }
       if (blink[0].num != rgb.num)
