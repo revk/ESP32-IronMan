@@ -2,7 +2,7 @@
 
 ## Chest
 
-![Chest](https://github.com/user-attachments/assets/d8829d01-987b-45fc-b661-21e0d87628f7)
+![a](https://github.com/user-attachments/assets/3d78c3bb-1657-4569-b92c-46161b9cf601)
 
 - Four LED driver outputs
 - Two button inputs
