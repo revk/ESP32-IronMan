@@ -9,4 +9,4 @@
 - Stereo speaker outputs
 - Stereo microphone (not needed for IronMan suit)
 - Micro SD card slot
-- One board LED
+- On board LED
