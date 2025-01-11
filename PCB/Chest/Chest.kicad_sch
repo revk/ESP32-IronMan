@@ -15269,7 +15269,7 @@
 				)
 			)
 		)
-		(property "Value" "210R2"
+		(property "Value" "210R"
 			(at 244.348 76.454 90)
 			(effects
 				(font
@@ -15297,6 +15297,15 @@
 		)
 		(property "Description" "Resistor"
 			(at 244.475 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C226891"
+			(at 244.475 78.74 90)
 			(effects
 				(font
 					(size 1.27 1.27)
