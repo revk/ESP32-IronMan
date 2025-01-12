@@ -1,6 +1,8 @@
-all: stl
+all: png stl
 
 stl:    Chest/Chest.stl
+
+png:	$(patsubst %.kicad_pcb,%.png,$(wildcard */*.kicad_pcb))
 
 PCBCase/case: PCBCase/case.c
 	make -C PCBCase
@@ -13,3 +15,5 @@ PCBCase/case: PCBCase/case.c
 Chest/Chest.scad: Chest/Chest.kicad_pcb PCBCase/case Makefile
 	PCBCase/case -o $@ $< --edge=2 --bottom=2 --top=7 --pcb=2
 
+%.png:	%.kicad_pcb
+	PCBCase/render	$<
