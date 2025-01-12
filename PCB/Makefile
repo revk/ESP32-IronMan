@@ -18,5 +18,5 @@ PCBCase/clean: PCBCase/clean.c
 Chest/Chest.scad: Chest/Chest.kicad_pcb PCBCase/case Makefile
 	PCBCase/case -o $@ $< --edge=2 --bottom=2 --top=7 --pcb=2
 
-%.png:	%.kicad_pcb PCBCase/clean Makefile
+%.png:	%.kicad_pcb PCBCase/clean PCBCase/render Makefile
 	PCBCase/render $<
