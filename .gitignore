@@ -8,6 +8,7 @@
 */*.old
 */*/*.old
 *.pem
+*.BAK
 build/*
 sdkconfig
 managed_components

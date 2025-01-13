@@ -22,14 +22,12 @@ beta:
 	git push
 
 issue:
+	make -C PCB
 	-git pull
-	-git submodule update --recursive
 	-git commit -a
-	@make set
-	cp $(PROJECT_NAME)*.bin betarelease
-	cp $(PROJECT_NAME)*.bin release
-	git commit -a -m Release
-	git push
+	cp -f betarelease/$(PROJECT_NAME)*.bin release
+	-git commit -a -m Release
+	-git push
 
 main/settings.h:     components/ESP32-RevK/revk_settings main/settings.def components/ESP32-RevK/settings.def
 	components/ESP32-RevK/revk_settings $^
@@ -37,7 +35,7 @@ main/settings.h:     components/ESP32-RevK/revk_settings main/settings.def compo
 components/ESP32-RevK/revk_settings: components/ESP32-RevK/revk_settings.c
 	make -C components/ESP32-RevK
 
-set:    wroom solo pico s3
+set:    s3
 
 s3:
 	components/ESP32-RevK/setbuildsuffix -S3-MINI-N4-R2
@@ -75,4 +73,5 @@ update:
 	-git pull
 	-git commit -a
 	git submodule update --init --recursive --remote
-	git commit -a -m "Library update"
+	idf.py update-dependencies
+	-git commit -a -m "Library update"
