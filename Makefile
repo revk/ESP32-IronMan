@@ -35,7 +35,7 @@ settings.h:     components/ESP32-RevK/revk_settings settings.def components/ESP3
 components/ESP32-RevK/revk_settings: components/ESP32-RevK/revk_settings.c
 	make -C components/ESP32-RevK
 
-set:    wroom solo pico s3
+set:    s3
 
 s3:
 	components/ESP32-RevK/setbuildsuffix -S3-MINI-N4-R2
