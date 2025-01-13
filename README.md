@@ -6,4 +6,4 @@ Software and PCBs for an IronMan suit.
 
 A controller for the Chest
 
-<img width=25% src='PCB/Chest/Chest.png'><img width=25% src='PCB/Chest/Chest-bottom.png'>
+<img width=45% src='PCB/IronMan/IronMan.png'><img width=45% src='PCB/IronMan/IronMan-bottom.png'>

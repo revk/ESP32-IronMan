@@ -1,6 +1,6 @@
 all: png stl
 
-stl:    Chest/Chest.stl
+stl:    IronMan/IronMan.stl
 
 png:	$(patsubst %.kicad_pcb,%.png,$(wildcard */*.kicad_pcb))
 
@@ -15,7 +15,7 @@ PCBCase/clean: PCBCase/clean.c
 	/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD $< -o $@
 	echo "Made $@"
 
-Chest/Chest.scad: Chest/Chest.kicad_pcb PCBCase/case Makefile
+IronMan/IronMan.scad: IronMan/IronMan.kicad_pcb PCBCase/case Makefile
 	PCBCase/case -o $@ $< --edge=2 --bottom=2 --top=7 --pcb=2
 
 %.png:	%.kicad_pcb PCBCase/clean PCBCase/render Makefile

@@ -1,8 +1,8 @@
 # PCBs for IronMan Suit
 
-## Chest
+## Controller
 
-![Chest board](Chest/Chest.png)
+![Controller board](IronMan/IronMan.png)
 
 - Four LED driver outputs
 - Two button inputs
