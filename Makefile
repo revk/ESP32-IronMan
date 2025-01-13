@@ -32,7 +32,7 @@ issue:
 	git push
 
 main/settings.h:     components/ESP32-RevK/revk_settings main/settings.def components/ESP32-RevK/settings.def
-	components/ESP32-RevK/revk_settings $^ -h $@
+	components/ESP32-RevK/revk_settings $^
 
 components/ESP32-RevK/revk_settings: components/ESP32-RevK/revk_settings.c
 	make -C components/ESP32-RevK
