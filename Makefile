@@ -26,7 +26,7 @@ issue:
 	-git pull
 	-git commit -a
 	cp -f betarelease/$(PROJECT_NAME)*.bin release
-	git commit -a -m Release
+	-git commit -a -m Release
 	-git push
 
 settings.h:     components/ESP32-RevK/revk_settings settings.def components/ESP32-RevK/settings.def
