@@ -127,7 +127,11 @@ app_main ()
       led_strip_config_t strip_config = {
          .strip_gpio_num = rgb.num,
          .max_leds = leds,      // LIGHTS, blinker, beeper, clicker, and status
-         .led_pixel_format = LED_PIXEL_FORMAT_GRB,      // Pixel format of your LED strip
+#ifdef	LED_STRIP_COLOR_COMPONENT_FMT_GRB
+            .color_component_format = LED_STRIP_COLOR_COMPONENT_FMT_GRB,
+#else
+            .led_pixel_format = LED_PIXEL_FORMAT_GRB,
+#endif
          .led_model = LED_MODEL_WS2812, // LED strip model
          .flags.invert_out = rgb.invert,
       };

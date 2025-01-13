@@ -20,6 +20,7 @@ struct revk_settings_s {
  uint8_t len:4;
  uint8_t type:3;
  uint8_t decimal:5;
+ uint8_t digits:5;
  uint8_t array:7;
  uint8_t malloc:1;
  uint8_t revk:1;
@@ -28,6 +29,7 @@ struct revk_settings_s {
  uint8_t fix:1;
  uint8_t set:1;
  uint8_t hex:1;
+ uint8_t base32:1;
  uint8_t base64:1;
  uint8_t secret:1;
  uint8_t dq:1;
@@ -58,6 +60,10 @@ enum {
  REVK_SETTINGS_BITFIELD_prefixhost,
 #ifdef	CONFIG_REVK_BLINK_DEF
 #endif
+ REVK_SETTINGS_BITFIELD_dark,
+#ifdef  CONFIG_IDF_TARGET_ESP32S3
+#else
+#endif
 #ifdef  CONFIG_REVK_APMODE
 #ifdef	CONFIG_REVK_APCONFIG
 #endif
@@ -86,6 +92,10 @@ struct revk_settings_bits_s {
  uint8_t prefixapp:1;	// MQTT use appname/ in front of hostname in topic
  uint8_t prefixhost:1;	// MQTT use (appname/)hostname/topic instead of topic/(appname/)hostname
 #ifdef	CONFIG_REVK_BLINK_DEF
+#endif
+ uint8_t dark:1;	// Default LED off
+#ifdef  CONFIG_IDF_TARGET_ESP32S3
+#else
 #endif
 #ifdef  CONFIG_REVK_APMODE
 #ifdef	CONFIG_REVK_APCONFIG
@@ -158,13 +168,18 @@ extern char* topicstate;	// MQTT Topic for state
 extern char* topicevent;	// MQTT Topic for event
 extern char* topicinfo;	// MQTT Topic for info
 extern char* topicerror;	// MQTT Topic for error
+extern char* topicha;	// MQTT Topic for homeassistant
 #define	prefixapp	revk_settings_bits.prefixapp
 #define	prefixhost	revk_settings_bits.prefixhost
 #ifdef	CONFIG_REVK_BLINK_DEF
 extern revk_gpio_t blink[3];	// LED array
 #endif
-extern revk_settings_blob_t* clientkey;	// Client Key (OTA and MQTT TLS)
-extern revk_settings_blob_t* clientcert;	// Client certificate (OTA and MQTT TLS)
+#define	dark	revk_settings_bits.dark
+#ifdef  CONFIG_IDF_TARGET_ESP32S3
+extern revk_gpio_t factorygpio;	// Factory reset GPIO (press 3 times)
+#else
+extern revk_gpio_t factorygpio;	// Factory reset GPIO (press 3 times)
+#endif
 #ifdef  CONFIG_REVK_APMODE
 #ifdef	CONFIG_REVK_APCONFIG
 extern uint16_t apport;	// TCP port for config web pages on AP
@@ -178,8 +193,10 @@ extern char* mqtthost[CONFIG_REVK_MQTT_CLIENTS];	// MQTT hostname
 extern uint16_t mqttport[CONFIG_REVK_MQTT_CLIENTS];	// MQTT port
 extern char* mqttuser[CONFIG_REVK_MQTT_CLIENTS];	// MQTT username
 extern char* mqttpass[CONFIG_REVK_MQTT_CLIENTS];	// MQTT password
-extern revk_settings_blob_t* mqttcert[CONFIG_REVK_MQTT_CLIENTS];	// MQTT certificate
+extern revk_settings_blob_t* mqttcert[CONFIG_REVK_MQTT_CLIENTS];	// MQTT CA certificate
 #endif
+extern revk_settings_blob_t* clientkey;	// Client Key (OTA and MQTT TLS)
+extern revk_settings_blob_t* clientcert;	// Client certificate (OTA and MQTT TLS)
 #if     defined(CONFIG_REVK_WIFI) || defined(CONFIG_REVK_MESH)
 extern uint16_t wifireset;	// Restart if WiFi off for this long (seconds)
 extern char* wifissid;	// WiFI SSID (name)
