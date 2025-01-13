@@ -1,6 +1,6 @@
 // Settings
 // Generated from:-
-// settings.def
+// main/settings.def
 // components/ESP32-RevK/settings.def
 
 #include <stdint.h>
