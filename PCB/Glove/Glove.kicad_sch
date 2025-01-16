@@ -3589,7 +3589,7 @@
 						(type default)
 					)
 					(fill
-						(type none)
+						(type outline)
 					)
 				)
 				(arc
@@ -3601,7 +3601,7 @@
 						(type default)
 					)
 					(fill
-						(type outline)
+						(type none)
 					)
 				)
 				(arc
@@ -3711,17 +3711,6 @@
 						(type none)
 					)
 				)
-				(circle
-					(center 0 -5.842)
-					(radius 1.27)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
 				(polyline
 					(pts
 						(xy 0 -5.842) (xy 0 4.318)
@@ -3732,6 +3721,17 @@
 					)
 					(fill
 						(type none)
+					)
+				)
+				(circle
+					(center 0 -5.842)
+					(radius 1.27)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
 					)
 				)
 				(rectangle
@@ -5082,7 +5082,7 @@
 		(uuid "6e7794f4-edc0-48f3-9d97-672531a93b47")
 	)
 	(no_connect
-		(at 42.545 45.72)
+		(at 42.545 43.18)
 		(uuid "6ec53abc-4927-44c8-9d1e-e43f9f01c72c")
 	)
 	(no_connect
@@ -5126,7 +5126,7 @@
 		(uuid "b1960b1b-22cb-44a6-99a5-10223270c0c4")
 	)
 	(no_connect
-		(at 42.545 78.74)
+		(at 42.545 40.64)
 		(uuid "cd011b49-46d7-4d76-895b-476d691ee807")
 	)
 	(no_connect
@@ -5138,7 +5138,7 @@
 		(uuid "d99a6752-137f-46d2-8ed4-1da00c02562f")
 	)
 	(no_connect
-		(at 42.545 60.96)
+		(at 42.545 35.56)
 		(uuid "db57a8c3-a0e1-4e2f-ba21-72adfadc8a0d")
 	)
 	(no_connect
@@ -5146,7 +5146,7 @@
 		(uuid "e7ee256b-63e9-4f56-b948-9a094e69cf1a")
 	)
 	(no_connect
-		(at 42.545 76.2)
+		(at 42.545 48.26)
 		(uuid "fe97c4db-f64b-43ae-90ef-76f3be25f152")
 	)
 	(wire
@@ -5278,16 +5278,6 @@
 			(type default)
 		)
 		(uuid "57c0c267-8bf9-4cc7-b734-d71a239ac313")
-	)
-	(wire
-		(pts
-			(xy 107.95 100.33) (xy 111.76 100.33)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5d0fe0f5-e098-4463-9937-b68ac3a818f1")
 	)
 	(wire
 		(pts
@@ -5501,7 +5491,7 @@
 	)
 	(global_label "CHARGING"
 		(shape input)
-		(at 42.545 40.64 180)
+		(at 42.545 76.2 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5511,7 +5501,7 @@
 		)
 		(uuid "016ef1c0-c6a0-4a89-9bfe-51102b72b7e1")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 30.7796 40.64 0)
+			(at 30.7796 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5763,7 +5753,7 @@
 	)
 	(global_label "LED"
 		(shape output)
-		(at 42.545 43.18 180)
+		(at 42.545 60.96 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5773,7 +5763,7 @@
 		)
 		(uuid "7b1c2385-c198-4b65-a95d-950e9b1ff07d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 36.7669 43.18 0)
+			(at 36.7669 60.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5917,7 +5907,7 @@
 	)
 	(global_label "BTN"
 		(shape input)
-		(at 42.545 35.56 180)
+		(at 42.545 38.1 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5927,7 +5917,7 @@
 		)
 		(uuid "bf1b6493-dbeb-461a-9014-9ef220ed6f7a")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 36.6459 35.56 0)
+			(at 36.6459 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6005,7 +5995,7 @@
 	)
 	(global_label "USB"
 		(shape input)
-		(at 42.545 48.26 180)
+		(at 42.545 78.74 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6015,7 +6005,7 @@
 		)
 		(uuid "d58a8389-56a4-4ee0-8b7d-eb6bfef04785")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 36.404 48.26 0)
+			(at 36.404 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6049,7 +6039,7 @@
 	)
 	(global_label "RGB"
 		(shape output)
-		(at 42.545 38.1 180)
+		(at 42.545 45.72 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6059,7 +6049,7 @@
 		)
 		(uuid "e1c30a32-820e-4b17-aec9-5cb8b76f0ccc")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 36.404 38.1 0)
+			(at 36.404 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6673,7 +6663,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB Rotation Offset" "-90"
+		(property "Rotation Offset" "90"
 			(at 187.325 32.385 0)
 			(effects
 				(font
@@ -8923,7 +8913,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 107.95 100.33 270)
+		(at 111.76 100.33 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8932,7 +8922,7 @@
 		(fields_autoplaced yes)
 		(uuid "5b69f6ee-7688-4a10-8d18-1d0468a831e7")
 		(property "Reference" "#PWR03"
-			(at 101.6 100.33 0)
+			(at 111.76 106.68 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8941,16 +8931,16 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 104.7751 100.33 90)
+			(at 113.665 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
-			(at 107.95 100.33 0)
+			(at 111.76 100.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8959,7 +8949,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 107.95 100.33 0)
+			(at 111.76 100.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8968,7 +8958,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 107.95 100.33 0)
+			(at 111.76 100.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11837,6 +11827,15 @@
 			)
 		)
 		(property "LCSC Part #" "C295747"
+			(at 137.16 67.945 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Rotation Offset" "180"
 			(at 137.16 67.945 0)
 			(effects
 				(font
