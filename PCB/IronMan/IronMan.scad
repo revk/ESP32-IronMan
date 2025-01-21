@@ -1,6 +1,6 @@
 // Generated case design for IronMan/IronMan.kicad_pcb
 // By https://github.com/revk/PCBCase
-// Generated 2025-01-13 08:54:07
+// Generated 2025-01-21 11:03:52
 // title:	IronManChest
 // rev:	1
 // company:	Adrian Kennard, Andrews & Arnold Ltd
@@ -33,7 +33,7 @@ translate([46.000000,4.500000,1.200000])rotate([0,0,-90.000000])m1(part,hole,blo
 translate([24.300000,9.300000,1.200000])rotate([0,0,180.000000])m2(part,hole,block,casetop); // RevK:R_0402_ R_0402_1005Metric (back)
 translate([36.250000,17.700000,1.200000])rotate([0,0,-90.000000])m2(part,hole,block,casetop); // RevK:R_0402_ R_0402_1005Metric (back)
 translate([29.650000,17.700000,1.200000])rotate([0,0,-90.000000])m2(part,hole,block,casetop); // RevK:R_0402_ R_0402_1005Metric (back)
-translate([44.300000,37.600000,1.200000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
+translate([42.300000,37.900000,1.200000])rotate([0,0,180.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
 translate([17.000000,27.500000,1.200000])rotate([0,0,90.000000])m4(part,hole,block,casetop); // C5 (back)
 translate([41.000000,26.000000,1.200000])rotate([0,0,-90.000000])m1(part,hole,block,casetop); // D2 (back)
 translate([44.000000,15.000000,1.200000])rotate([0,0,-90.000000])m4(part,hole,block,casetop); // C5 (back)
@@ -59,25 +59,25 @@ translate([34.050000,17.700000,1.200000])rotate([0,0,-90.000000])m2(part,hole,bl
 translate([15.000000,4.500000,1.200000])rotate([0,0,90.000000])m1(part,hole,block,casetop); // D2 (back)
 translate([34.000000,8.000000,1.200000])m10(part,hole,block,casetop); // J12 (back)
 translate([27.450000,17.700000,1.200000])rotate([0,0,-90.000000])m2(part,hole,block,casetop); // RevK:R_0402_ R_0402_1005Metric (back)
-translate([42.300000,37.600000,1.200000])rotate([0,0,180.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
+translate([42.300000,37.100000,1.200000])rotate([0,0,180.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
 translate([15.100000,40.600000,1.200000])rotate([0,0,-90.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
 translate([22.500000,9.300000,1.200000])rotate([0,0,180.000000])m2(part,hole,block,casetop); // RevK:R_0402_ R_0402_1005Metric (back)
 translate([22.500000,13.200000,1.200000])rotate([0,0,180.000000])m7(part,hole,block,casetop); // RevK:C_0603_ C_0603_1608Metric (back)
 translate([53.000000,4.500000,1.200000])rotate([0,0,180.000000])m9(part,hole,block,casetop); // J11 (back)
 translate([46.000000,6.500000,1.200000])rotate([0,0,90.000000])m2(part,hole,block,casetop); // RevK:R_0402_ R_0402_1005Metric (back)
 translate([22.500000,11.200000,1.200000])rotate([0,0,180.000000])m11(part,hole,block,casetop); // RevK:SOT-23-6-MD8942 SOT-23-6 (back)
-translate([16.500000,34.000000,1.200000])rotate([0,0,180.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
-translate([41.500000,39.100000,1.200000])rotate([0,0,-90.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
+translate([16.000000,33.500000,1.200000])rotate([0,0,-90.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
+translate([41.100000,39.500000,1.200000])rotate([0,0,-90.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
 translate([20.000000,12.500000,1.200000])rotate([0,0,-90.000000])m7(part,hole,block,casetop); // RevK:C_0603_ C_0603_1608Metric (back)
 translate([39.000000,33.500000,1.200000])rotate([0,0,-90.000000])m2(part,hole,block,casetop); // RevK:R_0402_ R_0402_1005Metric (back)
 translate([17.000000,15.000000,1.200000])rotate([0,0,90.000000])m4(part,hole,block,casetop); // C5 (back)
 translate([8.000000,38.000000,1.200000])m9(part,hole,block,casetop); // J11 (back)
 translate([15.500000,9.500000,1.200000])rotate([0,0,-90.000000])m2(part,hole,block,casetop); // RevK:R_0402_ R_0402_1005Metric (back)
-translate([16.500000,33.000000,1.200000])rotate([0,0,180.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
+translate([17.000000,33.500000,1.200000])rotate([0,0,-90.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
 translate([16.500000,9.500000,1.200000])rotate([0,0,90.000000])m2(part,hole,block,casetop); // RevK:R_0402_ R_0402_1005Metric (back)
-translate([21.700000,26.500000,1.200000])m12(part,hole,block,casetop); // D3 (back)
+translate([21.250000,28.000000,1.200000])m12(part,hole,block,casetop); // D3 (back)
 translate([8.000000,27.500000,1.200000])m6(part,hole,block,casetop); // J8 (back)
-translate([20.300000,26.300000,1.200000])rotate([0,0,90.000000])m1(part,hole,block,casetop); // D2 (back)
+translate([19.750000,27.000000,1.200000])rotate([0,0,90.000000])m1(part,hole,block,casetop); // D2 (back)
 translate([21.500000,30.500000,1.200000])rotate([0,0,-90.000000])m3(part,hole,block,casetop); // RevK:C_0402 C_0402_1005Metric (back)
 translate([41.500000,20.000000,1.200000])rotate([0,0,180.000000])m1(part,hole,block,casetop); // D2 (back)
 translate([44.000000,27.500000,1.200000])rotate([0,0,-90.000000])m4(part,hole,block,casetop); // C5 (back)
