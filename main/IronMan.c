@@ -327,7 +327,6 @@ app_main ()
    {
       if (!led)
          return;
-      led--;
       int s = 0;
       while (s < STRIPS)
          if (led >= stripcount[s])
@@ -336,7 +335,7 @@ app_main ()
             break;
       if (s == STRIPS)
          return;
-      revk_led (strip[s], led + 1, level, colour);
+      revk_led (strip[s], led, level, colour);
    }
 
    while (1)
