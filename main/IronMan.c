@@ -13,6 +13,7 @@ static const char __attribute__((unused)) TAG[] = "IronMan";
 #include "esp_crt_bundle.h"
 #include <driver/sdmmc_host.h>
 #include "esp_vfs_fat.h"
+#include <driver/i2s_std.h>
 #include <hal/spi_types.h>
 #include <driver/gpio.h>
 #include <driver/mcpwm_prelude.h>
@@ -59,6 +60,9 @@ struct
    uint8_t pushed1:1;           // Pushed button1
    uint8_t pushed2:1;           // Pushed button2
 } b = { 0 };
+
+const char sd_mount[] = "/sd";
+const char *play = NULL;
 
 static inline uint32_t
 angle_to_compare (int angle)
@@ -143,12 +147,66 @@ spk_task (void *arg)
       .disk_status_check_enable = 1,
    };
    sdmmc_card_t *card = NULL;
-
-   // TODO SD card mount / dismount logic
-   // TODO SPK start/stop for WAV file
-
    while (1)
    {
+      while (!revk_gpio_get (sdcd))
+         usleep (100000);
+      e = esp_vfs_fat_sdmmc_mount (sd_mount, &host, &slot, &mount_config, &card);
+      if (e)
+      {
+         ESP_LOGE (TAG, "SD mount failed");
+         sleep (10);
+         continue;
+      }
+      while (revk_gpio_get (sdcd))
+      {
+         if (!play)
+         {
+            usleep (10000);
+            continue;
+         }
+         // Find WAV file
+
+         // Start speaker
+         i2s_chan_handle_t spk_handle = { 0 };
+         ESP_LOGE (TAG, "Spk init PWR %d BCLK %d DAT %d LR %d", spkpwr.num, spkbclk.num, spkdata.num, spklrc.num);
+         revk_gpio_output (spkpwr, 1);  // Power on
+
+         i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG (I2S_NUM_AUTO, I2S_ROLE_MASTER);
+         e = i2s_new_channel (&chan_cfg, &spk_handle, NULL);
+         i2s_std_config_t cfg = {
+		 // TODO from WAV file
+            //.clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG (spkfreq),
+            //.slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG (sizeof (audio_t) == 1 ? I2S_DATA_BIT_WIDTH_8BIT : sizeof (audio_t) == 2 ? I2S_DATA_BIT_WIDTH_16BIT : I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_MONO),
+            .gpio_cfg = {
+                         .mclk = I2S_GPIO_UNUSED,
+                         .bclk = spkbclk.num,
+                         .ws = spklrc.num,
+                         .dout = spkdata.num,
+                         .din = I2S_GPIO_UNUSED,
+                         .invert_flags = {
+                                          .mclk_inv = false,
+                                          .bclk_inv = spkbclk.invert,
+                                          .ws_inv = spklrc.invert,
+                                          },
+                         },
+         };
+         if (!e)
+            e = i2s_channel_init_std_mode (spk_handle, &cfg);
+         if (!e)
+            e = i2s_channel_enable (spk_handle);
+         if (!e)
+         {
+            // Play file
+
+         }
+         // Power off
+         revk_gpio_output (spkpwr, 0);  // Power off
+         i2s_channel_disable (spk_handle);
+         i2s_del_channel (spk_handle);
+         sleep (1);
+      }
+      esp_vfs_fat_sdcard_unmount (sd_mount, card);
       sleep (1);
    }
 }
