@@ -11,11 +11,18 @@ static const char __attribute__((unused)) TAG[] = "IronMan";
 #include "esp_http_client.h"
 #include "esp_http_server.h"
 #include "esp_crt_bundle.h"
+#include <driver/sdmmc_host.h>
+#include "esp_vfs_fat.h"
 #include <hal/spi_types.h>
 #include <driver/gpio.h>
 #include <driver/mcpwm_prelude.h>
 
-led_strip_handle_t strip = NULL;
+#define	typeisrgbw(x)	(((x)%12)/6)
+#define	typeissk6812(x)	((x)/12)
+#define	typebase(x)	((x)%6)
+
+led_strip_handle_t strip[STRIPS] = { 0 };
+
 #define SERVO_TIMEBASE_RESOLUTION_HZ 1000000    // 1MHz, 1us per tick
 #define SERVO_TIMEBASE_PERIOD        20000      // 20000 ticks, 20ms
 #define SERVO_MIN_PULSEWIDTH_US 1000    // Minimum pulse width in microsecond
@@ -111,39 +118,100 @@ app_callback (int client, const char *prefix, const char *target, const char *su
 }
 
 void
+spk_task (void *arg)
+{
+   esp_err_t e = 0;
+   revk_gpio_input (sdcd);
+   sdmmc_slot_config_t slot = SDMMC_SLOT_CONFIG_DEFAULT ();
+   slot.clk = sdclk.num;
+   slot.cmd = sdcmd.num;
+   slot.d0 = sddat0.num;
+   slot.d1 = sddat1.set ? sddat1.num : -1;
+   slot.d2 = sddat2.set ? sddat2.num : -1;
+   slot.d3 = sddat3.set ? sddat3.num : -1;
+   //slot.cd = sdcd.set ? sdcd.num : -1; // We do CD, and not sure how we would tell it polarity
+   slot.width = (sddat2.set && sddat3.set ? 4 : sddat1.set ? 2 : 1);
+   if (slot.width == 1)
+      slot.flags |= SDMMC_SLOT_FLAG_INTERNAL_PULLUP;    // Old boards?
+   sdmmc_host_t host = SDMMC_HOST_DEFAULT ();
+   host.max_freq_khz = SDMMC_FREQ_HIGHSPEED;
+   host.slot = SDMMC_HOST_SLOT_1;
+   esp_vfs_fat_sdmmc_mount_config_t mount_config = {
+      .format_if_mount_failed = 1,
+      .max_files = 2,
+      .allocation_unit_size = 16 * 1024,
+      .disk_status_check_enable = 1,
+   };
+   sdmmc_card_t *card = NULL;
+
+   // TODO SD card mount / dismount logic
+   // TODO SPK start/stop for WAV file
+
+   while (1)
+   {
+      sleep (1);
+   }
+}
+
+void
 app_main ()
 {
    revk_boot (&app_callback);
    revk_start ();
-   if (blink[0].num != rgb.num)
+   if (blink[0].set)
       revk_blink_init ();       // Library blink
-   revk_gpio_input (button1);
-   revk_gpio_input (button2);
-   revk_gpio_output (eye1, 0);
-   revk_gpio_output (eye2, 0);
+   revk_gpio_input (button[0]);
+   revk_gpio_input (button[1]);
    revk_gpio_output (pwr, 0);
-   if (rgb.set && leds)
-   {
-      led_strip_config_t strip_config = {
-         .strip_gpio_num = rgb.num,
-         .max_leds = leds,      // LIGHTS, blinker, beeper, clicker, and status
-#ifdef	LED_STRIP_COLOR_COMPONENT_FMT_GRB
+   if (spklrc.set && spkbclk.set && spkdata.set)
+      revk_task ("spk", spk_task, NULL, 8);
+   int leds = 0;
+   for (int s = 0; s < STRIPS; s++)
+      if (stripgpio[s].set && stripcount[s])
+      {
+         leds += stripcount[s];
+         ESP_LOGE (TAG, "Started using GPIO %d%s, %d LEDs", stripgpio[s].num, stripgpio[s].invert ? " (inverted)" : "",
+                   stripcount[s]);
+         led_strip_config_t strip_config = {
+            .strip_gpio_num = stripgpio[s].num,
+            .max_leds = stripcount[s],  // The number of LEDs in the strip,
             .color_component_format = LED_STRIP_COLOR_COMPONENT_FMT_GRB,
-#else
-            .led_pixel_format = LED_PIXEL_FORMAT_GRB,
+            .led_model = typeissk6812 (striptype[s]) ? LED_MODEL_SK6812 : LED_MODEL_WS2812,     // LED strip model
+            .flags.invert_out = stripgpio[s].invert,    // whether to invert the output signal(useful when your hardware has a level inverter)
+         };
+         if (typeisrgbw (striptype[s]))
+            strip_config.color_component_format.format.num_components = 4;
+         uint8_t t = typebase (striptype[s]);
+         if (t == REVK_SETTINGS_STRIPTYPE_WS2812_RGB || t == REVK_SETTINGS_STRIPTYPE_WS2812_RBG)
+            strip_config.color_component_format.format.r_pos = 0;
+         if (t == REVK_SETTINGS_STRIPTYPE_WS2812_GRB || t == REVK_SETTINGS_STRIPTYPE_WS2812_BRG)
+            strip_config.color_component_format.format.r_pos = 1;
+         if (t == REVK_SETTINGS_STRIPTYPE_WS2812_GBR || t == REVK_SETTINGS_STRIPTYPE_WS2812_BGR)
+            strip_config.color_component_format.format.r_pos = 2;
+         if (t == REVK_SETTINGS_STRIPTYPE_WS2812_GBR || t == REVK_SETTINGS_STRIPTYPE_WS2812_GRB)
+            strip_config.color_component_format.format.g_pos = 0;
+         if (t == REVK_SETTINGS_STRIPTYPE_WS2812_RGB || t == REVK_SETTINGS_STRIPTYPE_WS2812_BGR)
+            strip_config.color_component_format.format.g_pos = 1;
+         if (t == REVK_SETTINGS_STRIPTYPE_WS2812_RBG || t == REVK_SETTINGS_STRIPTYPE_WS2812_BRG)
+            strip_config.color_component_format.format.g_pos = 2;
+         if (t == REVK_SETTINGS_STRIPTYPE_WS2812_BRG || t == REVK_SETTINGS_STRIPTYPE_WS2812_BGR)
+            strip_config.color_component_format.format.b_pos = 0;
+         if (t == REVK_SETTINGS_STRIPTYPE_WS2812_RBG || t == REVK_SETTINGS_STRIPTYPE_WS2812_GBR)
+            strip_config.color_component_format.format.b_pos = 1;
+         if (t == REVK_SETTINGS_STRIPTYPE_WS2812_RGB || t == REVK_SETTINGS_STRIPTYPE_WS2812_GRB)
+            strip_config.color_component_format.format.b_pos = 2;
+         led_strip_rmt_config_t rmt_config = {
+            .clk_src = RMT_CLK_SRC_DEFAULT,     // different clock source can lead to different power consumption
+            .resolution_hz = 10 * 1000 * 1000,  // 10 MHz
+         };
+#ifdef	CONFIG_IDF_TARGET_ESP32S3
+         if (!s)
+            rmt_config.flags.with_dma = true;   // Seems can only be one, investigate more on this
 #endif
-         .led_model = LED_MODEL_WS2812, // LED strip model
-         .flags.invert_out = rgb.invert,
-      };
-      led_strip_rmt_config_t rmt_config = {
-         .clk_src = RMT_CLK_SRC_DEFAULT,        // different clock source can lead to different power consumption
-         .resolution_hz = 10 * 1000 * 1000,     // 10MHz
-#ifdef  CONFIG_IDF_TARGET_ESP32S3
-         .flags.with_dma = true,
-#endif
-      };
-      REVK_ERR_CHECK (led_strip_new_rmt_device (&strip_config, &rmt_config, &strip));
-   }
+         REVK_ERR_CHECK (led_strip_new_rmt_device (&strip_config, &rmt_config, &strip[s]));
+         if (strip[s])
+            REVK_ERR_CHECK (led_strip_clear (strip[s]));
+      }
    mcpwm_cmpr_handle_t comparator = NULL;
    if (pwm.set)
    {
@@ -187,11 +255,27 @@ app_main ()
    b.eyes = 1;
    b.init = 1;
 
+   void set_led (uint16_t led, uint8_t level, uint32_t colour)
+   {
+      if (!led)
+         return;
+      led--;
+      int s = 0;
+      while (s < STRIPS)
+         if (led >= stripcount[s])
+            led -= stripcount[s];
+         else
+            break;
+      if (s == STRIPS)
+         return;
+      revk_led (strip[s], led + 1, level, colour);
+   }
+
    while (1)
    {
       usleep (50000);
       // Main button
-      uint8_t push = revk_gpio_get (button1);
+      uint8_t push = revk_gpio_get (button[0]);
       static uint8_t push1 = 0;
       static uint8_t press1 = 0;
       if (b.init || push != b.pushed1)
@@ -201,7 +285,7 @@ app_main ()
          push1 = 1;
          b.pushed1 = push;
          if (ledbutton1 && ledbutton1 <= leds)
-            revk_led (strip, ledbutton1, 255, revk_rgb (push ? 'R' : 'G'));
+            set_led (ledbutton1, 255, revk_rgb (push ? 'R' : 'G'));
       } else if (push1 && push1++ >= 10)
       {                         // Action
          push1 = 0;
@@ -224,7 +308,7 @@ app_main ()
          press1 = 0;
       }
       // Second button
-      push = revk_gpio_get (button2);
+      push = revk_gpio_get (button[1]);
       static uint8_t push2 = 0;
       static uint8_t press2 = 0;
       if (b.init || push != b.pushed2)
@@ -234,7 +318,7 @@ app_main ()
          push2 = 1;
          b.pushed2 = push;
          if (ledbutton2 && ledbutton2 <= leds)
-            revk_led (strip, ledbutton2, 255, revk_rgb (push ? 'R' : 'G'));
+            set_led (ledbutton2, 255, revk_rgb (push ? 'R' : 'G'));
       } else if (push2 && push2++ >= 10)
       {                         // Action
          push2 = 0;
@@ -247,7 +331,7 @@ app_main ()
          b.connect = 0;
          revk_command ("upgrade", NULL);
       }
-      if (strip)
+      if (leds)
       {
          int angle = b.open ? visoropen : visorclose;
          static int wasangle = -1;
@@ -261,48 +345,44 @@ app_main ()
             wasangle = angle;
          }
          for (int i = 0; i < leds; i++)
-            revk_led (strip, i, 255, 0);        // Clear
-         if (blink[0].num == rgb.num)
-            revk_led (strip, 0, 255, revk_blinker ());
+            set_led (i, 255, 0);        // Clear
          if (!revk_shutting_down (NULL))
          {
             // Static LEDs
-            if (ledarc && ledarcs && strip)
+            if (ledarc && ledarcs)
                for (int i = ledarc; i < ledarc + ledarcs; i++)
-                  revk_led (strip, i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? *ledarcc1 : *ledarcc2));
-            if (ledfixed && ledfixeds && strip)
+                  set_led (i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? *ledarcc1 : *ledarcc2));
+            if (ledfixed && ledfixeds)
                for (int i = ledfixed; i < ledfixed + ledfixeds; i++)
-                  revk_led (strip, i - 1, 255, revk_rgb (*ledfixedc));
+                  set_led (i - 1, 255, revk_rgb (*ledfixedc));
 
             if (ledpwm && ledpwm <= leds)
-               revk_led (strip, ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
+               set_led (ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
             // PWR
             revk_gpio_set (pwr, b.pwr);
             if (ledpwr && ledpwr <= leds)
-               revk_led (strip, ledpwr - 1, 255, revk_rgb (b.pwr ? 'G' : 'R'));
+               set_led (ledpwr - 1, 255, revk_rgb (b.pwr ? 'G' : 'R'));
             // Eye 1
-            revk_gpio_set (eye1, b.eyes);
             if (ledeye1 && ledeye2 <= leds)
                for (int i = 0; i < ledeyes; i++)
-                  revk_led (strip, i + ledeye1 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
+                  set_led (i + ledeye1 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
             // Eye 2
-            revk_gpio_set (eye2, b.eyes);
             if (ledeye2 && ledeye2 <= leds)
                for (int i = 0; i < ledeyes; i++)
-                  revk_led (strip, i + ledeye2 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
-            if (ledpulse && ledpulses && strip)
+                  set_led (i + ledeye2 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
+            if (ledpulse && ledpulses)
             {
                static uint8_t cycle = 0;
                cycle += 8;
                for (int i = ledpulse; i < ledpulse + ledpulses && i <= leds; i++)
-                  revk_led (strip, i - 1, 64 + cos8[cycle] / 2, revk_rgb (*ledpulsec));
+                  set_led (i - 1, 64 + cos8[cycle] / 2, revk_rgb (*ledpulsec));
             }
-            if (b.cylon && ledcylon && ledcylons && strip)
+            if (b.cylon && ledcylon && ledcylons)
             {                   // Cylon
                static int8_t cycle = 0,
                   dir = 1;
                for (int i = ledcylon; i < ledcylon + ledcylons && i <= leds; i++)
-                  revk_led (strip, i - 1, 255, revk_rgb (i == ledcylon + cycle ? *ledcylonc : 'K'));
+                  set_led (i - 1, 255, revk_rgb (i == ledcylon + cycle ? *ledcylonc : 'K'));
                if (cycle == ledcylons - 1)
                   dir = -1;
                else if (!cycle)
@@ -310,9 +390,11 @@ app_main ()
                cycle += dir;
             }
          }
-         led_strip_refresh (strip);
+         for (int s = 0; s < STRIPS; s++)
+            if (strip[s])
+               led_strip_refresh (strip[s]);
       }
-      if (blink[0].num != rgb.num)
+      if (blink[0].set)
          revk_blink_do ();      // Library blink
       b.init = 0;
    }
