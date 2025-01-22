@@ -166,6 +166,14 @@ spk_task (void *arg)
             continue;
          }
          // Find WAV file
+         int f = open (play, O_RDONLY);
+         if (f < 0)
+         {
+            ESP_LOGE (TAG, "Not found %s", play);
+            play = NULL;
+            continue;
+         }
+	 play=NULL;
 
          // Start speaker
          i2s_chan_handle_t spk_handle = { 0 };
@@ -175,7 +183,7 @@ spk_task (void *arg)
          i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG (I2S_NUM_AUTO, I2S_ROLE_MASTER);
          e = i2s_new_channel (&chan_cfg, &spk_handle, NULL);
          i2s_std_config_t cfg = {
-		 // TODO from WAV file
+            // TODO from WAV file
             //.clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG (spkfreq),
             //.slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG (sizeof (audio_t) == 1 ? I2S_DATA_BIT_WIDTH_8BIT : sizeof (audio_t) == 2 ? I2S_DATA_BIT_WIDTH_16BIT : I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_MONO),
             .gpio_cfg = {
@@ -197,9 +205,11 @@ spk_task (void *arg)
             e = i2s_channel_enable (spk_handle);
          if (!e)
          {
-            // Play file
+            // Play file until end of file, unmounted, or play set again
+
 
          }
+         close (f);
          // Power off
          revk_gpio_output (spkpwr, 0);  // Power off
          i2s_channel_disable (spk_handle);
