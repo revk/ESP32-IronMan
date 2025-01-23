@@ -3147,30 +3147,13 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
+			(property "Description" "Regulator and associated components."
 				(at 0 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 					(hide yes)
-				)
-			)
-			(property "MPN" "C2684786"
-				(at 0 -26.67 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Rotation Offset" "180"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
 				)
 			)
 			(symbol "MD89420-RegBlock_1_1"
@@ -3937,15 +3920,6 @@
 					(hide yes)
 				)
 			)
-			(property "Position Offset" "0,0.15"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
 			(property "ki_keywords" "connector SD microsd"
 				(at 0 0 0)
 				(effects
@@ -4323,15 +4297,6 @@
 					(hide yes)
 				)
 			)
-			(property "Position Offset" "0,0.715"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
 			(property "ki_keywords" "usb universal serial bus type-C USB2.0"
 				(at 0 0 0)
 				(effects
@@ -4394,7 +4359,7 @@
 						(type default)
 					)
 					(fill
-						(type none)
+						(type outline)
 					)
 				)
 				(arc
@@ -4406,7 +4371,7 @@
 						(type default)
 					)
 					(fill
-						(type outline)
+						(type none)
 					)
 				)
 				(arc
@@ -4442,7 +4407,7 @@
 						(type default)
 					)
 					(fill
-						(type outline)
+						(type none)
 					)
 				)
 				(arc
@@ -4454,7 +4419,7 @@
 						(type default)
 					)
 					(fill
-						(type none)
+						(type outline)
 					)
 				)
 				(polyline
@@ -8446,7 +8411,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C194427"
+		(property "MPN" "C194427"
 			(at 55.245 19.685 0)
 			(effects
 				(font
@@ -9024,16 +8989,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C106188"
-			(at 137.16 156.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Rotation Offset" "180"
+		(property "MPN" "C106188"
 			(at 137.16 156.21 0)
 			(effects
 				(font
@@ -9109,7 +9065,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
 			(at 105.41 137.795 0)
 			(effects
 				(font
@@ -10665,7 +10621,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C15525"
+		(property "MPN" "C15525"
 			(at 265.43 35.56 0)
 			(effects
 				(font
@@ -11012,7 +10968,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765055"
+		(property "MPN" "C2765055"
 			(at 81.28 133.35 0)
 			(effects
 				(font
@@ -11473,7 +11429,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
 			(at 140.335 166.37 0)
 			(effects
 				(font
@@ -11638,7 +11594,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
 			(at 62.23 158.75 0)
 			(effects
 				(font
@@ -11856,7 +11812,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
 			(at 105.41 166.37 0)
 			(effects
 				(font
@@ -12355,15 +12311,6 @@
 				(hide yes)
 			)
 		)
-		(property "Position Offset" "0,0.15"
-			(at 257.175 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "1"
 			(uuid "d4fbeff9-6529-49e0-98f4-f4b4707c73f8")
 		)
@@ -12733,15 +12680,6 @@
 				(hide yes)
 			)
 		)
-		(property "Position Offset" "0,0.715"
-			(at 92.71 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "A1"
 			(uuid "f78f3d3c-b372-4ada-9e3c-7221c7be1c0b")
 		)
@@ -13023,16 +12961,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C106188"
-			(at 102.235 156.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Rotation Offset" "180"
+		(property "MPN" "C106188"
 			(at 102.235 156.21 0)
 			(effects
 				(font
@@ -13109,7 +13038,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765056"
+		(property "MPN" "C2765056"
 			(at 156.21 133.985 0)
 			(effects
 				(font
@@ -13356,7 +13285,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765056"
+		(property "MPN" "C2765056"
 			(at 156.21 162.56 0)
 			(effects
 				(font
@@ -13436,7 +13365,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765056"
+		(property "MPN" "C2765056"
 			(at 121.285 133.985 0)
 			(effects
 				(font
@@ -13582,7 +13511,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
 			(at 140.335 137.795 0)
 			(effects
 				(font
@@ -13670,7 +13599,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765055"
+		(property "MPN" "C2765055"
 			(at 245.745 30.48 0)
 			(effects
 				(font
@@ -13814,7 +13743,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765055"
+		(property "MPN" "C2765055"
 			(at 81.28 157.48 0)
 			(effects
 				(font
@@ -14139,7 +14068,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5349953"
+		(property "MPN" "C5349953"
 			(at 103.505 87.63 0)
 			(effects
 				(font
@@ -14563,7 +14492,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765056"
+		(property "MPN" "C2765056"
 			(at 121.285 162.56 0)
 			(effects
 				(font
@@ -14645,16 +14574,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C106188"
-			(at 102.235 127.635 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Rotation Offset" "180"
+		(property "MPN" "C106188"
 			(at 102.235 127.635 0)
 			(effects
 				(font
@@ -14787,35 +14707,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Regulator and associated components."
 			(at 34.29 26.035 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part #" "C2684786"
-			(at 34.29 52.705 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Rotation Offset" "180"
-			(at 34.29 26.035 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "C2684786"
-			(at 34.29 52.705 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15190,16 +15083,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C106188"
-			(at 137.16 127.635 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Rotation Offset" "180"
+		(property "MPN" "C106188"
 			(at 137.16 127.635 0)
 			(effects
 				(font
@@ -15278,7 +15162,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765055"
+		(property "MPN" "C2765055"
 			(at 245.745 72.39 0)
 			(effects
 				(font
@@ -15422,7 +15306,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C1691"
+		(property "MPN" "C1691"
 			(at 55.245 21.59 0)
 			(effects
 				(font
@@ -15730,7 +15614,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C226891"
+		(property "MPN" "C226891"
 			(at 244.475 78.74 90)
 			(effects
 				(font
@@ -16088,7 +15972,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
 			(at 62.23 134.62 0)
 			(effects
 				(font
@@ -16748,7 +16632,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C15525"
+		(property "MPN" "C15525"
 			(at 266.065 78.105 0)
 			(effects
 				(font
