@@ -11,8 +11,6 @@ revk_settings_bits_t revk_settings_bits={0};
 #define	quote(s)	str(s)
 revk_settings_t const revk_settings[]={
 #define	STRIPS	4
- {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="pwr",.comment="Visor servo power",.len=3,.ptr=&pwr,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
- {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="pwm",.comment="Visor service PWM",.len=3,.ptr=&pwm,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="button",.comment="Activation buttons",.len=6,.ptr=&button,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.array=2},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="stripgpio",.comment="GPIOs for LED string",.group=1,.len=9,.dot=5,.def="4",.ptr=&stripgpio,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.array=STRIPS,.old="rgb"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="stripcount",.comment="How many LEDs in string",.group=1,.len=10,.dot=5,.ptr=&stripcount,.size=sizeof(uint16_t),.array=STRIPS,.old="leds"	},
@@ -35,25 +33,26 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye2",.comment="LED number for eye 2",.group=5,.len=7,.dot=3,.ptr=&ledeye2,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeyes",.comment="How many LEDs in eye",.group=5,.len=7,.dot=3,.def="1",.ptr=&ledeyes,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_STRING,.name="ledeyec",.comment="Eye LED colour",.group=5,.len=7,.dot=3,.def="C",.ptr=&ledeyec,.size=sizeof(char[2]),.live=1},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwr",.comment="LED number for servo PWR",.group=5,.len=6,.dot=3,.ptr=&ledpwr,.size=sizeof(uint8_t),.live=1},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwm",.comment="LED number for servo PWM",.group=5,.len=6,.dot=3,.ptr=&ledpwm,.size=sizeof(uint8_t),.live=1},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton1",.comment="LED number for button1",.group=5,.len=10,.dot=3,.ptr=&ledbutton1,.size=sizeof(uint8_t),.live=1},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton2",.comment="LED number for button2",.group=5,.len=10,.dot=3,.ptr=&ledbutton2,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_STRING,.name="ledeyec2",.comment="Eye LED colour (evil)",.group=5,.len=8,.dot=3,.def="R",.ptr=&ledeyec2,.size=sizeof(char[2]),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledarc",.comment="LED number start of arc ring",.group=5,.len=6,.dot=3,.ptr=&ledarc,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledarcs",.comment="How many LED in arc ring",.group=5,.len=7,.dot=3,.ptr=&ledarcs,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_STRING,.name="ledarcc1",.comment="Arc LED colour (bright)",.group=5,.len=8,.dot=3,.def="C",.ptr=&ledarcc1,.size=sizeof(char[2]),.live=1},
  {.type=REVK_SETTINGS_STRING,.name="ledarcc2",.comment="Arc LED colour (dim)",.group=5,.len=8,.dot=3,.def="R",.ptr=&ledarcc2,.size=sizeof(char[2]),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulse",.comment="LED number start of pulsing",.group=5,.len=8,.dot=3,.ptr=&ledpulse,.size=sizeof(uint8_t),.live=1},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulses",.comment="How many LED in pusling",.group=5,.len=9,.dot=3,.ptr=&ledpulses,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulses",.comment="How many LED in pulsing",.group=5,.len=9,.dot=3,.ptr=&ledpulses,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_STRING,.name="ledpulsec",.comment="Pulse LED colour",.group=5,.len=9,.dot=3,.def="W",.ptr=&ledpulsec,.size=sizeof(char[2]),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledfixed",.comment="LED number start of fixed LEDs",.group=5,.len=8,.dot=3,.ptr=&ledfixed,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledfixeds",.comment="How many LED in fixed LED",.group=5,.len=9,.dot=3,.ptr=&ledfixeds,.size=sizeof(uint8_t),.live=1},
- {.type=REVK_SETTINGS_STRING,.name="ledfixedc",.comment="fixed LED colour",.group=5,.len=9,.dot=3,.def="C",.ptr=&ledfixedc,.size=sizeof(char[2]),.live=1},
+ {.type=REVK_SETTINGS_STRING,.name="ledfixedc",.comment="Fixed LED colour",.group=5,.len=9,.dot=3,.def="C",.ptr=&ledfixedc,.size=sizeof(char[2]),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylon",.comment="LED number start of cylon LEDs",.group=5,.len=8,.dot=3,.ptr=&ledcylon,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylons",.comment="How many LED in cylon LED",.group=5,.len=9,.dot=3,.ptr=&ledcylons,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_STRING,.name="ledcylonc",.comment="cylon LED colour",.group=5,.len=9,.dot=3,.def="R",.ptr=&ledcylonc,.size=sizeof(char[2]),.live=1},
- {.type=REVK_SETTINGS_UNSIGNED,.name="visorclose",.comment="Angle (degrees) visor close",.group=6,.len=10,.dot=5,.def="0",.ptr=&visorclose,.size=sizeof(uint8_t),.live=1},
- {.type=REVK_SETTINGS_UNSIGNED,.name="visoropen",.comment="Angle (degrees) visor open",.group=6,.len=9,.dot=5,.def="90",.ptr=&visoropen,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwm",.comment="LED number for servo PWM status",.group=5,.len=6,.dot=3,.ptr=&ledpwm,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton1",.comment="LED number for button 1 status",.group=5,.len=10,.dot=3,.ptr=&ledbutton1,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton2",.comment="LED number for button 2 status",.group=5,.len=10,.dot=3,.ptr=&ledbutton2,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="visorpwm",.comment="Visor servo PWM",.group=6,.len=8,.dot=5,.ptr=&visorpwm,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.old="pwm"		},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="visorclose",.comment="Angle visor close",.group=6,.len=10,.dot=5,.def="0",.ptr=&visorclose,.size=sizeof(uint8_t),.live=1,.unit="°"	},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="visoropen",.comment="Angle visor open",.group=6,.len=9,.dot=5,.def="90",.ptr=&visoropen,.size=sizeof(uint8_t),.live=1,.unit="°"	},
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
  {.type=REVK_SETTINGS_STRING,.name="password",.comment="Settings password (this is not sent securely so use with care on local networks you control)",.len=8,.ptr=&password,.malloc=1,.revk=1,.hide=1,.secret=1},
 #endif
@@ -141,8 +140,6 @@ revk_settings_t const revk_settings[]={
 #undef quote
 #undef str
 #define	STRIPS	4
-revk_gpio_t pwr={0};
-revk_gpio_t pwm={0};
 revk_gpio_t button[2]={0};
 revk_gpio_t stripgpio[STRIPS]={0};
 uint16_t stripcount[STRIPS]={0};
@@ -165,10 +162,7 @@ uint8_t ledeye1=0;
 uint8_t ledeye2=0;
 uint8_t ledeyes=0;
 char ledeyec[2]="";
-uint8_t ledpwr=0;
-uint8_t ledpwm=0;
-uint8_t ledbutton1=0;
-uint8_t ledbutton2=0;
+char ledeyec2[2]="";
 uint8_t ledarc=0;
 uint8_t ledarcs=0;
 char ledarcc1[2]="";
@@ -182,6 +176,10 @@ char ledfixedc[2]="";
 uint8_t ledcylon=0;
 uint8_t ledcylons=0;
 char ledcylonc[2]="";
+uint8_t ledpwm=0;
+uint8_t ledbutton1=0;
+uint8_t ledbutton2=0;
+revk_gpio_t visorpwm={0};
 uint8_t visorclose=0;
 uint8_t visoropen=0;
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD

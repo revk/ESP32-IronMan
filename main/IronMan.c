@@ -173,7 +173,7 @@ spk_task (void *arg)
             play = NULL;
             continue;
          }
-	 play=NULL;
+         play = NULL;
 
          // Start speaker
          i2s_chan_handle_t spk_handle = { 0 };
@@ -224,13 +224,13 @@ spk_task (void *arg)
 void
 app_main ()
 {
+   //ESP_LOGE (TAG, "Started");
    revk_boot (&app_callback);
    revk_start ();
    if (blink[0].set)
       revk_blink_init ();       // Library blink
    revk_gpio_input (button[0]);
    revk_gpio_input (button[1]);
-   revk_gpio_output (pwr, 0);
    if (spklrc.set && spkbclk.set && spkdata.set)
       revk_task ("spk", spk_task, NULL, 8);
    int leds = 0;
@@ -281,7 +281,7 @@ app_main ()
             REVK_ERR_CHECK (led_strip_clear (strip[s]));
       }
    mcpwm_cmpr_handle_t comparator = NULL;
-   if (pwm.set)
+   if (visorpwm.set)
    {
       mcpwm_timer_handle_t timer = NULL;
       mcpwm_timer_config_t timer_config = {
@@ -304,8 +304,8 @@ app_main ()
       ESP_ERROR_CHECK (mcpwm_new_comparator (oper, &comparator_config, &comparator));
       mcpwm_gen_handle_t generator = NULL;
       mcpwm_generator_config_t generator_config = {
-         .gen_gpio_num = pwm.num,
-         .flags.invert_pwm = pwm.invert,
+         .gen_gpio_num = visorpwm.num,
+         .flags.invert_pwm = visorpwm.invert,
       };
       ESP_ERROR_CHECK (mcpwm_new_generator (oper, &generator_config, &generator));
       ESP_ERROR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (visorclose)));
@@ -324,15 +324,10 @@ app_main ()
    b.init = 1;
 
    void set_led (uint16_t led, uint8_t level, uint32_t colour)
-   {
-      if (!led)
-         return;
+   {                            // led index from 0
       int s = 0;
-      while (s < STRIPS)
-         if (led >= stripcount[s])
-            led -= stripcount[s];
-         else
-            break;
+      while (s < STRIPS && led >= stripcount[s])
+         led -= stripcount[s++];
       if (s == STRIPS)
          return;
       revk_led (strip[s], led, level, colour);
@@ -340,7 +335,7 @@ app_main ()
 
    while (1)
    {
-      usleep (50000);
+      usleep (25000);
       // Main button
       uint8_t push = revk_gpio_get (button[0]);
       static uint8_t push1 = 0;
@@ -348,18 +343,24 @@ app_main ()
       if (b.init || push != b.pushed1)
       {
          if (push)
+         {
             press1++;
+            ESP_LOGE (TAG, "Push1 %d", press1);
+         }
          push1 = 1;
          b.pushed1 = push;
-         if (ledbutton1 && ledbutton1 <= leds)
+         if (ledbutton1)
             set_led (ledbutton1, 255, revk_rgb (push ? 'R' : 'G'));
       } else if (push1 && push1++ >= 10)
       {                         // Action
          push1 = 0;
+         ESP_LOGE (TAG, "Pushed1 %d", press1);
          if (press1 == 1)
          {
             if (b.pwr)
                b.open ^= 1;
+            else
+               b.pwr = 1;
          } else if (press1 == 2)
          {                      // off
             if (b.pwr)
@@ -381,14 +382,18 @@ app_main ()
       if (b.init || push != b.pushed2)
       {
          if (push)
+         {
             press2++;
+            ESP_LOGE (TAG, "Push2 %d", press2);
+         }
          push2 = 1;
          b.pushed2 = push;
-         if (ledbutton2 && ledbutton2 <= leds)
+         if (ledbutton2)
             set_led (ledbutton2, 255, revk_rgb (push ? 'R' : 'G'));
       } else if (push2 && push2++ >= 10)
       {                         // Action
          push2 = 0;
+         ESP_LOGE (TAG, "Pushed2 %d", press2);
          // No action for now
          press2 = 0;
       }
@@ -396,21 +401,34 @@ app_main ()
       {
          b.connected = 1;
          b.connect = 0;
-         revk_command ("upgrade", NULL);
+         revk_command ("upgrade", NULL);        // Immediate upgrade attempt
+      }
+      {
+         int newangle = b.open ? visoropen : visorclose;
+         static uint16_t angle;
+         static int8_t step = 0;
+         if (b.init || newangle != angle)
+         {
+            if (newangle > angle && step < 10)
+               step++;
+            else if (newangle < angle && step > -10)
+               step--;
+            angle += step;
+            if (angle > visoropen)
+               angle = visoropen;
+            if (angle < visorclose)
+               angle = visorclose;
+            if (newangle == angle)
+               step = 0;
+            if (visorpwm.set)
+            {                   // PWM
+               REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (angle)));
+               ESP_LOGE (TAG, "Angle %d(%d) value %ld", angle, step, angle_to_compare (angle));
+            }
+         }
       }
       if (leds)
       {
-         int angle = b.open ? visoropen : visorclose;
-         static int wasangle = -1;
-         if (b.init || angle != wasangle)
-         {
-            if (pwm.set)
-            {                   // PWM
-               REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (angle)));
-               ESP_LOGE (TAG, "Angle %d-%d value %ld", wasangle, angle, angle_to_compare (angle));
-            }
-            wasangle = angle;
-         }
          for (int i = 0; i < leds; i++)
             set_led (i, 255, 0);        // Clear
          if (!revk_shutting_down (NULL))
@@ -418,37 +436,35 @@ app_main ()
             // Static LEDs
             if (ledarc && ledarcs)
                for (int i = ledarc; i < ledarc + ledarcs; i++)
-                  set_led (i - 1, (i & 1) ? 255 : 50, revk_rgb ((i & 1) ? *ledarcc1 : *ledarcc2));
+                  set_led (i - 1, (i & 1) ? 255 : 100, revk_rgb ((i & 1) ? *ledarcc1 : *ledarcc2));
+
             if (ledfixed && ledfixeds)
                for (int i = ledfixed; i < ledfixed + ledfixeds; i++)
                   set_led (i - 1, 255, revk_rgb (*ledfixedc));
 
-            if (ledpwm && ledpwm <= leds)
+	    // PWM (open/closed)
+            if (ledpwm)
                set_led (ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
-            // PWR
-            revk_gpio_set (pwr, b.pwr);
-            if (ledpwr && ledpwr <= leds)
-               set_led (ledpwr - 1, 255, revk_rgb (b.pwr ? 'G' : 'R'));
             // Eye 1
-            if (ledeye1 && ledeye2 <= leds)
+            if (ledeye1)
                for (int i = 0; i < ledeyes; i++)
                   set_led (i + ledeye1 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
             // Eye 2
-            if (ledeye2 && ledeye2 <= leds)
+            if (ledeye2)
                for (int i = 0; i < ledeyes; i++)
                   set_led (i + ledeye2 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
             if (ledpulse && ledpulses)
             {
                static uint8_t cycle = 0;
                cycle += 8;
-               for (int i = ledpulse; i < ledpulse + ledpulses && i <= leds; i++)
+               for (int i = ledpulse; i < ledpulse + ledpulses; i++)
                   set_led (i - 1, 64 + cos8[cycle] / 2, revk_rgb (*ledpulsec));
             }
             if (b.cylon && ledcylon && ledcylons)
             {                   // Cylon
                static int8_t cycle = 0,
                   dir = 1;
-               for (int i = ledcylon; i < ledcylon + ledcylons && i <= leds; i++)
+               for (int i = ledcylon; i < ledcylon + ledcylons; i++)
                   set_led (i - 1, 255, revk_rgb (i == ledcylon + cycle ? *ledcylonc : 'K'));
                if (cycle == ledcylons - 1)
                   dir = -1;

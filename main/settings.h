@@ -15,6 +15,7 @@ struct revk_settings_s {
   const char *enums;
  };
  const char *old;
+ const char *unit;
  const char *comment;
  uint16_t size;
  uint8_t group;
@@ -149,8 +150,6 @@ struct revk_settings_bits_s {
 #endif
 };
 #define	STRIPS	4
-extern revk_gpio_t pwr;	// Visor servo power
-extern revk_gpio_t pwm;	// Visor service PWM
 extern revk_gpio_t button[2];	// Activation buttons
 extern revk_gpio_t stripgpio[STRIPS];	// GPIOs for LED string
 extern uint16_t stripcount[STRIPS];	// How many LEDs in string
@@ -173,25 +172,26 @@ extern uint8_t ledeye1;	// LED number for eye 1
 extern uint8_t ledeye2;	// LED number for eye 2
 extern uint8_t ledeyes;	// How many LEDs in eye
 extern char ledeyec[2];	// Eye LED colour
-extern uint8_t ledpwr;	// LED number for servo PWR
-extern uint8_t ledpwm;	// LED number for servo PWM
-extern uint8_t ledbutton1;	// LED number for button1
-extern uint8_t ledbutton2;	// LED number for button2
+extern char ledeyec2[2];	// Eye LED colour (evil)
 extern uint8_t ledarc;	// LED number start of arc ring
 extern uint8_t ledarcs;	// How many LED in arc ring
 extern char ledarcc1[2];	// Arc LED colour (bright)
 extern char ledarcc2[2];	// Arc LED colour (dim)
 extern uint8_t ledpulse;	// LED number start of pulsing
-extern uint8_t ledpulses;	// How many LED in pusling
+extern uint8_t ledpulses;	// How many LED in pulsing
 extern char ledpulsec[2];	// Pulse LED colour
 extern uint8_t ledfixed;	// LED number start of fixed LEDs
 extern uint8_t ledfixeds;	// How many LED in fixed LED
-extern char ledfixedc[2];	// fixed LED colour
+extern char ledfixedc[2];	// Fixed LED colour
 extern uint8_t ledcylon;	// LED number start of cylon LEDs
 extern uint8_t ledcylons;	// How many LED in cylon LED
 extern char ledcylonc[2];	// cylon LED colour
-extern uint8_t visorclose;	// Angle (degrees) visor close
-extern uint8_t visoropen;	// Angle (degrees) visor open
+extern uint8_t ledpwm;	// LED number for servo PWM status
+extern uint8_t ledbutton1;	// LED number for button 1 status
+extern uint8_t ledbutton2;	// LED number for button 2 status
+extern revk_gpio_t visorpwm;	// Visor servo PWM
+extern uint8_t visorclose;	// Angle visor close
+extern uint8_t visoropen;	// Angle visor open
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 extern char* password;	// Settings password (this is not sent securely so use with care on local networks you control)
 #endif
@@ -285,6 +285,7 @@ enum {
 };
 #define	REVK_SETTINGS_HAS_ENUM
 #define	REVK_SETTINGS_HAS_OLD
+#define	REVK_SETTINGS_HAS_UNIT
 #define	REVK_SETTINGS_HAS_COMMENT
 #define	REVK_SETTINGS_HAS_GPIO
 #define	REVK_SETTINGS_HAS_NUMERIC
