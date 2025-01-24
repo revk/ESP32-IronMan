@@ -209,7 +209,7 @@ struct revk_gpio_s {
  uint16_t set:1;
 };
 enum {
-#define	STRIPS	4
+#define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 #endif
  REVK_SETTINGS_BITFIELD_otaauto,
@@ -243,7 +243,7 @@ enum {
 };
 typedef struct revk_settings_bits_s revk_settings_bits_t;
 struct revk_settings_bits_s {
-#define	STRIPS	4
+#define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 #endif
  uint8_t otaauto:1;	// OTA auto upgrade
@@ -275,7 +275,7 @@ struct revk_settings_bits_s {
  uint8_t meshroot:1;	// This is preferred mesh root
 #endif
 };
-#define	STRIPS	4
+#define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 extern revk_gpio_t button[2];	// Activation buttons
 extern revk_gpio_t stripgpio[STRIPS];	// GPIOs for LED string
 extern uint16_t stripcount[STRIPS];	// How many LEDs in string

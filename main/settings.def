@@ -1,5 +1,4 @@
-#define	STRIPS	4
-
+#define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 
 gpio	button			.array=2		// Activation buttons
 

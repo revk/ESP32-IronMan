@@ -62,7 +62,7 @@ struct
 } b = { 0 };
 
 const char sd_mount[] = "/sd";
-const char *play = NULL;
+const char *play = "POWERON";
 
 static inline uint32_t
 angle_to_compare (int angle)
@@ -158,6 +158,7 @@ spk_task (void *arg)
          sleep (10);
          continue;
       }
+      ESP_LOGE (TAG, "SD mounted");
       while (revk_gpio_get (sdcd))
       {
          if (!play)
@@ -166,26 +167,69 @@ spk_task (void *arg)
             continue;
          }
          // Find WAV file
-         int f = open (play, O_RDONLY);
+         const char *bad = NULL;
+         char *fn = NULL;
+         asprintf (&fn, "%s/%s.WAV", sd_mount, play);
+         int f = open (fn, O_RDONLY);
+         free (fn);
          if (f < 0)
+            bad = "File not found";
+         uint16_t channels = 0;
+         uint16_t bits = 0;
+         uint32_t rate = 0;
+         uint32_t size = 0;
+         if (!bad)
          {
-            ESP_LOGE (TAG, "Not found %s", play);
+            uint8_t buf[44];
+            if (read (f, buf, sizeof (buf)) != sizeof (buf))
+               bad = "Header read failed";
+            if (!bad && memcmp (buf + 0, "RIFF", 4))
+               bad = "Not RIFF";
+            if (!bad && memcmp (buf + 8, "WAVE", 4))
+               bad = "Not WAVE";
+            if (!bad && memcmp (buf + 12, "fmt ", 4))
+               bad = "Not fmt";
+            if (!bad && *(uint32_t *) (buf + 16) != 16)
+               bad = "Not 16 byte header";
+            if (!bad && *(uint16_t *) (buf + 20) != 1)
+               bad = "Not PCM";
+            channels = *(uint16_t *) (buf + 22);
+            if (!bad && channels != 1 && channels != 2)
+               bad = "Not mono/stereo";
+            rate = *(uint32_t *) (buf + 24);
+            if (!bad && rate != 8000 && rate != 16000 && rate != 32000 && rate != 44100 && rate != 48000 && rate != 88200 && rate != 96000)     // MAX98357A rates
+               bad = "Unacceptable sample rate";
+            bits = *(uint16_t *) (buf + 34);
+            if (!bad && bits != 8 && bits != 16 && bits != 24 && bits != 32)
+               bad = "Silly sample size";
+            if (!bad && *(uint32_t *) (buf + 28) != rate * bits * channels / 8)
+               bad = "Wrong sample bytes";
+            if (!bad && memcmp (buf + 36, "data", 4))
+               bad = "Not data";
+            size = *(uint32_t *) (buf + 40);
+         }
+         if (bad)
+         {
+            ESP_LOGE (TAG, "Play %s:%s", play, bad);
+            if (f >= 0)
+               close (f);
             play = NULL;
             continue;
          }
-         play = NULL;
-
+         ESP_LOGE (TAG, "Spk init PWR %d BCLK %d DAT %d LR %d rate %lu channels %u bits %u size %lu file %s", spkpwr.num,
+                   spkbclk.num, spkdata.num, spklrc.num, rate, channels, bits, size,play);
+         play = NULL;           // ready for new play
          // Start speaker
          i2s_chan_handle_t spk_handle = { 0 };
-         ESP_LOGE (TAG, "Spk init PWR %d BCLK %d DAT %d LR %d", spkpwr.num, spkbclk.num, spkdata.num, spklrc.num);
          revk_gpio_output (spkpwr, 1);  // Power on
-
          i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG (I2S_NUM_AUTO, I2S_ROLE_MASTER);
          e = i2s_new_channel (&chan_cfg, &spk_handle, NULL);
          i2s_std_config_t cfg = {
-            // TODO from WAV file
-            //.clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG (spkfreq),
-            //.slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG (sizeof (audio_t) == 1 ? I2S_DATA_BIT_WIDTH_8BIT : sizeof (audio_t) == 2 ? I2S_DATA_BIT_WIDTH_16BIT : I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_MONO),
+            .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG (rate),
+            .slot_cfg =
+               I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG (bits == 8 ? I2S_DATA_BIT_WIDTH_8BIT : bits ==
+                                                    16 ? I2S_DATA_BIT_WIDTH_16BIT : I2S_DATA_BIT_WIDTH_32BIT,
+                                                    channels == 2 ? I2S_SLOT_MODE_STEREO : I2S_SLOT_MODE_MONO),
             .gpio_cfg = {
                          .mclk = I2S_GPIO_UNUSED,
                          .bclk = spkbclk.num,
@@ -206,8 +250,19 @@ spk_task (void *arg)
          if (!e)
          {
             // Play file until end of file, unmounted, or play set again
-
-
+            uint16_t n = channels * bits * 1000 / 8;
+            uint8_t *buf = malloc (n);
+            while (size && !play && revk_gpio_get (sdcd))
+            {
+               size_t l = read (f, buf, n);
+               if (l != n)
+                  break;
+               e = i2s_channel_write (spk_handle, buf, n, &l, 100);
+               if (e)
+                  break;
+	       size-=l;
+            }
+            free (buf);
          }
          close (f);
          // Power off
@@ -238,7 +293,7 @@ app_main ()
       if (stripgpio[s].set && stripcount[s])
       {
          leds += stripcount[s];
-         ESP_LOGE (TAG, "Started using GPIO %d%s, %d LEDs", stripgpio[s].num, stripgpio[s].invert ? " (inverted)" : "",
+         ESP_LOGE (TAG, "Started using GPIO %d %s, %d LEDs", stripgpio[s].num, stripgpio[s].invert ? " (inverted)" : "",
                    stripcount[s]);
          led_strip_config_t strip_config = {
             .strip_gpio_num = stripgpio[s].num,
@@ -328,7 +383,7 @@ app_main ()
       int s = 0;
       while (s < STRIPS && led >= stripcount[s])
          led -= stripcount[s++];
-      if (s == STRIPS)
+      if (s == STRIPS || !strip[s])
          return;
       uint8_t r = ((c & 1) ? level : 0);
       uint8_t g = ((c & 2) ? level : 0);
@@ -408,7 +463,7 @@ app_main ()
       {
          b.connected = 1;
          b.connect = 0;
-         revk_command ("upgrade", NULL);        // Immediate upgrade attempt
+         revk_command ("upgrade", NULL);      // Immediate upgrade attempt
       }
       {
          int newangle = b.open ? visoropen : visorclose;
@@ -430,7 +485,7 @@ app_main ()
             if (visorpwm.set)
             {                   // PWM
                REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (angle)));
-               ESP_LOGE (TAG, "Angle %d(%d) value %ld", angle, step, angle_to_compare (angle));
+               ESP_LOGE (TAG, "Angle %d (%d) value %ld ", angle, step, angle_to_compare (angle));
             }
          }
       }
