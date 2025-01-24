@@ -217,7 +217,7 @@ spk_task (void *arg)
             continue;
          }
          ESP_LOGE (TAG, "Spk init PWR %d BCLK %d DAT %d LR %d rate %lu channels %u bits %u size %lu file %s", spkpwr.num,
-                   spkbclk.num, spkdata.num, spklrc.num, rate, channels, bits, size,play);
+                   spkbclk.num, spkdata.num, spklrc.num, rate, channels, bits, size, play);
          play = NULL;           // ready for new play
          // Start speaker
          i2s_chan_handle_t spk_handle = { 0 };
@@ -260,7 +260,7 @@ spk_task (void *arg)
                e = i2s_channel_write (spk_handle, buf, n, &l, 100);
                if (e)
                   break;
-	       size-=l;
+               size -= l;
             }
             free (buf);
          }
@@ -286,7 +286,7 @@ app_main ()
       revk_blink_init ();       // Library blink
    revk_gpio_input (button[0]);
    revk_gpio_input (button[1]);
-   if (spklrc.set && spkbclk.set && spkdata.set)
+   if (spklrc.set && spkbclk.set && spkdata.set && sdcmd.set)
       revk_task ("spk", spk_task, NULL, 8);
    int leds = 0;
    for (int s = 0; s < STRIPS; s++)
@@ -463,7 +463,7 @@ app_main ()
       {
          b.connected = 1;
          b.connect = 0;
-         revk_command ("upgrade", NULL);      // Immediate upgrade attempt
+         revk_command ("upgrade", NULL);        // Immediate upgrade attempt
       }
       {
          int newangle = b.open ? visoropen : visorclose;
