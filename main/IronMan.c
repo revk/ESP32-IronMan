@@ -323,14 +323,21 @@ app_main ()
    b.eyes = 1;
    b.init = 1;
 
-   void set_led (uint16_t led, uint8_t level, uint32_t colour)
+   void set_led (uint16_t led, uint8_t level, uint8_t c)
    {                            // led index from 0
       int s = 0;
       while (s < STRIPS && led >= stripcount[s])
          led -= stripcount[s++];
       if (s == STRIPS)
          return;
-      revk_led (strip[s], led, level, colour);
+      uint8_t r = ((c & 1) ? level : 0);
+      uint8_t g = ((c & 2) ? level : 0);
+      uint8_t b = ((c & 4) ? level : 0);
+      uint8_t w = ((c & 8) ? level : 0);
+      if (typeisrgbw (striptype[s]))
+         led_strip_set_pixel_rgbw (strip[s], led, gamma8[r], gamma8[g], gamma8[b], gamma8[w]);
+      else
+         led_strip_set_pixel (strip[s], led, gamma8[r], gamma8[g], gamma8[b]);
    }
 
    while (1)
@@ -350,7 +357,7 @@ app_main ()
          push1 = 1;
          b.pushed1 = push;
          if (ledbutton1)
-            set_led (ledbutton1, 255, revk_rgb (push ? 'R' : 'G'));
+            set_led (ledbutton1, 255, push ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
       } else if (push1 && push1++ >= 10)
       {                         // Action
          push1 = 0;
@@ -389,7 +396,7 @@ app_main ()
          push2 = 1;
          b.pushed2 = push;
          if (ledbutton2)
-            set_led (ledbutton2, 255, revk_rgb (push ? 'R' : 'G'));
+            set_led (ledbutton2, 255, push ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
       } else if (push2 && push2++ >= 10)
       {                         // Action
          push2 = 0;
@@ -430,42 +437,41 @@ app_main ()
       if (leds)
       {
          for (int i = 0; i < leds; i++)
-            set_led (i, 255, 0);        // Clear
+            set_led (i, 255, REVK_SETTINGS_LEDEYEC_BLACK);      // Clear
          if (!revk_shutting_down (NULL))
          {
             // Static LEDs
             if (ledarc && ledarcs)
                for (int i = ledarc; i < ledarc + ledarcs; i++)
-                  set_led (i - 1, (i & 1) ? 255 : 100, revk_rgb ((i & 1) ? *ledarcc1 : *ledarcc2));
+                  set_led (i - 1, 255, (i & 1) ? ledarcc1 : ledarcc2);
 
             if (ledfixed && ledfixeds)
                for (int i = ledfixed; i < ledfixed + ledfixeds; i++)
-                  set_led (i - 1, 255, revk_rgb (*ledfixedc));
+                  set_led (i - 1, 255, ledfixedc);
 
-	    // PWM (open/closed)
+            // PWM (open/closed)
             if (ledpwm)
-               set_led (ledpwm - 1, 255, revk_rgb (b.open ? 'G' : 'R'));
+               set_led (ledpwm - 1, 255, b.open ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
             // Eye 1
-            if (ledeye1)
+            if (ledeye1 && b.eyes)
                for (int i = 0; i < ledeyes; i++)
-                  set_led (i + ledeye1 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
+                  set_led (i + ledeye1 - 1, 255, ledeyec);
             // Eye 2
-            if (ledeye2)
+            if (ledeye2 && b.eyes)
                for (int i = 0; i < ledeyes; i++)
-                  set_led (i + ledeye2 - 1, 255, revk_rgb (b.eyes ? *ledeyec : 'K'));
+                  set_led (i + ledeye2 - 1, 255, ledeyec);
             if (ledpulse && ledpulses)
             {
                static uint8_t cycle = 0;
                cycle += 8;
                for (int i = ledpulse; i < ledpulse + ledpulses; i++)
-                  set_led (i - 1, 64 + cos8[cycle] / 2, revk_rgb (*ledpulsec));
+                  set_led (i - 1, 64 + cos8[cycle] / 2, ledpulsec);
             }
             if (b.cylon && ledcylon && ledcylons)
             {                   // Cylon
                static int8_t cycle = 0,
                   dir = 1;
-               for (int i = ledcylon; i < ledcylon + ledcylons; i++)
-                  set_led (i - 1, 255, revk_rgb (i == ledcylon + cycle ? *ledcylonc : 'K'));
+               set_led (ledcylon + cycle - 1, 255, ledcylonc);
                if (cycle == ledcylons - 1)
                   dir = -1;
                else if (!cycle)

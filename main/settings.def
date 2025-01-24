@@ -27,21 +27,21 @@ gpio	spk.data	37		// Speaker Data
 u8	led.eye1		.live=1			// LED number for eye 1
 u8	led.eye2		.live=1			// LED number for eye 2
 u8	led.eyes	1	.live=1			// How many LEDs in eye
-c1	led.eyec	C	.live=1			// Eye LED colour
-c1	led.eyec2	R	.live=1			// Eye LED colour (evil)
+enum	led.eyec	6	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Eye LED colour
+enum	led.eyec2	1	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Eye LED colour (evil)
 u8	led.arc			.live=1			// LED number start of arc ring
 u8	led.arcs		.live=1			// How many LED in arc ring
-c1	led.arcc1	C	.live=1			// Arc LED colour (bright)
-c1	led.arcc2	R	.live=1			// Arc LED colour (dim)
+enum	led.arcc1	9	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Arc LED colour (bright)
+enum	led.arcc2	8	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Arc LED colour (dim)
 u8	led.pulse		.live=1			// LED number start of pulsing
 u8	led.pulses		.live=1			// How many LED in pulsing
-c1	led.pulsec	W	.live=1			// Pulse LED colour
+enum	led.pulsec	1	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Pulse LED colour
 u8	led.fixed		.live=1			// LED number start of fixed LEDs
 u8	led.fixeds		.live=1			// How many LED in fixed LED
-c1	led.fixedc	C	.live=1			// Fixed LED colour
+enum	led.fixedc	6	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Fixed LED colour
 u8	led.cylon		.live=1			// LED number start of cylon LEDs
 u8	led.cylons		.live=1			// How many LED in cylon LED
-c1	led.cylonc	R	.live=1			// cylon LED colour
+enum	led.cylonc	1	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// cylon LED colour
 u8	led.pwm			.live=1			// LED number for servo PWM status
 u8	led.button1		.live=1			// LED number for button 1 status
 u8	led.button2		.live=1			// LED number for button 2 status
