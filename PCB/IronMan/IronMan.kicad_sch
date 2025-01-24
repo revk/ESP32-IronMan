@@ -748,6 +748,257 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "MAX98357A_1"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at -8.89 11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "MAX98357A"
+				(at 10.16 11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "RevK:WLP-1.437mmx1.347mm-0.21mm-ball"
+				(at 0 -26.67 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX98357A-MAX98357B.pdf"
+				(at -0.254 -29.21 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Mono DAC with amplifier, I2S, PCM, TDM, 32-bit, 96khz, 3.2W, WLP"
+				(at -0.254 -24.13 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MPN" "C2682619"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "pcm tdm i2s left-justified amplifier audio dac"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "TQFN*3x3mm*P0.5mm*EP1.23x1.23mm*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "MAX98357A_1_1_1"
+				(rectangle
+					(start -10.16 10.16)
+					(end 10.16 -10.16)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(pin input line
+					(at -12.7 7.62 0)
+					(length 2.54)
+					(name "DIN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 5.08 0)
+					(length 2.54)
+					(name "BCLK"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "C1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 2.54 0)
+					(length 2.54)
+					(name "LRCLK"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "C3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 12.7 270)
+					(length 2.54)
+					(name "VDD"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 -12.7 90)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "C2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 12.7 7.62 180)
+					(length 2.54)
+					(name "OUTP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 12.7 5.08 180)
+					(length 2.54)
+					(name "OUTN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at 12.7 -1.27 180)
+					(length 2.54)
+					(name "~{SD_MODE}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "A1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 12.7 -3.81 180)
+					(length 2.54)
+					(name "GAIN_SLOT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "B2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "RevK:ES05D1MC10"
 			(pin_numbers
 				(hide yes)
@@ -798,7 +1049,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C5137770"
+			(property "MPN" "C5137770"
 				(at 0 -3.175 0)
 				(effects
 					(font
@@ -930,7 +1181,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
+			(property "Description" "ESP32S3"
 				(at 0 0 0)
 				(effects
 					(font
@@ -939,7 +1190,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C3013941"
+			(property "MPN" "C3013941"
 				(at 0 -32.385 0)
 				(effects
 					(font
@@ -2434,7 +2685,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C5656610"
+			(property "MPN" "C5656610"
 				(at 6.35 -8.128 0)
 				(effects
 					(font
@@ -2654,12 +2905,13 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" ""
+			(property "MPN" "C2682619"
 				(at 0 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(hide yes)
 				)
 			)
 			(property "ki_keywords" "pcm tdm i2s left-justified amplifier audio dac"
@@ -2895,17 +3147,8 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
+			(property "Description" "Regulator and associated components."
 				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "LCSC Part #" "C2684786"
-				(at 0 -26.67 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -3668,7 +3911,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C393941"
+			(property "MPN" "C393941"
 				(at 0 0 0)
 				(effects
 					(font
@@ -4045,7 +4288,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C709357"
+			(property "MPN" "C709357"
 				(at 0 0 0)
 				(effects
 					(font
@@ -4164,7 +4407,7 @@
 						(type default)
 					)
 					(fill
-						(type outline)
+						(type none)
 					)
 				)
 				(arc
@@ -4176,7 +4419,7 @@
 						(type default)
 					)
 					(fill
-						(type none)
+						(type outline)
 					)
 				)
 				(polyline
@@ -4238,6 +4481,17 @@
 						(type none)
 					)
 				)
+				(circle
+					(center 0 -5.842)
+					(radius 1.27)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
 				(polyline
 					(pts
 						(xy 0 -5.842) (xy 0 4.318)
@@ -4248,17 +4502,6 @@
 					)
 					(fill
 						(type none)
-					)
-				)
-				(circle
-					(center 0 -5.842)
-					(radius 1.27)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
 					)
 				)
 				(rectangle
@@ -4720,7 +4963,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C5349953"
+			(property "MPN" "C5349953"
 				(at 1.27 -11.43 0)
 				(effects
 					(font
@@ -8168,7 +8411,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C194427"
+		(property "MPN" "C194427"
 			(at 55.245 19.685 0)
 			(effects
 				(font
@@ -8737,7 +8980,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Polarized capacitor"
 			(at 137.16 156.21 0)
 			(effects
 				(font
@@ -8746,16 +8989,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C106188"
-			(at 137.16 156.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Rotation Offset" "180"
+		(property "MPN" "C106188"
 			(at 137.16 156.21 0)
 			(effects
 				(font
@@ -8831,7 +9065,16 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
+			(at 105.41 137.795 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "C5137770"
 			(at 105.41 137.795 0)
 			(effects
 				(font
@@ -9128,7 +9371,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Resistor"
 			(at 210.185 129.54 0)
 			(effects
 				(font
@@ -9195,7 +9438,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Resistor"
 			(at 213.995 129.54 0)
 			(effects
 				(font
@@ -9330,7 +9573,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Unpolarized capacitor"
 			(at 187.325 63.5 0)
 			(effects
 				(font
@@ -9400,7 +9643,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "ESP32S3"
 			(at 50.8 77.47 0)
 			(effects
 				(font
@@ -9409,7 +9652,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C3013941"
+		(property "MPN" "C3013941"
 			(at 50.8 109.855 0)
 			(effects
 				(font
@@ -9673,7 +9916,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Unpolarized capacitor"
 			(at 272.415 78.105 0)
 			(effects
 				(font
@@ -9741,7 +9984,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
 			(at 277.495 160.02 0)
 			(effects
 				(font
@@ -9808,7 +10051,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
 			(at 227.965 90.17 0)
 			(effects
 				(font
@@ -10167,7 +10410,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Resistor"
 			(at 233.045 129.54 0)
 			(effects
 				(font
@@ -10369,7 +10612,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Unpolarized capacitor"
 			(at 265.43 35.56 0)
 			(effects
 				(font
@@ -10378,7 +10621,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C15525"
+		(property "MPN" "C15525"
 			(at 265.43 35.56 0)
 			(effects
 				(font
@@ -10516,7 +10759,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
 			(at 240.665 81.28 0)
 			(effects
 				(font
@@ -10725,7 +10968,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765055"
+		(property "MPN" "C2765055"
 			(at 81.28 133.35 0)
 			(effects
 				(font
@@ -10911,7 +11154,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "RevK:ICS43434_MEMS_Mic_Open"
+		(property "Footprint" "RevK:ICS43434_MEMS_Mic"
 			(at 162.306 45.085 0)
 			(effects
 				(font
@@ -10938,7 +11181,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5656610"
+		(property "MPN" "C5656610"
 			(at 168.91 72.263 0)
 			(effects
 				(font
@@ -11020,7 +11263,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
 			(at 227.965 48.26 0)
 			(effects
 				(font
@@ -11071,7 +11314,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "RevK:ICS43434_MEMS_Mic_Open"
+		(property "Footprint" "RevK:ICS43434_MEMS_Mic"
 			(at 162.306 13.97 0)
 			(effects
 				(font
@@ -11098,7 +11341,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5656610"
+		(property "MPN" "C5656610"
 			(at 168.91 41.148 0)
 			(effects
 				(font
@@ -11186,7 +11429,16 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
+			(at 140.335 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "C5137770"
 			(at 140.335 166.37 0)
 			(effects
 				(font
@@ -11245,7 +11497,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" " ~"
+		(property "Datasheet" "~"
 			(at 91.44 27.305 0)
 			(effects
 				(font
@@ -11342,7 +11594,16 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
+			(at 62.23 158.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "C5137770"
 			(at 62.23 158.75 0)
 			(effects
 				(font
@@ -11551,7 +11812,16 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
+			(at 105.41 166.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "C5137770"
 			(at 105.41 166.37 0)
 			(effects
 				(font
@@ -11686,7 +11956,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Unpolarized capacitor"
 			(at 271.78 35.56 0)
 			(effects
 				(font
@@ -12023,7 +12293,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Micro SD Card Socket"
 			(at 257.175 144.78 0)
 			(effects
 				(font
@@ -12032,16 +12302,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C393941"
-			(at 257.175 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Position Offset" "0,3.075"
+		(property "MPN" "C393941"
 			(at 257.175 144.78 0)
 			(effects
 				(font
@@ -12135,7 +12396,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
 			(at 240.665 39.37 0)
 			(effects
 				(font
@@ -12199,7 +12460,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Resistor"
 			(at 229.235 129.54 0)
 			(effects
 				(font
@@ -12410,7 +12671,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C709357"
+		(property "MPN" "C709357"
 			(at 92.71 58.42 0)
 			(effects
 				(font
@@ -12546,6 +12807,7 @@
 		)
 	)
 	(symbol
+		(lib_name "MAX98357A_1")
 		(lib_id "RevK:MAX98357A")
 		(at 227.965 35.56 0)
 		(unit 1)
@@ -12600,12 +12862,13 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" ""
+		(property "MPN" "C2682619"
 			(at 227.965 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "B2"
@@ -12689,7 +12952,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Polarized capacitor"
 			(at 102.235 156.21 0)
 			(effects
 				(font
@@ -12698,16 +12961,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C106188"
-			(at 102.235 156.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Rotation Offset" "180"
+		(property "MPN" "C106188"
 			(at 102.235 156.21 0)
 			(effects
 				(font
@@ -12784,7 +13038,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765056"
+		(property "MPN" "C2765056"
 			(at 156.21 133.985 0)
 			(effects
 				(font
@@ -12866,12 +13120,13 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" ""
+		(property "MPN" "C2682619"
 			(at 227.965 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(pin "B2"
@@ -13030,7 +13285,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765056"
+		(property "MPN" "C2765056"
 			(at 156.21 162.56 0)
 			(effects
 				(font
@@ -13110,7 +13365,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765056"
+		(property "MPN" "C2765056"
 			(at 121.285 133.985 0)
 			(effects
 				(font
@@ -13180,7 +13435,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Resistor"
 			(at 221.615 129.54 0)
 			(effects
 				(font
@@ -13256,7 +13511,16 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
+			(at 140.335 137.795 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "C5137770"
 			(at 140.335 137.795 0)
 			(effects
 				(font
@@ -13335,7 +13599,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765055"
+		(property "MPN" "C2765055"
 			(at 245.745 30.48 0)
 			(effects
 				(font
@@ -13479,7 +13743,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765055"
+		(property "MPN" "C2765055"
 			(at 81.28 157.48 0)
 			(effects
 				(font
@@ -13804,7 +14068,17 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5349953"
+		(property "MPN" "C5349953"
+			(at 103.505 87.63 0)
+			(effects
+				(font
+					(size 1 1)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "MPN" "C5349953"
 			(at 103.505 87.63 0)
 			(effects
 				(font
@@ -14075,7 +14349,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Unpolarized capacitor"
 			(at 34.29 118.745 0)
 			(effects
 				(font
@@ -14218,7 +14492,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765056"
+		(property "MPN" "C2765056"
 			(at 121.285 162.56 0)
 			(effects
 				(font
@@ -14291,7 +14565,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Polarized capacitor"
 			(at 102.235 127.635 0)
 			(effects
 				(font
@@ -14300,16 +14574,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C106188"
-			(at 102.235 127.635 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Rotation Offset" "180"
+		(property "MPN" "C106188"
 			(at 102.235 127.635 0)
 			(effects
 				(font
@@ -14442,17 +14707,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Regulator and associated components."
 			(at 34.29 26.035 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part #" "C2684786"
-			(at 34.29 52.705 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14818,7 +15074,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Polarized capacitor"
 			(at 137.16 127.635 0)
 			(effects
 				(font
@@ -14827,16 +15083,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C106188"
-			(at 137.16 127.635 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB Rotation Offset" "180"
+		(property "MPN" "C106188"
 			(at 137.16 127.635 0)
 			(effects
 				(font
@@ -14915,7 +15162,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C2765055"
+		(property "MPN" "C2765055"
 			(at 245.745 72.39 0)
 			(effects
 				(font
@@ -15059,7 +15306,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C1691"
+		(property "MPN" "C1691"
 			(at 55.245 21.59 0)
 			(effects
 				(font
@@ -15225,7 +15472,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Unpolarized capacitor"
 			(at 187.325 32.385 0)
 			(effects
 				(font
@@ -15367,7 +15614,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C226891"
+		(property "MPN" "C226891"
 			(at 244.475 78.74 90)
 			(effects
 				(font
@@ -15649,7 +15896,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Resistor"
 			(at 225.425 129.54 0)
 			(effects
 				(font
@@ -15725,7 +15972,16 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C5137770"
+		(property "MPN" "C5137770"
+			(at 62.23 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "C5137770"
 			(at 62.23 134.62 0)
 			(effects
 				(font
@@ -15925,7 +16181,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Unpolarized capacitor"
 			(at 27.94 118.745 0)
 			(effects
 				(font
@@ -16134,7 +16390,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Resistor"
 			(at 217.805 129.54 0)
 			(effects
 				(font
@@ -16367,7 +16623,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Unpolarized capacitor"
 			(at 266.065 78.105 0)
 			(effects
 				(font
@@ -16376,7 +16632,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C15525"
+		(property "MPN" "C15525"
 			(at 266.065 78.105 0)
 			(effects
 				(font
