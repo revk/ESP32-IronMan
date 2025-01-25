@@ -444,6 +444,7 @@ app_main ()
       {
          b.connected = 1;
          b.connect = 0;
+         play = "";
          revk_command ("upgrade", NULL);        // Immediate upgrade attempt
       }
       {
@@ -522,5 +523,9 @@ app_main ()
       if (blink[0].set)
          revk_blink_do ();      // Library blink
       b.init = 0;
+      if (revk_shutting_down (NULL))
+         break;
    }
+   sleep (2);
+   play = "UPGRADE";
 }
