@@ -1,6 +1,8 @@
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 #define	BUTTONS	2
 
+enum	ironman			.enums="ArcReactor,Helmet,Glove"	// What part of suit
+
 gpio	button			.array=BUTTONS		// Activation buttons
 
 gpio	strip.gpio		4	.array=STRIPS .old="rgb"		// GPIOs for LED string

@@ -12,6 +12,7 @@ revk_settings_bits_t revk_settings_bits={0};
 revk_settings_t const revk_settings[]={
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 #define	BUTTONS	2
+ {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ironman",.comment="What part of suit",.len=7,.ptr=&ironman,.size=sizeof(uint8_t),.enums="ArcReactor,Helmet,Glove"	},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="button",.comment="Activation buttons",.len=6,.ptr=&button,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.array=BUTTONS},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="stripgpio",.comment="GPIOs for LED string",.group=1,.len=9,.dot=5,.def="4",.ptr=&stripgpio,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.array=STRIPS,.old="rgb"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="stripcount",.comment="How many LEDs in string",.group=1,.len=10,.dot=5,.ptr=&stripcount,.size=sizeof(uint16_t),.array=STRIPS,.old="leds"	},
@@ -140,6 +141,7 @@ revk_settings_t const revk_settings[]={
 #undef str
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 #define	BUTTONS	2
+uint8_t ironman=0;
 revk_gpio_t button[BUTTONS]={0};
 revk_gpio_t stripgpio[STRIPS]={0};
 uint16_t stripcount[STRIPS]={0};

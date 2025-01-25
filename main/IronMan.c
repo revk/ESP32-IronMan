@@ -281,29 +281,61 @@ void
 dobutton (uint8_t button, uint8_t press)
 {
    ESP_LOGE (TAG, "Button%d press %d", button, press);
-   if (!button)
-   {                            // First button)
-      if (press == 1)
+   switch (button)
+   {
+   case 0:                     // First button
+      switch (ironman)
       {
-         if (b.pwr)
-            b.open ^= 1;
-         return;
+      case REVK_SETTINGS_IRONMAN_HELMET:
+         switch (press)
+         {
+         case 1:
+            if (b.pwr)
+               b.open ^= 1;
+            break;
+         case 2:
+            if (b.pwr)
+               b.eyes ^= 1;     // Eyes off
+            b.cylon = ~b.eyes;
+            break;
+         case 3:
+            b.eyes = 0;         // Eyes off
+            b.pwr = 0;          // power off
+            b.cylon = 0;        // Cylon off
+            revk_restart (1, "Reboot");
+            break;
+         }
+         break;
+      case REVK_SETTINGS_IRONMAN_ARCREACTOR:
+         switch (press)
+         {
+         case 1:
+            play = "SUIT1";
+            break;
+         case 2:
+            play = "SUIT2";
+            break;
+         case 3:
+            revk_restart (1, "Reboot");
+            break;
+         }
+         break;
+      case REVK_SETTINGS_IRONMAN_GLOVE:
+         switch (press)
+         {
+         case 1:
+            break;
+         case 2:
+            break;
+         case 3:
+            revk_restart (1, "Reboot");
+            break;
+         }
+         break;
       }
-      if (press == 2)
-      {                         // off
-         if (b.pwr)
-            b.eyes ^= 1;        // Eyes off
-         b.cylon = ~b.eyes;
-         return;
-      }
-      if (press == 3)
-      {
-         b.eyes = 0;            // Eyes off
-         b.pwr = 0;             // power off
-         b.cylon = 0;           // Cylon off
-         revk_restart (1, "Reboot");
-         return;
-      }
+      break;
+   case 1:                     // Second button
+      break;
    }
 }
 

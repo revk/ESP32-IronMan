@@ -42,6 +42,11 @@ struct revk_settings_s {
  uint8_t isenum:1;
 };
 enum {
+ REVK_SETTINGS_IRONMAN_ARCREACTOR,
+ REVK_SETTINGS_IRONMAN_HELMET,
+ REVK_SETTINGS_IRONMAN_GLOVE,
+};
+enum {
  REVK_SETTINGS_STRIPTYPE_WS2812_GRB,
  REVK_SETTINGS_STRIPTYPE_WS2812_GBR,
  REVK_SETTINGS_STRIPTYPE_WS2812_RGB,
@@ -261,6 +266,7 @@ struct revk_settings_bits_s {
 };
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 #define	BUTTONS	2
+extern uint8_t ironman;	// What part of suit
 extern revk_gpio_t button[BUTTONS];	// Activation buttons
 extern revk_gpio_t stripgpio[STRIPS];	// GPIOs for LED string
 extern uint16_t stripcount[STRIPS];	// How many LEDs in string
@@ -405,6 +411,6 @@ enum {
 #define	REVK_SETTINGS_HAS_BLOB
 #define	REVK_SETTINGS_HAS_STRING
 #define	REVK_SETTINGS_HAS_OCTET
-typedef uint8_t revk_setting_bits_t[13];
+typedef uint8_t revk_setting_bits_t[14];
 typedef uint8_t revk_setting_group_t[2];
 extern const char revk_settings_secret[];
