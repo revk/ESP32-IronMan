@@ -210,6 +210,7 @@ struct revk_gpio_s {
 };
 enum {
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
+#define	BUTTONS	2
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 #endif
  REVK_SETTINGS_BITFIELD_otaauto,
@@ -244,6 +245,7 @@ enum {
 typedef struct revk_settings_bits_s revk_settings_bits_t;
 struct revk_settings_bits_s {
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
+#define	BUTTONS	2
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 #endif
  uint8_t otaauto:1;	// OTA auto upgrade
@@ -276,7 +278,8 @@ struct revk_settings_bits_s {
 #endif
 };
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
-extern revk_gpio_t button[2];	// Activation buttons
+#define	BUTTONS	2
+extern revk_gpio_t button[BUTTONS];	// Activation buttons
 extern revk_gpio_t stripgpio[STRIPS];	// GPIOs for LED string
 extern uint16_t stripcount[STRIPS];	// How many LEDs in string
 extern uint8_t striptype[STRIPS];	// Type of LED string
@@ -313,8 +316,7 @@ extern uint8_t ledcylon;	// LED number start of cylon LEDs
 extern uint8_t ledcylons;	// How many LED in cylon LED
 extern uint8_t ledcylonc;	// cylon LED colour
 extern uint8_t ledpwm;	// LED number for servo PWM status
-extern uint8_t ledbutton1;	// LED number for button 1 status
-extern uint8_t ledbutton2;	// LED number for button 2 status
+extern uint8_t ledbutton[BUTTONS];	// LED number for button status
 extern revk_gpio_t visorpwm;	// Visor servo PWM
 extern uint8_t visorclose;	// Angle visor close
 extern uint8_t visoropen;	// Angle visor open

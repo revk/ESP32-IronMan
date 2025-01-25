@@ -24,6 +24,8 @@ static const char __attribute__((unused)) TAG[] = "IronMan";
 
 led_strip_handle_t strip[STRIPS] = { 0 };
 
+#define	CPS	40
+
 #define SERVO_TIMEBASE_RESOLUTION_HZ 1000000    // 1MHz, 1us per tick
 #define SERVO_TIMEBASE_PERIOD        20000      // 20000 ticks, 20ms
 #define SERVO_MIN_PULSEWIDTH_US 1000    // Minimum pulse width in microsecond
@@ -57,8 +59,6 @@ struct
    uint8_t connect:1;           // WiFi connect
    uint8_t cylon:1;             // Cylon effect
    uint8_t connected:1;         // WiFi connected
-   uint8_t pushed1:1;           // Pushed button1
-   uint8_t pushed2:1;           // Pushed button2
 } b = { 0 };
 
 const char sd_mount[] = "/sd";
@@ -397,67 +397,48 @@ app_main ()
 
    while (1)
    {
-      usleep (25000);
+      usleep (1000000 / CPS);
       // Main button
-      uint8_t push = revk_gpio_get (button[0]);
-      static uint8_t push1 = 0;
-      static uint8_t press1 = 0;
-      if (b.init || push != b.pushed1)
+      static uint8_t pushlast = 0;      // Last button state
+      static uint8_t press[BUTTONS] = { 0 };    // Press count
+      static uint8_t pushtime[BUTTONS] = { 0 }; // Push time
+      for (int n = 0; n < BUTTONS; n++)
       {
-         if (push)
+         uint8_t push = revk_gpio_get (button[n]);
+         if (b.init || ((pushlast >> n) & 1) != push)
          {
-            press1++;
-            ESP_LOGE (TAG, "Push1 %d", press1);
+            pushlast = ((pushlast & ~(1 << n)) | (push << n));
+            if (push)
+            {
+               press[n]++;
+               ESP_LOGE (TAG, "Push%d %d", n, press[n]);        // TODO
+            }
+            if (ledbutton[n])
+               set_led (ledbutton[n], 255, push ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
+            pushtime[n] = 0;
+         } else if (press[n] && pushtime[n]++ >= CPS / 2)
+         {                      // Action
+            ESP_LOGE (TAG, "Pushed%d %d", n, press[n]); // TODO
+            if (!n && press[n] == 1)
+            {
+               if (b.pwr)
+                  b.open ^= 1;
+               else
+                  b.pwr = 1;
+            } else if (!n && press[n] == 2)
+            {                   // off
+               if (b.pwr)
+                  b.eyes ^= 1;  // Eyes off
+               b.cylon = ~b.eyes;
+            } else if (!n && press[n] == 3)
+            {
+               b.eyes = 0;      // Eyes off
+               b.pwr = 0;       // power off
+               b.cylon = 0;     // Cylon off
+               revk_restart (1, "Reboot");
+            }
+            press[n] = 0;
          }
-         push1 = 1;
-         b.pushed1 = push;
-         if (ledbutton1)
-            set_led (ledbutton1, 255, push ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
-      } else if (push1 && push1++ >= 10)
-      {                         // Action
-         push1 = 0;
-         ESP_LOGE (TAG, "Pushed1 %d", press1);
-         if (press1 == 1)
-         {
-            if (b.pwr)
-               b.open ^= 1;
-            else
-               b.pwr = 1;
-         } else if (press1 == 2)
-         {                      // off
-            if (b.pwr)
-               b.eyes ^= 1;     // Eyes off
-            b.cylon = ~b.eyes;
-         } else if (press1 == 3)
-         {
-            b.eyes = 0;         // Eyes off
-            b.pwr = 0;          // power off
-            b.cylon = 0;        // Cylon off
-            revk_restart (1, "Reboot");
-         }
-         press1 = 0;
-      }
-      // Second button
-      push = revk_gpio_get (button[1]);
-      static uint8_t push2 = 0;
-      static uint8_t press2 = 0;
-      if (b.init || push != b.pushed2)
-      {
-         if (push)
-         {
-            press2++;
-            ESP_LOGE (TAG, "Push2 %d", press2);
-         }
-         push2 = 1;
-         b.pushed2 = push;
-         if (ledbutton2)
-            set_led (ledbutton2, 255, push ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
-      } else if (push2 && push2++ >= 10)
-      {                         // Action
-         push2 = 0;
-         ESP_LOGE (TAG, "Pushed2 %d", press2);
-         // No action for now
-         press2 = 0;
       }
       if (b.connect)
       {

@@ -1,6 +1,7 @@
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
+#define	BUTTONS	2
 
-gpio	button			.array=2		// Activation buttons
+gpio	button			.array=BUTTONS		// Activation buttons
 
 gpio	strip.gpio		4	.array=STRIPS .old="rgb"		// GPIOs for LED string
 u16	strip.count			.array=STRIPS .old="leds"	// How many LEDs in string
@@ -42,8 +43,7 @@ u8	led.cylon		.live=1			// LED number start of cylon LEDs
 u8	led.cylons		.live=1			// How many LED in cylon LED
 enum	led.cylonc	1	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// cylon LED colour
 u8	led.pwm			.live=1			// LED number for servo PWM status
-u8	led.button1		.live=1			// LED number for button 1 status
-u8	led.button2		.live=1			// LED number for button 2 status
+u8	led.button		.live=1 .array=BUTTONS			// LED number for button status
 
 gpio	visor.pwm		.old="pwm"		// Visor servo PWM
 u8	visor.close	0	.live=1 .unit="°"	// Angle visor close

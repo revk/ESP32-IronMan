@@ -11,7 +11,8 @@ revk_settings_bits_t revk_settings_bits={0};
 #define	quote(s)	str(s)
 revk_settings_t const revk_settings[]={
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
- {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="button",.comment="Activation buttons",.len=6,.ptr=&button,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.array=2},
+#define	BUTTONS	2
+ {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="button",.comment="Activation buttons",.len=6,.ptr=&button,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.array=BUTTONS},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="stripgpio",.comment="GPIOs for LED string",.group=1,.len=9,.dot=5,.def="4",.ptr=&stripgpio,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.array=STRIPS,.old="rgb"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="stripcount",.comment="How many LEDs in string",.group=1,.len=10,.dot=5,.ptr=&stripcount,.size=sizeof(uint16_t),.array=STRIPS,.old="leds"	},
  {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="striptype",.comment="Type of LED string",.group=1,.len=9,.dot=5,.ptr=&striptype,.size=sizeof(uint8_t),.array=STRIPS,.enums="WS2812 GRB,WS2812 GBR,WS2812 RGB,WS2812 RBG,WS2812 BGR,WS2812 BRG,WS2812 GRBW,WS2812 GBRW,WS2812 RGBW,WS2812 RBGW,WS2812 BGRW,WS2812 BRGW,SK7812 GRB,SK7812 GBR,SK7812 RGB,SK7812 RBG,SK7812 BGR,SK7812 BRG,SK7812 GRBW,SK7812 GBRW,SK7812 RGBW,SK7812 RBGW,SK7812 BGRW,SK7812 BRGW" },
@@ -48,8 +49,7 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylons",.comment="How many LED in cylon LED",.group=5,.len=9,.dot=3,.ptr=&ledcylons,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledcylonc",.comment="cylon LED colour",.group=5,.len=9,.dot=3,.def="1",.ptr=&ledcylonc,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwm",.comment="LED number for servo PWM status",.group=5,.len=6,.dot=3,.ptr=&ledpwm,.size=sizeof(uint8_t),.live=1},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton1",.comment="LED number for button 1 status",.group=5,.len=10,.dot=3,.ptr=&ledbutton1,.size=sizeof(uint8_t),.live=1},
- {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton2",.comment="LED number for button 2 status",.group=5,.len=10,.dot=3,.ptr=&ledbutton2,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton",.comment="LED number for button status",.group=5,.len=9,.dot=3,.ptr=&ledbutton,.size=sizeof(uint8_t),.live=1,.array=BUTTONS},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="visorpwm",.comment="Visor servo PWM",.group=6,.len=8,.dot=5,.ptr=&visorpwm,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.old="pwm"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visorclose",.comment="Angle visor close",.group=6,.len=10,.dot=5,.def="0",.ptr=&visorclose,.size=sizeof(uint8_t),.live=1,.unit="°"	},
  {.type=REVK_SETTINGS_UNSIGNED,.name="visoropen",.comment="Angle visor open",.group=6,.len=9,.dot=5,.def="90",.ptr=&visoropen,.size=sizeof(uint8_t),.live=1,.unit="°"	},
@@ -140,7 +140,8 @@ revk_settings_t const revk_settings[]={
 #undef quote
 #undef str
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
-revk_gpio_t button[2]={0};
+#define	BUTTONS	2
+revk_gpio_t button[BUTTONS]={0};
 revk_gpio_t stripgpio[STRIPS]={0};
 uint16_t stripcount[STRIPS]={0};
 uint8_t striptype[STRIPS]={0};
@@ -177,8 +178,7 @@ uint8_t ledcylon=0;
 uint8_t ledcylons=0;
 uint8_t ledcylonc=0;
 uint8_t ledpwm=0;
-uint8_t ledbutton1=0;
-uint8_t ledbutton2=0;
+uint8_t ledbutton[BUTTONS]={0};
 revk_gpio_t visorpwm={0};
 uint8_t visorclose=0;
 uint8_t visoropen=0;
