@@ -467,11 +467,11 @@ app_main ()
          static int8_t step = 0;
          if (b.init || newangle != pwmangle)
          {
-            if (newangle > pwmangle && step < 10)
+            if (newangle > pwmangle && step < CPS)
                step++;
-            else if (newangle < pwmangle && step > -10)
+            else if (newangle < pwmangle && step > -CPS)
                step--;
-            pwmangle += step;
+            pwmangle += step / 4;
             if (pwmangle > visoropen)
                pwmangle = visoropen;
             if (pwmangle < visorclose)
