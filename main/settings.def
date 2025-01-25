@@ -28,7 +28,6 @@ u8	led.eye1		.live=1			// LED number for eye 1
 u8	led.eye2		.live=1			// LED number for eye 2
 u8	led.eyes	1	.live=1			// How many LEDs in eye
 enum	led.eyec	6	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Eye LED colour
-enum	led.eyec2	1	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Eye LED colour (evil)
 u8	led.arc			.live=1			// LED number start of arc ring
 u8	led.arcs		.live=1			// How many LED in arc ring
 enum	led.arcc1	9	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Arc LED colour (bright)
@@ -46,5 +45,5 @@ u8	led.pwm			.live=1			// LED number for servo PWM status
 u8	led.button		.live=1 .array=BUTTONS			// LED number for button status
 
 gpio	visor.pwm		.old="pwm"		// Visor servo PWM
-u8	visor.close	0	.live=1 .unit="°"	// Angle visor close
-u8	visor.open	90	.live=1	.unit="°"	// Angle visor open
+s16	visor.close	0	.live=1 .unit="°"	// Angle visor close
+s16	visor.open	130	.live=1	.unit="°"	// Angle visor open

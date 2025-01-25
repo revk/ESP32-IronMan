@@ -31,6 +31,7 @@ led_strip_handle_t strip[STRIPS] = { 0 };
 #define SERVO_MIN_PULSEWIDTH_US 1000    // Minimum pulse width in microsecond
 #define SERVO_MAX_PULSEWIDTH_US 2000    // Maximum pulse width in microsecond
 #define SERVO_MAX_DEGREE        90      // Maximum angle
+RTC_NOINIT_ATTR int16_t pwmangle;
 
 const uint8_t cos8[256] =
    { 255, 255, 255, 255, 255, 255, 254, 254, 253, 252, 252, 251, 250, 249, 248, 247, 246, 245, 243, 242, 240, 239, 237, 236, 234,
@@ -277,6 +278,36 @@ spk_task (void *arg)
 }
 
 void
+dobutton (uint8_t button, uint8_t press)
+{
+   ESP_LOGE (TAG, "Button%d press %d", button, press);
+   if (!button)
+   {                            // First button)
+      if (press == 1)
+      {
+         if (b.pwr)
+            b.open ^= 1;
+         return;
+      }
+      if (press == 2)
+      {                         // off
+         if (b.pwr)
+            b.eyes ^= 1;        // Eyes off
+         b.cylon = ~b.eyes;
+         return;
+      }
+      if (press == 3)
+      {
+         b.eyes = 0;            // Eyes off
+         b.pwr = 0;             // power off
+         b.cylon = 0;           // Cylon off
+         revk_restart (1, "Reboot");
+         return;
+      }
+   }
+}
+
+void
 app_main ()
 {
    //ESP_LOGE (TAG, "Started");
@@ -293,7 +324,7 @@ app_main ()
       if (stripgpio[s].set && stripcount[s])
       {
          leds += stripcount[s];
-         ESP_LOGE (TAG, "Started using GPIO %d %s, %d LEDs", stripgpio[s].num, stripgpio[s].invert ? " (inverted)" : "",
+         ESP_LOGE (TAG, "PWM started using GPIO %d%s, %d LEDs", stripgpio[s].num, stripgpio[s].invert ? " (inverted)" : "",
                    stripcount[s]);
          led_strip_config_t strip_config = {
             .strip_gpio_num = stripgpio[s].num,
@@ -411,32 +442,14 @@ app_main ()
             if (push)
             {
                press[n]++;
-               ESP_LOGE (TAG, "Push%d %d", n, press[n]);        // TODO
+               ESP_LOGD (TAG, "Push%d %d", n, press[n]);        // TODO
             }
             if (ledbutton[n])
                set_led (ledbutton[n], 255, push ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
             pushtime[n] = 0;
          } else if (press[n] && pushtime[n]++ >= CPS / 2)
          {                      // Action
-            ESP_LOGE (TAG, "Pushed%d %d", n, press[n]); // TODO
-            if (!n && press[n] == 1)
-            {
-               if (b.pwr)
-                  b.open ^= 1;
-               else
-                  b.pwr = 1;
-            } else if (!n && press[n] == 2)
-            {                   // off
-               if (b.pwr)
-                  b.eyes ^= 1;  // Eyes off
-               b.cylon = ~b.eyes;
-            } else if (!n && press[n] == 3)
-            {
-               b.eyes = 0;      // Eyes off
-               b.pwr = 0;       // power off
-               b.cylon = 0;     // Cylon off
-               revk_restart (1, "Reboot");
-            }
+            dobutton (n, press[n]);
             press[n] = 0;
          }
       }
@@ -448,26 +461,27 @@ app_main ()
          revk_command ("upgrade", NULL);        // Immediate upgrade attempt
       }
       {
+         if (b.init && pwmangle == visoropen)
+            b.open = 1;
          int newangle = b.open ? visoropen : visorclose;
-         static uint16_t angle;
          static int8_t step = 0;
-         if (b.init || newangle != angle)
+         if (b.init || newangle != pwmangle)
          {
-            if (newangle > angle && step < 10)
+            if (newangle > pwmangle && step < 10)
                step++;
-            else if (newangle < angle && step > -10)
+            else if (newangle < pwmangle && step > -10)
                step--;
-            angle += step;
-            if (angle > visoropen)
-               angle = visoropen;
-            if (angle < visorclose)
-               angle = visorclose;
-            if (newangle == angle)
+            pwmangle += step;
+            if (pwmangle > visoropen)
+               pwmangle = visoropen;
+            if (pwmangle < visorclose)
+               pwmangle = visorclose;
+            if (newangle == pwmangle)
                step = 0;
             if (visorpwm.set)
             {                   // PWM
-               REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (angle)));
-               ESP_LOGE (TAG, "Angle %d (%d) value %ld ", angle, step, angle_to_compare (angle));
+               REVK_ERR_CHECK (mcpwm_comparator_set_compare_value (comparator, angle_to_compare (pwmangle)));
+               ESP_LOGD (TAG, "Angle %d (%d) value %ld ", pwmangle, step, angle_to_compare (pwmangle));
             }
          }
       }

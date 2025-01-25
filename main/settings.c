@@ -34,7 +34,6 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye2",.comment="LED number for eye 2",.group=5,.len=7,.dot=3,.ptr=&ledeye2,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeyes",.comment="How many LEDs in eye",.group=5,.len=7,.dot=3,.def="1",.ptr=&ledeyes,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledeyec",.comment="Eye LED colour",.group=5,.len=7,.dot=3,.def="6",.ptr=&ledeyec,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
- {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledeyec2",.comment="Eye LED colour (evil)",.group=5,.len=8,.dot=3,.def="1",.ptr=&ledeyec2,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledarc",.comment="LED number start of arc ring",.group=5,.len=6,.dot=3,.ptr=&ledarc,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledarcs",.comment="How many LED in arc ring",.group=5,.len=7,.dot=3,.ptr=&ledarcs,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledarcc1",.comment="Arc LED colour (bright)",.group=5,.len=8,.dot=3,.def="9",.ptr=&ledarcc1,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
@@ -51,8 +50,8 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwm",.comment="LED number for servo PWM status",.group=5,.len=6,.dot=3,.ptr=&ledpwm,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton",.comment="LED number for button status",.group=5,.len=9,.dot=3,.ptr=&ledbutton,.size=sizeof(uint8_t),.live=1,.array=BUTTONS},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="visorpwm",.comment="Visor servo PWM",.group=6,.len=8,.dot=5,.ptr=&visorpwm,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.old="pwm"		},
- {.type=REVK_SETTINGS_UNSIGNED,.name="visorclose",.comment="Angle visor close",.group=6,.len=10,.dot=5,.def="0",.ptr=&visorclose,.size=sizeof(uint8_t),.live=1,.unit="°"	},
- {.type=REVK_SETTINGS_UNSIGNED,.name="visoropen",.comment="Angle visor open",.group=6,.len=9,.dot=5,.def="90",.ptr=&visoropen,.size=sizeof(uint8_t),.live=1,.unit="°"	},
+ {.type=REVK_SETTINGS_SIGNED,.name="visorclose",.comment="Angle visor close",.group=6,.len=10,.dot=5,.def="0",.ptr=&visorclose,.size=sizeof(int16_t),.live=1,.unit="°"	},
+ {.type=REVK_SETTINGS_SIGNED,.name="visoropen",.comment="Angle visor open",.group=6,.len=9,.dot=5,.def="130",.ptr=&visoropen,.size=sizeof(int16_t),.live=1,.unit="°"	},
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
  {.type=REVK_SETTINGS_STRING,.name="password",.comment="Settings password (this is not sent securely so use with care on local networks you control)",.len=8,.ptr=&password,.malloc=1,.revk=1,.hide=1,.secret=1},
 #endif
@@ -163,7 +162,6 @@ uint8_t ledeye1=0;
 uint8_t ledeye2=0;
 uint8_t ledeyes=0;
 uint8_t ledeyec=0;
-uint8_t ledeyec2=0;
 uint8_t ledarc=0;
 uint8_t ledarcs=0;
 uint8_t ledarcc1=0;
@@ -180,8 +178,8 @@ uint8_t ledcylonc=0;
 uint8_t ledpwm=0;
 uint8_t ledbutton[BUTTONS]={0};
 revk_gpio_t visorpwm={0};
-uint8_t visorclose=0;
-uint8_t visoropen=0;
+int16_t visorclose=0;
+int16_t visoropen=0;
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 char* password=NULL;
 #endif

@@ -86,24 +86,6 @@ enum {
  REVK_SETTINGS_LEDEYEC_W_WHITE,
 };
 enum {
- REVK_SETTINGS_LEDEYEC2_BLACK,
- REVK_SETTINGS_LEDEYEC2_RED,
- REVK_SETTINGS_LEDEYEC2_GREEN,
- REVK_SETTINGS_LEDEYEC2_YELLOW,
- REVK_SETTINGS_LEDEYEC2_BLUE,
- REVK_SETTINGS_LEDEYEC2_MAGENTA,
- REVK_SETTINGS_LEDEYEC2_CYAN,
- REVK_SETTINGS_LEDEYEC2_WHITE,
- REVK_SETTINGS_LEDEYEC2_W,
- REVK_SETTINGS_LEDEYEC2_W_RED,
- REVK_SETTINGS_LEDEYEC2_W_GREEN,
- REVK_SETTINGS_LEDEYEC2_W_YELLOW,
- REVK_SETTINGS_LEDEYEC2_W_BLUE,
- REVK_SETTINGS_LEDEYEC2_W_MAGENTA,
- REVK_SETTINGS_LEDEYEC2_W_CYAN,
- REVK_SETTINGS_LEDEYEC2_W_WHITE,
-};
-enum {
  REVK_SETTINGS_LEDARCC1_BLACK,
  REVK_SETTINGS_LEDARCC1_RED,
  REVK_SETTINGS_LEDARCC1_GREEN,
@@ -301,7 +283,6 @@ extern uint8_t ledeye1;	// LED number for eye 1
 extern uint8_t ledeye2;	// LED number for eye 2
 extern uint8_t ledeyes;	// How many LEDs in eye
 extern uint8_t ledeyec;	// Eye LED colour
-extern uint8_t ledeyec2;	// Eye LED colour (evil)
 extern uint8_t ledarc;	// LED number start of arc ring
 extern uint8_t ledarcs;	// How many LED in arc ring
 extern uint8_t ledarcc1;	// Arc LED colour (bright)
@@ -318,8 +299,8 @@ extern uint8_t ledcylonc;	// cylon LED colour
 extern uint8_t ledpwm;	// LED number for servo PWM status
 extern uint8_t ledbutton[BUTTONS];	// LED number for button status
 extern revk_gpio_t visorpwm;	// Visor servo PWM
-extern uint8_t visorclose;	// Angle visor close
-extern uint8_t visoropen;	// Angle visor open
+extern int16_t visorclose;	// Angle visor close
+extern int16_t visoropen;	// Angle visor open
 #ifdef	CONFIG_REVK_SETTINGS_PASSWORD
 extern char* password;	// Settings password (this is not sent securely so use with care on local networks you control)
 #endif
@@ -405,6 +386,7 @@ extern char* meshpass;	// Mesh AP password
 #endif
 extern revk_settings_bits_t revk_settings_bits;
 enum {
+ REVK_SETTINGS_SIGNED,
  REVK_SETTINGS_UNSIGNED,
  REVK_SETTINGS_BIT,
  REVK_SETTINGS_BLOB,
@@ -417,11 +399,12 @@ enum {
 #define	REVK_SETTINGS_HAS_COMMENT
 #define	REVK_SETTINGS_HAS_GPIO
 #define	REVK_SETTINGS_HAS_NUMERIC
+#define	REVK_SETTINGS_HAS_SIGNED
 #define	REVK_SETTINGS_HAS_UNSIGNED
 #define	REVK_SETTINGS_HAS_BIT
 #define	REVK_SETTINGS_HAS_BLOB
 #define	REVK_SETTINGS_HAS_STRING
 #define	REVK_SETTINGS_HAS_OCTET
-typedef uint8_t revk_setting_bits_t[14];
+typedef uint8_t revk_setting_bits_t[13];
 typedef uint8_t revk_setting_group_t[2];
 extern const char revk_settings_secret[];
