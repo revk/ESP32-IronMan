@@ -167,6 +167,11 @@ spk_task (void *arg)
             usleep (10000);
             continue;
          }
+         if (!*play)
+         {
+            play = NULL;
+            continue;
+         }
          // Find WAV file
          const char *bad = NULL;
          char *fn = NULL;
@@ -489,7 +494,6 @@ app_main ()
       {
          b.connected = 1;
          b.connect = 0;
-         play = "";
          revk_command ("upgrade", NULL);        // Immediate upgrade attempt
       }
       {
@@ -499,9 +503,9 @@ app_main ()
          static int8_t step = 0;
          if (b.init || newangle != pwmangle)
          {
-            if (newangle > pwmangle && step < CPS)
+            if (newangle > pwmangle && step < 100)
                step++;
-            else if (newangle < pwmangle && step > -CPS)
+            else if (newangle < pwmangle && step > -100)
                step--;
             pwmangle += step / 3;
             if (pwmangle > visoropen)
@@ -572,6 +576,17 @@ app_main ()
       if (revk_shutting_down (NULL))
          break;
    }
-   sleep (2);
-   play = "UPGRADE";
+   play = "";
+   if (revk_shutting_down (NULL) > 5)
+   {                            // Upgrade
+      sleep (2);
+      play = "UPGRADE";
+      while (1)
+      {
+         sleep (1);
+         if (revk_shutting_down (NULL) == 3)
+            play = "RESTART";
+      }
+   } else
+      play = "RESTART";
 }
