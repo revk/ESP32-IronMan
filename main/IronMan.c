@@ -503,7 +503,7 @@ app_main ()
                step++;
             else if (newangle < pwmangle && step > -CPS)
                step--;
-            pwmangle += step / 4;
+            pwmangle += step / 3;
             if (pwmangle > visoropen)
                pwmangle = visoropen;
             if (pwmangle < visorclose)
