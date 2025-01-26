@@ -42,6 +42,9 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulse",.comment="LED number start of pulsing",.group=5,.len=8,.dot=3,.ptr=&ledpulse,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpulses",.comment="How many LED in pulsing",.group=5,.len=9,.dot=3,.ptr=&ledpulses,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledpulsec",.comment="Pulse LED colour",.group=5,.len=9,.dot=3,.def="1",.ptr=&ledpulsec,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledglove",.comment="LED number start of glove",.group=5,.len=8,.dot=3,.ptr=&ledglove,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledgloves",.comment="How many LED in glove",.group=5,.len=9,.dot=3,.ptr=&ledgloves,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledglovec",.comment="Glove LED colour",.group=5,.len=9,.dot=3,.def="7",.ptr=&ledglovec,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledfixed",.comment="LED number start of fixed LEDs",.group=5,.len=8,.dot=3,.ptr=&ledfixed,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledfixeds",.comment="How many LED in fixed LED",.group=5,.len=9,.dot=3,.ptr=&ledfixeds,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledfixedc",.comment="Fixed LED colour",.group=5,.len=9,.dot=3,.def="6",.ptr=&ledfixedc,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
@@ -171,6 +174,9 @@ uint8_t ledarcc2=0;
 uint8_t ledpulse=0;
 uint8_t ledpulses=0;
 uint8_t ledpulsec=0;
+uint8_t ledglove=0;
+uint8_t ledgloves=0;
+uint8_t ledglovec=0;
 uint8_t ledfixed=0;
 uint8_t ledfixeds=0;
 uint8_t ledfixedc=0;

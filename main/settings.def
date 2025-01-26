@@ -37,6 +37,9 @@ enum	led.arcc2	8	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,
 u8	led.pulse		.live=1			// LED number start of pulsing
 u8	led.pulses		.live=1			// How many LED in pulsing
 enum	led.pulsec	1	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Pulse LED colour
+u8	led.glove		.live=1			// LED number start of glove
+u8	led.gloves		.live=1			// How many LED in glove
+enum	led.glovec	7	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Glove LED colour
 u8	led.fixed		.live=1			// LED number start of fixed LEDs
 u8	led.fixeds		.live=1			// How many LED in fixed LED
 enum	led.fixedc	6	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// Fixed LED colour

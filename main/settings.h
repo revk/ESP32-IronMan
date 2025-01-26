@@ -145,6 +145,24 @@ enum {
  REVK_SETTINGS_LEDPULSEC_W_WHITE,
 };
 enum {
+ REVK_SETTINGS_LEDGLOVEC_BLACK,
+ REVK_SETTINGS_LEDGLOVEC_RED,
+ REVK_SETTINGS_LEDGLOVEC_GREEN,
+ REVK_SETTINGS_LEDGLOVEC_YELLOW,
+ REVK_SETTINGS_LEDGLOVEC_BLUE,
+ REVK_SETTINGS_LEDGLOVEC_MAGENTA,
+ REVK_SETTINGS_LEDGLOVEC_CYAN,
+ REVK_SETTINGS_LEDGLOVEC_WHITE,
+ REVK_SETTINGS_LEDGLOVEC_W,
+ REVK_SETTINGS_LEDGLOVEC_W_RED,
+ REVK_SETTINGS_LEDGLOVEC_W_GREEN,
+ REVK_SETTINGS_LEDGLOVEC_W_YELLOW,
+ REVK_SETTINGS_LEDGLOVEC_W_BLUE,
+ REVK_SETTINGS_LEDGLOVEC_W_MAGENTA,
+ REVK_SETTINGS_LEDGLOVEC_W_CYAN,
+ REVK_SETTINGS_LEDGLOVEC_W_WHITE,
+};
+enum {
  REVK_SETTINGS_LEDFIXEDC_BLACK,
  REVK_SETTINGS_LEDFIXEDC_RED,
  REVK_SETTINGS_LEDFIXEDC_GREEN,
@@ -296,6 +314,9 @@ extern uint8_t ledarcc2;	// Arc LED colour (dim)
 extern uint8_t ledpulse;	// LED number start of pulsing
 extern uint8_t ledpulses;	// How many LED in pulsing
 extern uint8_t ledpulsec;	// Pulse LED colour
+extern uint8_t ledglove;	// LED number start of glove
+extern uint8_t ledgloves;	// How many LED in glove
+extern uint8_t ledglovec;	// Glove LED colour
 extern uint8_t ledfixed;	// LED number start of fixed LEDs
 extern uint8_t ledfixeds;	// How many LED in fixed LED
 extern uint8_t ledfixedc;	// Fixed LED colour

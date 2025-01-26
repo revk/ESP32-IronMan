@@ -59,6 +59,7 @@ struct
    uint8_t speaker:1;           // Have speaker
    uint8_t lowpower:1;          // WiFI off
    uint8_t eyes:1;              // Eyes on
+   uint8_t glove:1;             // Glove on
    uint8_t pwr:1;               // Servo power on
    uint8_t open:1;              // Visor open
    uint8_t connect:1;           // WiFi connect
@@ -340,6 +341,7 @@ dobutton (uint8_t button, uint8_t press)
          switch (press)
          {
          case 1:
+            b.glove = 1;
             break;
          case 2:
             break;
@@ -564,6 +566,16 @@ app_main ()
          if (ledeye2 && b.eyes)
             for (int i = 0; i < ledeyes; i++)
                set_led (i + ledeye2 - 1, 255, ledeyec);
+         // Glove
+         if (ledglove && ledgloves && b.glove)
+         {
+            static uint8_t cycle = 0;
+            for (int i = 0; i < ledgloves; i++)
+               set_led (i + ledglove - 1, (cycle + ledgloves-i) > 255 ? 255 : cycle + ledgloves-i, ledglovec);
+            cycle += 8;
+            if (!cycle)
+               b.glove = 0;
+         }
          if (ledpulse && ledpulses)
          {
             static uint8_t cycle = 0;
