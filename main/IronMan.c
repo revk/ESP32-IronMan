@@ -636,6 +636,8 @@ app_main ()
       play = "UPGRADE";
       while (1)
       {
+         if (blink[0].set)
+            revk_blink_do ();   // Library blink
          usleep (100000);
          if (revk_shutting_down (NULL) == 3)
             break;
