@@ -632,7 +632,14 @@ app_main ()
    play = "";
    if (revk_shutting_down (NULL) > 5)
    {                            // Upgrade
-      sleep (2);
+      // Don't play while erasing flash
+      int n = 20;
+      while (n--)
+      {
+         if (blink[0].set)
+            revk_blink_do ();   // Library blink
+         usleep (100000);
+      }
       play = "UPGRADE";
       while (1)
       {
