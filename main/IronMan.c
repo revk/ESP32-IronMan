@@ -142,6 +142,7 @@ spk_task (void *arg)
    slot.width = (sddat2.set && sddat3.set ? 4 : sddat1.set ? 2 : 1);
    if (slot.width == 1)
       slot.flags |= SDMMC_SLOT_FLAG_INTERNAL_PULLUP;    // Old boards?
+   //if (slot.width == 4) slot.flags |= SDMMC_SLOT_FLAG_UHS1;
    sdmmc_host_t host = SDMMC_HOST_DEFAULT ();
    host.max_freq_khz = SDMMC_FREQ_HIGHSPEED;
    host.slot = SDMMC_HOST_SLOT_1;
@@ -284,11 +285,11 @@ spk_task (void *arg)
          i2s_channel_disable (spk_handle);
          i2s_del_channel (spk_handle);
          sleep (1);
+         if (b.dying)
+            b.die = 1;
       }
       esp_vfs_fat_sdcard_unmount (sd_mount, card);
       sleep (1);
-      if (b.dying)
-         b.die = 1;
    }
    vTaskDelete (NULL);
 }
@@ -471,37 +472,38 @@ app_main ()
       static uint8_t pushlast = 0;      // Last button state
       static uint8_t press[BUTTONS] = { 0 };    // Press count
       static uint8_t pushtime[BUTTONS] = { 0 }; // Push time
-      for (int n = 0; n < BUTTONS; n++)
-      {
-         uint8_t push = revk_gpio_get (button[n]);
-         if (b.init || ((pushlast >> n) & 1) != push)
-         {                      // Change
-            pushlast = ((pushlast & ~(1 << n)) | (push << n));
-            if (push && !b.init)
-            {                   // Count presses
-               press[n]++;
-               ESP_LOGD (TAG, "Push%d %d", n, press[n]);        // TODO
+      if (!b.dying)
+         for (int n = 0; n < BUTTONS; n++)
+         {
+            uint8_t push = revk_gpio_get (button[n]);
+            if (b.init || ((pushlast >> n) & 1) != push)
+            {                   // Change
+               pushlast = ((pushlast & ~(1 << n)) | (push << n));
+               if (push && !b.init)
+               {                // Count presses
+                  press[n]++;
+                  ESP_LOGD (TAG, "Push%d %d", n, press[n]);     // TODO
+               }
+               if (ledbutton[n])
+                  set_led (ledbutton[n], 255, push ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
+               pushtime[n] = 0; // Start timer
+            } else if (!push)
+            {                   // Released
+               if (press[n] && pushtime[n]++ >= CPS / 2)
+               {                // Action
+                  dobutton (n, press[n]);
+                  press[n] = 0;
+               }
+            } else if (pushtime[n]++ >= CPS * 3)
+            {                   // Held
+               if (b.speaker)
+               {                // try and play power off - not foolproof
+                  play = "POWEROFF";
+                  b.dying = 1;
+               } else
+                  b.die = 1;    // off now
             }
-            if (ledbutton[n])
-               set_led (ledbutton[n], 255, push ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
-            pushtime[n] = 0;    // Start timer
-         } else if (!push)
-         {                      // Released
-            if (press[n] && pushtime[n]++ >= CPS / 2)
-            {                   // Action
-               dobutton (n, press[n]);
-               press[n] = 0;
-            }
-         } else if (pushtime[n]++ >= CPS * 2)
-         {                      // Held
-            if (b.speaker)
-            {                   // try and play power off - not foolproof
-               play = "POWEROFF";
-               b.dying = 1;
-            } else
-               b.die = 1;       // off now
          }
-      }
       if (b.connect)
       {
          b.connected = 1;
@@ -629,10 +631,10 @@ app_main ()
       play = "UPGRADE";
       while (1)
       {
-         sleep (1);
+         usleep (100000);
          if (revk_shutting_down (NULL) == 3)
-            play = "RESTART";
+            break;
       }
-   } else
-      play = "RESTART";
+   }
+   play = "RESTART";
 }
