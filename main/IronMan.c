@@ -163,7 +163,10 @@ spk_task (void *arg)
       if (e)
       {
          ESP_LOGE (TAG, "SD mount failed");
-         sleep (10);
+         if (b.dying)
+            b.die = 1;
+         else
+            sleep (10);
          continue;
       }
       ESP_LOGE (TAG, "SD mounted");
@@ -171,6 +174,8 @@ spk_task (void *arg)
       {
          if (!play)
          {
+            if (b.dying)
+               b.die = 1;
             usleep (10000);
             continue;
          }
