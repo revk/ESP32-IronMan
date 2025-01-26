@@ -14,6 +14,7 @@ static const char __attribute__((unused)) TAG[] = "IronMan";
 #include <driver/sdmmc_host.h>
 #include "esp_vfs_fat.h"
 #include <driver/i2s_std.h>
+#include <driver/rtc_io.h>
 #include <hal/spi_types.h>
 #include <driver/gpio.h>
 #include <driver/mcpwm_prelude.h>
@@ -53,6 +54,9 @@ const uint8_t cos8[256] =
 struct
 {
    uint8_t init:1;              // Startup
+   uint8_t die:1;               // Deep sleep
+   uint8_t dying:1;             // Deep sleep (after sound)
+   uint8_t speaker:1;           // Have speaker
    uint8_t lowpower:1;          // WiFI off
    uint8_t eyes:1;              // Eyes on
    uint8_t pwr:1;               // Servo power on
@@ -148,10 +152,12 @@ spk_task (void *arg)
       .disk_status_check_enable = 1,
    };
    sdmmc_card_t *card = NULL;
-   while (1)
+   b.speaker = 1;
+   while (!b.die)
    {
+      usleep (100000);
       while (!revk_gpio_get (sdcd))
-         usleep (100000);
+         continue;
       e = esp_vfs_fat_sdmmc_mount (sd_mount, &host, &slot, &mount_config, &card);
       if (e)
       {
@@ -160,7 +166,7 @@ spk_task (void *arg)
          continue;
       }
       ESP_LOGE (TAG, "SD mounted");
-      while (revk_gpio_get (sdcd))
+      while (revk_gpio_get (sdcd) && !b.die)
       {
          if (!play)
          {
@@ -215,11 +221,13 @@ spk_task (void *arg)
             size = *(uint32_t *) (buf + 40);
          }
          if (bad)
-         {
+         {                      // Failed to play
             ESP_LOGE (TAG, "Play %s:%s", play, bad);
             if (f >= 0)
                close (f);
             play = NULL;
+            if (b.dying)
+               b.die = 1;
             continue;
          }
          ESP_LOGE (TAG, "Spk init PWR %d BCLK %d DAT %d LR %d rate %lu channels %u bits %u size %lu file %s", spkpwr.num,
@@ -258,7 +266,7 @@ spk_task (void *arg)
             // Play file until end of file, unmounted, or play set again
             uint16_t n = channels * bits * 1000 / 8;
             uint8_t *buf = malloc (n);
-            while (size && !play && revk_gpio_get (sdcd))
+            while (size && !play && revk_gpio_get (sdcd) && !b.die)
             {
                size_t l = read (f, buf, n);
                if (l != n)
@@ -279,7 +287,10 @@ spk_task (void *arg)
       }
       esp_vfs_fat_sdcard_unmount (sd_mount, card);
       sleep (1);
+      if (b.dying)
+         b.die = 1;
    }
+   vTaskDelete (NULL);
 }
 
 void
@@ -303,12 +314,6 @@ dobutton (uint8_t button, uint8_t press)
                b.eyes ^= 1;     // Eyes off
             b.cylon = ~b.eyes;
             break;
-         case 3:
-            b.eyes = 0;         // Eyes off
-            b.pwr = 0;          // power off
-            b.cylon = 0;        // Cylon off
-            revk_restart (1, "Reboot");
-            break;
          }
          break;
       case REVK_SETTINGS_IRONMAN_ARCREACTOR:
@@ -321,7 +326,7 @@ dobutton (uint8_t button, uint8_t press)
             play = "SUIT2";
             break;
          case 3:
-            revk_restart (1, "Reboot");
+            play = "SUIT3";
             break;
          }
          break;
@@ -331,9 +336,6 @@ dobutton (uint8_t button, uint8_t press)
          case 1:
             break;
          case 2:
-            break;
-         case 3:
-            revk_restart (1, "Reboot");
             break;
          }
          break;
@@ -352,8 +354,8 @@ app_main ()
    revk_start ();
    if (blink[0].set)
       revk_blink_init ();       // Library blink
-   revk_gpio_input (button[0]);
-   revk_gpio_input (button[1]);
+   for (int n = 0; n < BUTTONS; n++)
+      revk_gpio_input (button[n]);
    if (spklrc.set && spkbclk.set && spkdata.set && sdcmd.set)
       revk_task ("spk", spk_task, NULL, 8);
    int leds = 0;
@@ -404,9 +406,9 @@ app_main ()
             REVK_ERR_CHECK (led_strip_clear (strip[s]));
       }
    mcpwm_cmpr_handle_t comparator = NULL;
+   mcpwm_timer_handle_t visortimer = NULL;
    if (visorpwm.set)
    {
-      mcpwm_timer_handle_t timer = NULL;
       mcpwm_timer_config_t timer_config = {
          .group_id = 0,
          .clk_src = MCPWM_TIMER_CLK_SRC_DEFAULT,
@@ -414,13 +416,13 @@ app_main ()
          .period_ticks = SERVO_TIMEBASE_PERIOD,
          .count_mode = MCPWM_TIMER_COUNT_MODE_UP,
       };
-      ESP_ERROR_CHECK (mcpwm_new_timer (&timer_config, &timer));
+      ESP_ERROR_CHECK (mcpwm_new_timer (&timer_config, &visortimer));
       mcpwm_oper_handle_t oper = NULL;
       mcpwm_operator_config_t operator_config = {
          .group_id = 0,         // operator must be in the same group to the timer
       };
       ESP_ERROR_CHECK (mcpwm_new_operator (&operator_config, &oper));
-      ESP_ERROR_CHECK (mcpwm_operator_connect_timer (oper, timer));
+      ESP_ERROR_CHECK (mcpwm_operator_connect_timer (oper, visortimer));
       mcpwm_comparator_config_t comparator_config = {
          .flags.update_cmp_on_tez = true,
       };
@@ -438,8 +440,8 @@ app_main ()
                                                                                                 MCPWM_GEN_ACTION_HIGH)));
       ESP_ERROR_CHECK (mcpwm_generator_set_action_on_compare_event
                        (generator, MCPWM_GEN_COMPARE_EVENT_ACTION (MCPWM_TIMER_DIRECTION_UP, comparator, MCPWM_GEN_ACTION_LOW)));
-      ESP_ERROR_CHECK (mcpwm_timer_enable (timer));
-      ESP_ERROR_CHECK (mcpwm_timer_start_stop (timer, MCPWM_TIMER_START_NO_STOP));
+      ESP_ERROR_CHECK (mcpwm_timer_enable (visortimer));
+      ESP_ERROR_CHECK (mcpwm_timer_start_stop (visortimer, MCPWM_TIMER_START_NO_STOP));
    }
 
    b.pwr = 1;
@@ -463,10 +465,9 @@ app_main ()
          led_strip_set_pixel (strip[s], led, gamma8[r], gamma8[g], gamma8[b]);
    }
 
-   while (1)
+   while (!b.die && !revk_shutting_down (NULL))
    {
       usleep (1000000 / CPS);
-      // Main button
       static uint8_t pushlast = 0;      // Last button state
       static uint8_t press[BUTTONS] = { 0 };    // Press count
       static uint8_t pushtime[BUTTONS] = { 0 }; // Push time
@@ -474,20 +475,31 @@ app_main ()
       {
          uint8_t push = revk_gpio_get (button[n]);
          if (b.init || ((pushlast >> n) & 1) != push)
-         {
+         {                      // Change
             pushlast = ((pushlast & ~(1 << n)) | (push << n));
-            if (push)
-            {
+            if (push && !b.init)
+            {                   // Count presses
                press[n]++;
                ESP_LOGD (TAG, "Push%d %d", n, press[n]);        // TODO
             }
             if (ledbutton[n])
                set_led (ledbutton[n], 255, push ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
-            pushtime[n] = 0;
-         } else if (press[n] && pushtime[n]++ >= CPS / 2)
-         {                      // Action
-            dobutton (n, press[n]);
-            press[n] = 0;
+            pushtime[n] = 0;    // Start timer
+         } else if (!push)
+         {                      // Released
+            if (press[n] && pushtime[n]++ >= CPS / 2)
+            {                   // Action
+               dobutton (n, press[n]);
+               press[n] = 0;
+            }
+         } else if (pushtime[n]++ >= CPS * 2)
+         {                      // Held
+            if (b.speaker)
+            {                   // try and play power off - not foolproof
+               play = "POWEROFF";
+               b.dying = 1;
+            } else
+               b.die = 1;       // off now
          }
       }
       if (b.connect)
@@ -525,46 +537,43 @@ app_main ()
       {
          for (int i = 0; i < leds; i++)
             set_led (i, 255, REVK_SETTINGS_LEDEYEC_BLACK);      // Clear
-         if (!revk_shutting_down (NULL))
+         // Static LEDs
+         if (ledarc && ledarcs)
+            for (int i = ledarc; i < ledarc + ledarcs; i++)
+               set_led (i - 1, 255, (i & 1) ? ledarcc1 : ledarcc2);
+
+         if (ledfixed && ledfixeds)
+            for (int i = ledfixed; i < ledfixed + ledfixeds; i++)
+               set_led (i - 1, 255, ledfixedc);
+
+         // PWM (open/closed)
+         if (ledpwm)
+            set_led (ledpwm - 1, 255, b.open ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
+         // Eye 1
+         if (ledeye1 && b.eyes)
+            for (int i = 0; i < ledeyes; i++)
+               set_led (i + ledeye1 - 1, 255, ledeyec);
+         // Eye 2
+         if (ledeye2 && b.eyes)
+            for (int i = 0; i < ledeyes; i++)
+               set_led (i + ledeye2 - 1, 255, ledeyec);
+         if (ledpulse && ledpulses)
          {
-            // Static LEDs
-            if (ledarc && ledarcs)
-               for (int i = ledarc; i < ledarc + ledarcs; i++)
-                  set_led (i - 1, 255, (i & 1) ? ledarcc1 : ledarcc2);
-
-            if (ledfixed && ledfixeds)
-               for (int i = ledfixed; i < ledfixed + ledfixeds; i++)
-                  set_led (i - 1, 255, ledfixedc);
-
-            // PWM (open/closed)
-            if (ledpwm)
-               set_led (ledpwm - 1, 255, b.open ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
-            // Eye 1
-            if (ledeye1 && b.eyes)
-               for (int i = 0; i < ledeyes; i++)
-                  set_led (i + ledeye1 - 1, 255, ledeyec);
-            // Eye 2
-            if (ledeye2 && b.eyes)
-               for (int i = 0; i < ledeyes; i++)
-                  set_led (i + ledeye2 - 1, 255, ledeyec);
-            if (ledpulse && ledpulses)
-            {
-               static uint8_t cycle = 0;
-               cycle += 8;
-               for (int i = ledpulse; i < ledpulse + ledpulses; i++)
-                  set_led (i - 1, 64 + cos8[cycle] / 2, ledpulsec);
-            }
-            if (b.cylon && ledcylon && ledcylons)
-            {                   // Cylon
-               static int8_t cycle = 0,
-                  dir = 1;
-               set_led (ledcylon + cycle - 1, 255, ledcylonc);
-               if (cycle == ledcylons - 1)
-                  dir = -1;
-               else if (!cycle)
-                  dir = 1;
-               cycle += dir;
-            }
+            static uint8_t cycle = 0;
+            cycle += 8;
+            for (int i = ledpulse; i < ledpulse + ledpulses; i++)
+               set_led (i - 1, 64 + cos8[cycle] / 2, ledpulsec);
+         }
+         if (b.cylon && ledcylon && ledcylons)
+         {                      // Cylon
+            static int8_t cycle = 0,
+               dir = 1;
+            set_led (ledcylon + cycle - 1, 255, ledcylonc);
+            if (cycle == ledcylons - 1)
+               dir = -1;
+            else if (!cycle)
+               dir = 1;
+            cycle += dir;
          }
          for (int s = 0; s < STRIPS; s++)
             if (strip[s])
@@ -573,9 +582,46 @@ app_main ()
       if (blink[0].set)
          revk_blink_do ();      // Library blink
       b.init = 0;
-      if (revk_shutting_down (NULL))
-         break;
    }
+   if (leds)
+   {                            // Dark
+      for (int i = 0; i < leds; i++)
+         set_led (i, 255, REVK_SETTINGS_LEDEYEC_BLACK); // Clear
+      for (int s = 0; s < STRIPS; s++)
+         if (strip[s])
+            led_strip_refresh (strip[s]);
+   }
+   if (b.die)
+   {                            // Deep sleep
+      revk_pre_shutdown ();
+      if (blink[0].set)
+         revk_blink_do ();      // Library blink
+      if (visorpwm.set)
+         ESP_ERROR_CHECK (mcpwm_timer_enable (visortimer));
+      while (revk_gpio_get (button[0]))
+         usleep (100000);       // Button release
+      // Alarm
+      if (rtc_gpio_is_valid_gpio (button[0].num))
+      {                         // Deep sleep
+         ESP_LOGE (TAG, "Deep sleep on button %d %s", button[0].num, button[0].invert ? "low" : "high");
+         rtc_gpio_set_direction_in_sleep (button[0].num, RTC_GPIO_MODE_INPUT_ONLY);
+         REVK_ERR_CHECK (esp_sleep_enable_ext0_wakeup (button[0].num, 1 - button[0].invert));
+      } else
+      {                         // Light sleep
+         ESP_LOGE (TAG, "Light sleep on button %d %s", button[0].num, button[0].invert ? "low" : "high");
+         gpio_wakeup_enable (button[0].num, button[0].invert ? GPIO_INTR_LOW_LEVEL : GPIO_INTR_HIGH_LEVEL);
+         esp_sleep_enable_gpio_wakeup ();
+      }
+      // Shutdown
+      sleep (1);                // Allow tasks to end
+      // Night night
+      if (rtc_gpio_is_valid_gpio (button[0].num))
+         esp_deep_sleep_start ();
+      else
+         esp_light_sleep_start ();
+      esp_restart ();
+   }
+   // Restart
    play = "";
    if (revk_shutting_down (NULL) > 5)
    {                            // Upgrade
