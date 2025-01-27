@@ -25,6 +25,8 @@ static esp_bt_uuid_t remote_filter_service_uuid = {
    .uuid = {.uuid16 = ble_service_id,},
 };
 
+static uint16_t heart_rate_cntl_handle = 0;
+
 static bool get_service = false;
 
 static esp_ble_scan_params_t ble_scan_params = {
@@ -256,8 +258,12 @@ gattc_profile_event_handler (esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
                         esp_ble_gattc_register_for_notify (gattc_if,
                                                            gl_profile_tab[PROFILE_A_APP_ID].remote_bda,
                                                            char_elem_result[i].char_handle);
-                        break;
                      }
+                     if (char_elem_result[i].uuid.len == ESP_UUID_LEN_16
+                         && char_elem_result[i].uuid.uuid.uuid16 == ESP_GATT_HEART_RATE_CNTL_POINT)
+                        heart_rate_cntl_handle = char_elem_result[i].char_handle;
+                     if (char_elem_result[i].uuid.len == ESP_UUID_LEN_16)
+                        ESP_LOGE (TAG, "GATT%d %04X %d", i, char_elem_result[i].uuid.uuid.uuid16, char_elem_result[i].char_handle);
                   }
                }
             }
@@ -323,10 +329,11 @@ gattc_profile_event_handler (esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
                                                      descr_elem_result[i].handle,
                                                      sizeof (notify_en),
                                                      (uint8_t *) & notify_en, ESP_GATT_WRITE_TYPE_RSP, ESP_GATT_AUTH_REQ_NONE);
-
                      break;
+
                   }
                }
+               ble_control (parts[ironman]);
             }
             free (descr_elem_result);
             descr_elem_result = NULL;
@@ -365,6 +372,7 @@ gattc_profile_event_handler (esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
       ESP_LOGE (TAG, "Disconnected, remote " ESP_BD_ADDR_STR ", reason 0x%02x",
                 ESP_BD_ADDR_HEX (p_data->disconnect.remote_bda), p_data->disconnect.reason);
       b.ble = 0;
+      heart_rate_cntl_handle = 0;
       get_service = false;
       esp_ble_gap_start_scanning (0);
       break;
@@ -638,4 +646,21 @@ do_ble_client (void)
    esp_ble_gap_set_security_param (ESP_BLE_SM_SET_INIT_KEY, &init_key, sizeof (uint8_t));
    esp_ble_gap_set_security_param (ESP_BLE_SM_SET_RSP_KEY, &rsp_key, sizeof (uint8_t));
 
+}
+
+void
+ble_control (const char *control)
+{                               // Try sending a write
+   ESP_LOGE (TAG, "Control %s (ble %d handle %d)", control, b.ble, heart_rate_cntl_handle);
+   if (!b.ble || !heart_rate_cntl_handle)
+      return;
+   esp_err_t e = esp_ble_gattc_write_char (gl_profile_tab[PROFILE_A_APP_ID].gattc_if,
+                                           gl_profile_tab[PROFILE_A_APP_ID].conn_id,
+                                           heart_rate_cntl_handle,
+                                           strlen (control),
+                                           (uint8_t *) control,
+                                           ESP_GATT_WRITE_TYPE_NO_RSP,
+                                           ESP_GATT_AUTH_REQ_NONE);
+   if (e)
+      ESP_LOGE (TAG, "Write fail %s", esp_err_to_name (e));
 }

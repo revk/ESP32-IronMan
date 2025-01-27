@@ -57,8 +57,6 @@ const uint8_t cos8[256] =
 
 struct bit_s b = { 0 };
 
-uint8_t bleclients = 0;         // BLE clients (bit per parts)
-
 const char sd_mount[] = "/sd";
 const char *play = "POWERON";
 const char *const parts[] = { "SUIT", "HELMET", "LGLOVE", "RGLOVE" };
@@ -66,7 +64,9 @@ const char *const parts[] = { "SUIT", "HELMET", "LGLOVE", "RGLOVE" };
 void
 do_play (const char *fn)
 {
+	if(ironman==REVK_SETTINGS_IRONMAN_SUIT)
    play = fn;
+	else ble_control(fn);
 }
 
 static inline uint32_t
@@ -309,10 +309,9 @@ dobutton (uint8_t button, uint8_t press)
    {
    case 0:                     // First button
       {
-         play = "";
          static char playing[40];
          sprintf (playing, "%s%d", parts[ironman], press);
-         play = playing;
+	 do_play(playing);
          switch (ironman)
          {
          case REVK_SETTINGS_IRONMAN_HELMET:
@@ -531,6 +530,11 @@ app_main ()
          static int8_t step = 0;
          if (b.init || newangle != pwmangle)
          {
+		 if(b.open!=b.wasopen)
+		 {
+			 b.wasopen=b.open;
+			 if(!b.init)do_play(b.open?"OPEN":"CLOSE");
+		 }
             if (newangle > pwmangle && step < 100)
                step++;
             else if (newangle < pwmangle && step > -100)
