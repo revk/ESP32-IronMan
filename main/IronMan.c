@@ -31,6 +31,8 @@ led_strip_handle_t strip[STRIPS] = { 0 };
 
 #define	CPS	40
 
+uint64_t glitch = 0;
+
 #define SERVO_TIMEBASE_RESOLUTION_HZ 1000000    // 1MHz, 1us per tick
 #define SERVO_TIMEBASE_PERIOD        20000      // 20000 ticks, 20ms
 #define SERVO_MIN_PULSEWIDTH_US 1000    // Minimum pulse width in microsecond
@@ -64,6 +66,8 @@ const char *const parts[] = { "SUIT", "HELMET", "LGLOVE", "RGLOVE" };
 void
 do_play (const char *fn)
 {
+   if (!fn || !*fn)
+      return;
    if (ironman == REVK_SETTINGS_IRONMAN_SUIT)
       play = fn;
    else
@@ -94,13 +98,13 @@ app_callback (int client, const char *prefix, const char *target, const char *su
       return NULL;              //Not for us or not a command from main MQTT
    if (!strcmp (suffix, "connect"))
       b.connect = 1;
-   if (!strcmp (suffix, "up"))
+   if (!strcmp (suffix, "open"))
    {
       b.open = 1;               // Open
       b.pwr = 1;                // Power on
       return NULL;
    }
-   if (!strcmp (suffix, "down"))
+   if (!strcmp (suffix, "close"))
    {
       b.open = 0;               // Closed
       b.pwr = 1;                // Power on
@@ -122,6 +126,11 @@ app_callback (int client, const char *prefix, const char *target, const char *su
    {
       b.eyes = 0;               // Eyes off
       b.cylon = 0;
+      return NULL;
+   }
+   if (!strcmp (suffix, "glitch"))
+   {
+      b.glitch = 1;
       return NULL;
    }
    return NULL;
@@ -326,6 +335,9 @@ dobutton (uint8_t button, uint8_t press)
                   b.eyes ^= 1;  // Eyes off
                b.cylon = ~b.eyes;
                break;
+            case 3:
+	       b.glitch=1;
+	       break;
             default:
                do_play (playing);
             }
@@ -562,71 +574,82 @@ app_main ()
       {
          for (int i = 0; i < leds; i++)
             set_led (i, 255, REVK_SETTINGS_LEDEYEC_BLACK);      // Clear
-         // PWM (open/closed)
-         if (ledpwm)
-            set_led (ledpwm - 1, 255, b.open ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
-         // Static LEDs
-         if (ledfixed && ledfixeds)
-            for (int i = ledfixed; i < ledfixed + ledfixeds; i++)
-               set_led (i - 1, 255, ledfixedc);
-         // Arc
-         if (ledarc && ledarcs)
-            for (int i = ledarc; i < ledarc + ledarcs; i++)
-               set_led (i - 1, 255, (i & 1) ? ledarcc1 : ledarcc2);
-         // Eye 1
-         if (ledeye1 && b.eyes)
-            for (int i = 0; i < ledeyes; i++)
-               set_led (i + ledeye1 - 1, 255, ledeyec);
-         // Eye 2
-         if (ledeye2 && b.eyes)
-            for (int i = 0; i < ledeyes; i++)
-               set_led (i + ledeye2 - 1, 255, ledeyec);
-         // Pulse
-         if (ledpulse && ledpulses)
+         if (b.glitch)
          {
-            static uint8_t cycle = 0;
-            cycle += 8;
-            for (int i = ledpulse; i < ledpulse + ledpulses; i++)
-               set_led (i - 1, 64 + cos8[cycle] / 2, ledpulsec);
+            esp_fill_random (&glitch, sizeof (glitch));
+            b.glitch = 0;
+            do_play ("GLITCH");
          }
-         // Spin
-         if (ledspin && ledspins)
+         if (!glitch || (glitch & 1))
          {
-            static uint8_t cycle = 0;
-            cycle++;
-            cycle %= ledspins;
-            set_led (ledspin + cycle - 1, 255, ledspinc);
-         }
-         // Glove
-         if (ledglove && ledgloves && b.glove)
-         {
-            static uint8_t cycle = 0;
-            for (int i = 0; i < ledgloves; i++)
-               set_led (i + ledglove - 1, (cycle + ledgloves - i) > 255 ? 255 : cycle + ledgloves - i, ledglovec);
-            cycle += 8;
-            if (!cycle)
-               b.glove = 0;
-         }
-         if (b.cylon != b.wascylon)
-         {
-            b.wascylon = b.cylon;
-            if (b.cylon)
-               do_play ("CYLON");
-         }
-         if (b.cylon && ledcylon && ledcylons)
-         {                      // Cylon
-            static int8_t cycle = 0,
-               dir = 1;
-            set_led (ledcylon + cycle - 1, 255, ledcylonc);
-            if (cycle == ledcylons - 1)
-               dir = -1;
-            else if (!cycle)
-               dir = 1;
-            cycle += dir;
+            // PWM (open/closed)
+            if (ledpwm)
+               set_led (ledpwm - 1, 255, b.open ? REVK_SETTINGS_LEDEYEC_RED : REVK_SETTINGS_LEDEYEC_GREEN);
+            // Static LEDs
+            if (ledfixed && ledfixeds)
+               for (int i = ledfixed; i < ledfixed + ledfixeds; i++)
+                  set_led (i - 1, 255, ledfixedc);
+            // Arc
+            if (ledarc && ledarcs)
+               for (int i = ledarc; i < ledarc + ledarcs; i++)
+                  set_led (i - 1, 255, (i & 1) ? ledarcc1 : ledarcc2);
+            // Eye 1
+            if (ledeye1 && b.eyes)
+               for (int i = 0; i < ledeyes; i++)
+                  set_led (i + ledeye1 - 1, 255, ledeyec);
+            // Eye 2
+            if (ledeye2 && b.eyes)
+               for (int i = 0; i < ledeyes; i++)
+                  set_led (i + ledeye2 - 1, 255, ledeyec);
+            // Pulse
+            if (ledpulse && ledpulses)
+            {
+               static uint8_t cycle = 0;
+               cycle += 8;
+               for (int i = ledpulse; i < ledpulse + ledpulses; i++)
+                  set_led (i - 1, 64 + cos8[cycle] / 2, ledpulsec);
+            }
+            // Spin
+            if (ledspin && ledspins)
+            {
+               static uint8_t cycle = 0;
+               cycle++;
+               cycle %= ledspins;
+               set_led (ledspin + cycle - 1, 255, ledspinc);
+            }
+            // Glove
+            if (ledglove && ledgloves && b.glove)
+            {
+               static uint8_t cycle = 0;
+               for (int i = 0; i < ledgloves; i++)
+                  set_led (i + ledglove - 1, (cycle + ledgloves - i) > 255 ? 255 : cycle + ledgloves - i, ledglovec);
+               cycle += 8;
+               if (!cycle)
+                  b.glove = 0;
+            }
+            if (b.cylon != b.wascylon)
+            {
+               b.wascylon = b.cylon;
+               if (b.cylon)
+                  do_play ("CYLON");
+            }
+            if (b.cylon && ledcylon && ledcylons)
+            {                   // Cylon
+               static int8_t cycle = 0,
+                  dir = 1;
+               set_led (ledcylon + cycle - 1, 255, ledcylonc);
+               if (cycle == ledcylons - 1)
+                  dir = -1;
+               else if (!cycle)
+                  dir = 1;
+               cycle += dir;
+            }
          }
          for (int s = 0; s < STRIPS; s++)
             if (strip[s])
                led_strip_refresh (strip[s]);
+         if (glitch)
+            glitch >>= 1ULL;
       }
       if (blink[0].set)
          revk_blink_do ();      // Library blink

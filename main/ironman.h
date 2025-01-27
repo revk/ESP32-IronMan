@@ -15,6 +15,7 @@ extern struct bit_s
    uint8_t connect:1;           // WiFi connect
    uint8_t cylon:1;             // Cylon effect
    uint8_t wascylon:1;          // Cylon effect
+   uint8_t glitch:1;		// Do glitch
    uint8_t connected:1;         // WiFi connected
    uint8_t playing:1;           // File is playing
    uint8_t usb:1;               // USB connected

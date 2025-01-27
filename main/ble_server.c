@@ -463,7 +463,10 @@ gatts_profile_event_handler (esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if,
             ESP_LOGE (TAG, "Write, conn_id %d", param->write.conn_id);
             memcpy (fn, param->write.value, param->write.len);
             fn[param->write.len] = 0;
-            do_play (fn);
+            if (ironman == REVK_SETTINGS_IRONMAN_SUIT && !strcasecmp (fn, "GLITCH"))
+               b.glitch = 1;
+            else
+               do_play (fn);
          }
       }
       break;
