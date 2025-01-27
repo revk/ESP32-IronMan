@@ -57,6 +57,8 @@ const uint8_t cos8[256] =
 
 struct bit_s b = { 0 };
 
+uint8_t bleclients = 0;         // BLE clients (bit per parts)
+
 const char sd_mount[] = "/sd";
 const char *play = "POWERON";
 const char *const parts[] = { "SUIT", "HELMET", "LGLOVE", "RGLOVE" };

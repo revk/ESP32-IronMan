@@ -16,7 +16,10 @@ extern struct bit_s
    uint8_t connected:1;         // WiFi connected
    uint8_t playing:1;           // File is playing
    uint8_t usb:1;               // USB connected
+   uint8_t ble:1;		// BLE client connected
 } b;
+
+extern uint8_t	bleclients;		// BLE clients (bit per parts)
 
 extern const char ble_device_name[ESP_BLE_ADV_NAME_LEN_MAX];
 #define	ble_service_id	ESP_GATT_UUID_HEART_RATE_SVC
