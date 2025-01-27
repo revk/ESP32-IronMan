@@ -460,7 +460,7 @@ gatts_profile_event_handler (esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if,
          static char fn[10];
          if (param->write.len && param->write.len < sizeof (fn) - 1)
          {
-            ESP_LOGE (TAG, "Write, conn_id %d", param->write.conn_id);
+            ESP_LOGI (TAG, "Write, conn_id %d", param->write.conn_id);
             memcpy (fn, param->write.value, param->write.len);
             fn[param->write.len] = 0;
             if (ironman == REVK_SETTINGS_IRONMAN_SUIT && !strcasecmp (fn, "GLITCH"))
