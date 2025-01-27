@@ -378,8 +378,7 @@ gap_event_handler (esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t * param)
             ESP_LOGI (TAG, "Pairing failed, reason 0x%x", param->ble_security.auth_cmpl.fail_reason);
          } else
          {
-            ESP_LOGI (TAG, "Pairing successfully, auth_mode %s",
-                      esp_auth_req_to_str (param->ble_security.auth_cmpl.auth_mode));
+            ESP_LOGI (TAG, "Pairing successfully, auth_mode %s", esp_auth_req_to_str (param->ble_security.auth_cmpl.auth_mode));
          }
          show_bonded_devices ();
          break;
@@ -429,8 +428,7 @@ gatts_profile_event_handler (esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if,
    switch (event)
    {
    case ESP_GATTS_REG_EVT:
-      ESP_LOGI (TAG, "GATT server register, status %d, app_id %d, gatts_if %d",
-                param->reg.status, param->reg.app_id, gatts_if);
+      ESP_LOGI (TAG, "GATT server register, status %d, app_id %d, gatts_if %d", param->reg.status, param->reg.app_id, gatts_if);
       esp_ble_gap_set_device_name (ble_device_name);
       //generate a resolvable random address
       esp_ble_gap_config_local_privacy (true);
@@ -442,8 +440,9 @@ gatts_profile_event_handler (esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if,
       ESP_LOGI (TAG, "Characteristic write, value ");
       ESP_LOG_BUFFER_HEX (TAG, param->write.value, param->write.len);
       static char fn[10];
-      if (param->write.len < sizeof (fn) - 1)
+      if (param->write.len && param->write.len < sizeof (fn) - 1)
       {
+         ESP_LOGE (TAG, "Write, conn_id %d, handle %u", param->write.conn_id, param->write.handle);
          memcpy (fn, param->write.value, param->write.len);
          fn[param->write.len] = 0;
          do_play (fn);
@@ -471,8 +470,8 @@ gatts_profile_event_handler (esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if,
       esp_ble_gap_start_advertising (&heart_rate_adv_params);
       break;
    case ESP_GATTS_DISCONNECT_EVT:
-      ESP_LOGE (TAG, "Disconnected, remote " ESP_BD_ADDR_STR ", reason 0x%x",
-                ESP_BD_ADDR_HEX (param->disconnect.remote_bda), param->disconnect.reason);
+      ESP_LOGE (TAG, "Disconnected, conn_id %d, remote " ESP_BD_ADDR_STR ", reason 0x%x",
+                param->disconnect.conn_id, ESP_BD_ADDR_HEX (param->disconnect.remote_bda), param->disconnect.reason);
       /* start advertising again when missing the connect */
       esp_ble_gap_start_advertising (&heart_rate_adv_params);
       break;

@@ -370,6 +370,7 @@ gattc_profile_event_handler (esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
                 ESP_BD_ADDR_HEX (p_data->disconnect.remote_bda), p_data->disconnect.reason);
       b.ble = 0;
       get_service = false;
+      esp_ble_gap_start_scanning (0);
       break;
    default:
       break;
@@ -399,9 +400,7 @@ esp_gap_cb (esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t * param)
       break;
    case ESP_GAP_BLE_SCAN_PARAM_SET_COMPLETE_EVT:
       {
-         //the unit of the duration is second
-         uint32_t duration = 0; // 30;
-         esp_ble_gap_start_scanning (duration);
+         esp_ble_gap_start_scanning (0);
          break;
       }
    case ESP_GAP_BLE_SCAN_START_COMPLETE_EVT:
@@ -617,7 +616,6 @@ do_ble_client (void)
    {
       ESP_LOGE (TAG, "%s gattc app register error, error code = %x", __func__, ret);
    }
-
 #if 0
    ret = esp_ble_gatt_set_local_mtu (200);
    if (ret)
