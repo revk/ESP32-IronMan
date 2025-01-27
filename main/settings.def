@@ -1,7 +1,7 @@
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 #define	BUTTONS	2
 
-enum	ironman			.enums="ArcReactor,Helmet,Glove"	// What part of suit
+enum	ironman			.enums="Suit,Helmet,Left Glove,Right Glove"	// What part
 
 gpio	button			.array=BUTTONS		// Activation buttons
 
@@ -26,6 +26,9 @@ gpio	spk.lrc		35		// Speaker LR clock
 gpio	spk.bclk	36		// Speaker Bit clock
 gpio	spk.data	37		// Speaker Data
 
+gpio	usb				// USB connected
+gpio	chg				// Charge indicator
+
 u8	led.eye1		.live=1			// LED number for eye 1
 u8	led.eye2		.live=1			// LED number for eye 2
 u8	led.eyes	1	.live=1			// How many LEDs in eye
@@ -46,6 +49,9 @@ enum	led.fixedc	6	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White
 u8	led.cylon		.live=1			// LED number start of cylon LEDs
 u8	led.cylons		.live=1			// How many LED in cylon LED
 enum	led.cylonc	1	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// cylon LED colour
+u8	led.spin		.live=1			// LED number start of spin LEDs
+u8	led.spins		.live=1			// How many LED in spin LED
+enum	led.spinc	1	.live=1	.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		// spin LED colour
 u8	led.pwm			.live=1			// LED number for servo PWM status
 u8	led.button		.live=1 .array=BUTTONS			// LED number for button status
 

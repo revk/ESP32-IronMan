@@ -42,9 +42,10 @@ struct revk_settings_s {
  uint8_t isenum:1;
 };
 enum {
- REVK_SETTINGS_IRONMAN_ARCREACTOR,
+ REVK_SETTINGS_IRONMAN_SUIT,
  REVK_SETTINGS_IRONMAN_HELMET,
- REVK_SETTINGS_IRONMAN_GLOVE,
+ REVK_SETTINGS_IRONMAN_LEFT_GLOVE,
+ REVK_SETTINGS_IRONMAN_RIGHT_GLOVE,
 };
 enum {
  REVK_SETTINGS_STRIPTYPE_WS2812_GRB,
@@ -198,6 +199,24 @@ enum {
  REVK_SETTINGS_LEDCYLONC_W_CYAN,
  REVK_SETTINGS_LEDCYLONC_W_WHITE,
 };
+enum {
+ REVK_SETTINGS_LEDSPINC_BLACK,
+ REVK_SETTINGS_LEDSPINC_RED,
+ REVK_SETTINGS_LEDSPINC_GREEN,
+ REVK_SETTINGS_LEDSPINC_YELLOW,
+ REVK_SETTINGS_LEDSPINC_BLUE,
+ REVK_SETTINGS_LEDSPINC_MAGENTA,
+ REVK_SETTINGS_LEDSPINC_CYAN,
+ REVK_SETTINGS_LEDSPINC_WHITE,
+ REVK_SETTINGS_LEDSPINC_W,
+ REVK_SETTINGS_LEDSPINC_W_RED,
+ REVK_SETTINGS_LEDSPINC_W_GREEN,
+ REVK_SETTINGS_LEDSPINC_W_YELLOW,
+ REVK_SETTINGS_LEDSPINC_W_BLUE,
+ REVK_SETTINGS_LEDSPINC_W_MAGENTA,
+ REVK_SETTINGS_LEDSPINC_W_CYAN,
+ REVK_SETTINGS_LEDSPINC_W_WHITE,
+};
 typedef struct revk_settings_blob_s revk_settings_blob_t;
 struct revk_settings_blob_s {
  uint16_t len;
@@ -284,7 +303,7 @@ struct revk_settings_bits_s {
 };
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 #define	BUTTONS	2
-extern uint8_t ironman;	// What part of suit
+extern uint8_t ironman;	// What part
 extern revk_gpio_t button[BUTTONS];	// Activation buttons
 extern revk_gpio_t stripgpio[STRIPS];	// GPIOs for LED string
 extern uint16_t stripcount[STRIPS];	// How many LEDs in string
@@ -303,6 +322,8 @@ extern revk_gpio_t spkpwr;	// Speaker power on
 extern revk_gpio_t spklrc;	// Speaker LR clock
 extern revk_gpio_t spkbclk;	// Speaker Bit clock
 extern revk_gpio_t spkdata;	// Speaker Data
+extern revk_gpio_t usb;	// USB connected
+extern revk_gpio_t chg;	// Charge indicator
 extern uint8_t ledeye1;	// LED number for eye 1
 extern uint8_t ledeye2;	// LED number for eye 2
 extern uint8_t ledeyes;	// How many LEDs in eye
@@ -323,6 +344,9 @@ extern uint8_t ledfixedc;	// Fixed LED colour
 extern uint8_t ledcylon;	// LED number start of cylon LEDs
 extern uint8_t ledcylons;	// How many LED in cylon LED
 extern uint8_t ledcylonc;	// cylon LED colour
+extern uint8_t ledspin;	// LED number start of spin LEDs
+extern uint8_t ledspins;	// How many LED in spin LED
+extern uint8_t ledspinc;	// spin LED colour
 extern uint8_t ledpwm;	// LED number for servo PWM status
 extern uint8_t ledbutton[BUTTONS];	// LED number for button status
 extern revk_gpio_t visorpwm;	// Visor servo PWM
@@ -432,6 +456,6 @@ enum {
 #define	REVK_SETTINGS_HAS_BLOB
 #define	REVK_SETTINGS_HAS_STRING
 #define	REVK_SETTINGS_HAS_OCTET
-typedef uint8_t revk_setting_bits_t[14];
+typedef uint8_t revk_setting_bits_t[15];
 typedef uint8_t revk_setting_group_t[2];
 extern const char revk_settings_secret[];

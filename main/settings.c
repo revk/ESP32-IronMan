@@ -12,7 +12,7 @@ revk_settings_bits_t revk_settings_bits={0};
 revk_settings_t const revk_settings[]={
 #define	STRIPS	3	// ESP32S3 only has 4 channels and one is for on board LED
 #define	BUTTONS	2
- {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ironman",.comment="What part of suit",.len=7,.ptr=&ironman,.size=sizeof(uint8_t),.enums="ArcReactor,Helmet,Glove"	},
+ {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ironman",.comment="What part",.len=7,.ptr=&ironman,.size=sizeof(uint8_t),.enums="Suit,Helmet,Left Glove,Right Glove"	},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="button",.comment="Activation buttons",.len=6,.ptr=&button,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.array=BUTTONS},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="stripgpio",.comment="GPIOs for LED string",.group=1,.len=9,.dot=5,.def="4",.ptr=&stripgpio,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.array=STRIPS,.old="rgb"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="stripcount",.comment="How many LEDs in string",.group=1,.len=10,.dot=5,.ptr=&stripcount,.size=sizeof(uint16_t),.array=STRIPS,.old="leds"	},
@@ -31,6 +31,8 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="spklrc",.comment="Speaker LR clock",.group=4,.len=6,.dot=3,.def="35",.ptr=&spklrc,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="spkbclk",.comment="Speaker Bit clock",.group=4,.len=7,.dot=3,.def="36",.ptr=&spkbclk,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="spkdata",.comment="Speaker Data",.group=4,.len=7,.dot=3,.def="37",.ptr=&spkdata,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
+ {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="usb",.comment="USB connected",.len=3,.ptr=&usb,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
+ {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="chg",.comment="Charge indicator",.len=3,.ptr=&chg,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕"},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye1",.comment="LED number for eye 1",.group=5,.len=7,.dot=3,.ptr=&ledeye1,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeye2",.comment="LED number for eye 2",.group=5,.len=7,.dot=3,.ptr=&ledeye2,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledeyes",.comment="How many LEDs in eye",.group=5,.len=7,.dot=3,.def="1",.ptr=&ledeyes,.size=sizeof(uint8_t),.live=1},
@@ -51,6 +53,9 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylon",.comment="LED number start of cylon LEDs",.group=5,.len=8,.dot=3,.ptr=&ledcylon,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledcylons",.comment="How many LED in cylon LED",.group=5,.len=9,.dot=3,.ptr=&ledcylons,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledcylonc",.comment="cylon LED colour",.group=5,.len=9,.dot=3,.def="1",.ptr=&ledcylonc,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledspin",.comment="LED number start of spin LEDs",.group=5,.len=7,.dot=3,.ptr=&ledspin,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledspins",.comment="How many LED in spin LED",.group=5,.len=8,.dot=3,.ptr=&ledspins,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledspinc",.comment="spin LED colour",.group=5,.len=8,.dot=3,.def="1",.ptr=&ledspinc,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwm",.comment="LED number for servo PWM status",.group=5,.len=6,.dot=3,.ptr=&ledpwm,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton",.comment="LED number for button status",.group=5,.len=9,.dot=3,.ptr=&ledbutton,.size=sizeof(uint8_t),.live=1,.array=BUTTONS},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="visorpwm",.comment="Visor servo PWM",.group=6,.len=8,.dot=5,.ptr=&visorpwm,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.old="pwm"		},
@@ -163,6 +168,8 @@ revk_gpio_t spkpwr={0};
 revk_gpio_t spklrc={0};
 revk_gpio_t spkbclk={0};
 revk_gpio_t spkdata={0};
+revk_gpio_t usb={0};
+revk_gpio_t chg={0};
 uint8_t ledeye1=0;
 uint8_t ledeye2=0;
 uint8_t ledeyes=0;
@@ -183,6 +190,9 @@ uint8_t ledfixedc=0;
 uint8_t ledcylon=0;
 uint8_t ledcylons=0;
 uint8_t ledcylonc=0;
+uint8_t ledspin=0;
+uint8_t ledspins=0;
+uint8_t ledspinc=0;
 uint8_t ledpwm=0;
 uint8_t ledbutton[BUTTONS]={0};
 revk_gpio_t visorpwm={0};
