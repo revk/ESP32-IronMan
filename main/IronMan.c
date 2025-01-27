@@ -64,9 +64,10 @@ const char *const parts[] = { "SUIT", "HELMET", "LGLOVE", "RGLOVE" };
 void
 do_play (const char *fn)
 {
-	if(ironman==REVK_SETTINGS_IRONMAN_SUIT)
-   play = fn;
-	else ble_control(fn);
+   if (ironman == REVK_SETTINGS_IRONMAN_SUIT)
+      play = fn;
+   else
+      ble_control (fn);
 }
 
 static inline uint32_t
@@ -311,7 +312,6 @@ dobutton (uint8_t button, uint8_t press)
       {
          static char playing[40];
          sprintf (playing, "%s%d", parts[ironman], press);
-	 do_play(playing);
          switch (ironman)
          {
          case REVK_SETTINGS_IRONMAN_HELMET:
@@ -326,12 +326,16 @@ dobutton (uint8_t button, uint8_t press)
                   b.eyes ^= 1;  // Eyes off
                b.cylon = ~b.eyes;
                break;
+            default:
+               do_play (playing);
             }
             break;
          case REVK_SETTINGS_IRONMAN_SUIT:
+            do_play (playing);
             break;
          case REVK_SETTINGS_IRONMAN_LEFT_GLOVE:
          case REVK_SETTINGS_IRONMAN_RIGHT_GLOVE:
+            do_play (playing);
             switch (press)
             {
             case 1:
@@ -530,11 +534,12 @@ app_main ()
          static int8_t step = 0;
          if (b.init || newangle != pwmangle)
          {
-		 if(b.open!=b.wasopen)
-		 {
-			 b.wasopen=b.open;
-			 if(!b.init)do_play(b.open?"OPEN":"CLOSE");
-		 }
+            if (b.open != b.wasopen)
+            {
+               b.wasopen = b.open;
+               if (!b.init)
+                  do_play (b.open ? "OPEN" : "CLOSE");
+            }
             if (newangle > pwmangle && step < 100)
                step++;
             else if (newangle < pwmangle && step > -100)
@@ -601,6 +606,12 @@ app_main ()
             cycle += 8;
             if (!cycle)
                b.glove = 0;
+         }
+         if (b.cylon != b.wascylon)
+         {
+            b.wascylon = b.cylon;
+            if (b.cylon)
+               do_play ("CYLON");
          }
          if (b.cylon && ledcylon && ledcylons)
          {                      // Cylon
