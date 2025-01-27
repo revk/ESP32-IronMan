@@ -314,7 +314,7 @@ spk_task (void *arg)
 void
 dobutton (uint8_t button, uint8_t press)
 {
-   ESP_LOGE (TAG, "Button%d press %d", button, press);
+   ESP_LOGI (TAG, "Button%d press %d", button, press);
    switch (button)
    {
    case 0:                     // First button
