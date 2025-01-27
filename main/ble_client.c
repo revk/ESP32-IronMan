@@ -15,9 +15,6 @@ static const char __attribute__((unused)) TAG[] = "BLEC";
 
 #define REMOTE_NOTIFY_UUID    ESP_GATT_HEART_RATE_MEAS
 
-static esp_gattc_char_elem_t *char_elem_result = NULL;
-static esp_gattc_descr_elem_t *descr_elem_result = NULL;
-
 ///Declare static functions
 static void esp_gap_cb (esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t * param);
 static void esp_gattc_cb (esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if, esp_ble_gattc_cb_param_t * param);
@@ -227,7 +224,7 @@ gattc_profile_event_handler (esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
          }
          if (count > 0)
          {
-            char_elem_result = (esp_gattc_char_elem_t *) malloc (sizeof (esp_gattc_char_elem_t) * count);
+            esp_gattc_char_elem_t *char_elem_result = (esp_gattc_char_elem_t *) malloc (sizeof (esp_gattc_char_elem_t) * count);
             if (!char_elem_result)
             {
                ESP_LOGE (TAG, "gattc no mem");
@@ -265,7 +262,6 @@ gattc_profile_event_handler (esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
                }
             }
             free (char_elem_result);
-            char_elem_result = NULL;
          }
       }
 
@@ -299,7 +295,7 @@ gattc_profile_event_handler (esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
 
          if (count > 0)
          {
-            descr_elem_result = malloc (sizeof (esp_gattc_descr_elem_t) * count);
+            esp_gattc_descr_elem_t *descr_elem_result = malloc (sizeof (esp_gattc_descr_elem_t) * count);
             if (!descr_elem_result)
             {
                ESP_LOGE (TAG, "malloc error, gattc no mem");

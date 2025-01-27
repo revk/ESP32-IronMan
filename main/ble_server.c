@@ -168,7 +168,23 @@ static const esp_gatts_attr_db_t heart_rate_gatt_db[] = {
     },
 };
 
-#define HRS_IDX_NB	(sizeof(heart_rate_gatt_db)/sizeof(*heart_rate_gatt_db))
+enum
+{                               // Match above
+   HRS_IDX_SVC,
+
+   HRS_IDX_HR_MEAS_CHAR,
+   HRS_IDX_HR_MEAS_VAL,
+   HRS_IDX_HR_MEAS_NTF_CFG,
+
+   HRS_IDX_BOBY_SENSOR_LOC_CHAR,
+   HRS_IDX_BOBY_SENSOR_LOC_VAL,
+
+   HRS_IDX_HR_CTNL_PT_CHAR,
+   HRS_IDX_HR_CTNL_PT_VAL,
+
+   HRS_IDX_NB,
+};
+
 static uint16_t heart_rate_handle_table[HRS_IDX_NB];
 
 static char *
@@ -439,13 +455,16 @@ gatts_profile_event_handler (esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if,
    case ESP_GATTS_WRITE_EVT:
       ESP_LOGI (TAG, "Characteristic write, value ");
       ESP_LOG_BUFFER_HEX (TAG, param->write.value, param->write.len);
-      static char fn[10];
-      if (param->write.len && param->write.len < sizeof (fn) - 1)
+      if (heart_rate_handle_table[HRS_IDX_HR_CTNL_PT_VAL] == param->write.handle)
       {
-         ESP_LOGE (TAG, "Write, conn_id %d, handle %u", param->write.conn_id, param->write.handle);
-         memcpy (fn, param->write.value, param->write.len);
-         fn[param->write.len] = 0;
-         do_play (fn);
+         static char fn[10];
+         if (param->write.len && param->write.len < sizeof (fn) - 1)
+         {
+            ESP_LOGE (TAG, "Write, conn_id %d", param->write.conn_id);
+            memcpy (fn, param->write.value, param->write.len);
+            fn[param->write.len] = 0;
+            do_play (fn);
+         }
       }
       break;
    case ESP_GATTS_EXEC_WRITE_EVT:
