@@ -366,7 +366,7 @@ dobutton (uint8_t button, uint8_t press)
 void
 app_main ()
 {
-   //ESP_LOGE (TAG, "Started");
+   ESP_LOGE (TAG, "Started");
    revk_boot (&app_callback);
    revk_start ();
    if (blink[0].set)
