@@ -9,8 +9,8 @@ The *button* can be pressed mutliple times if needed, and after half a second it
 |Part|Presses|Action|
 |----|-------|------|
 |Helmet|1|Toggle visor up/down - plays `OPEN` or `CLOSE`|
-|Helmet|2|Toggle cylon mode (eyes cycle red, instead of static cyan) - plays `CYLON` when activated|
-|Helmet|3|Glitch LEDs|
+|Helmet|2|Glitch LEDs to simulate a fault|
+|Helmet|3|Toggle cylon mode (eyes cycle red, instead of static cyan) - plays `CYLON` when activated|
 |Glove|1|Light pulse effect|
 
 In addition, (except for visor 1/2/3), an audio file is played named with `SUIT`, `HELMET`, `RGLOVE`, or `LGLOVE` followed by number of presses. This allows custom sound effects for multiple presses on each device.

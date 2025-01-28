@@ -326,18 +326,18 @@ dobutton (uint8_t button, uint8_t press)
          case REVK_SETTINGS_IRONMAN_HELMET:
             switch (press)
             {
-            case 1:
+            case 1:	// Visor
                if (b.pwr)
                   b.open ^= 1;
                break;
-            case 2:
+            case 2:	// Glitch
+	       b.glitch=1;
+	       break;
+            case 3:	// Cylon
                if (b.pwr)
                   b.eyes ^= 1;  // Eyes off
                b.cylon = ~b.eyes;
                break;
-            case 3:
-	       b.glitch=1;
-	       break;
             default:
                do_play (playing);
             }
@@ -366,7 +366,7 @@ dobutton (uint8_t button, uint8_t press)
 void
 app_main ()
 {
-   //ESP_LOGE (TAG, "Started");
+   ESP_LOGE (TAG, "Started");
    revk_boot (&app_callback);
    revk_start ();
    if (blink[0].set)
