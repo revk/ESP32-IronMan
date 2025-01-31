@@ -669,7 +669,7 @@ app_main ()
       if (blink[0].set)
          revk_blink_do ();      // Library blink
       if (visorpwm.set)
-         ESP_ERROR_CHECK (mcpwm_timer_enable (visortimer));
+         ESP_ERROR_CHECK (mcpwm_timer_disable (visortimer));
       while (revk_gpio_get (button[0]))
          usleep (100000);       // Button release
       // Alarm

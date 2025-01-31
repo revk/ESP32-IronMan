@@ -321,8 +321,6 @@ static void __attribute__((unused)) remove_all_bonded_devices (void)
 static void
 gap_event_handler (esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t * param)
 {
-   ESP_LOGV (TAG, "GAP_EVT, event %d", event);
-
    switch (event)
    {
    case ESP_GAP_BLE_SCAN_RSP_DATA_SET_COMPLETE_EVT:
