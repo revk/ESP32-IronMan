@@ -326,14 +326,14 @@ dobutton (uint8_t button, uint8_t press)
          case REVK_SETTINGS_IRONMAN_HELMET:
             switch (press)
             {
-            case 1:	// Visor
+            case 1:            // Visor
                if (b.pwr)
                   b.open ^= 1;
                break;
-            case 2:	// Glitch
-	       b.glitch=1;
-	       break;
-            case 3:	// Cylon
+            case 2:            // Glitch
+               b.glitch = 1;
+               break;
+            case 3:            // Cylon
                if (b.pwr)
                   b.eyes ^= 1;  // Eyes off
                b.cylon = ~b.eyes;
@@ -522,7 +522,7 @@ app_main ()
                   dobutton (n, press[n]);
                   press[n] = 0;
                }
-            } else if (pushtime[n]++ >= CPS * 3)
+            } else if (press[n] && pushtime[n]++ >= CPS * 3)
             {                   // Held
                if (!b.speaker)
                   b.die = 1;    // off now
