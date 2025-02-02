@@ -366,7 +366,6 @@ dobutton (uint8_t button, uint8_t press)
 void
 app_main ()
 {
-   ESP_LOGE (TAG, "Started");
    revk_boot (&app_callback);
    revk_start ();
    if (blink[0].set)
@@ -668,7 +667,7 @@ app_main ()
       revk_pre_shutdown ();
       if (blink[0].set)
          revk_blink_do ();      // Library blink
-      if (visorpwm.set)
+      if (visortimer)
          ESP_ERROR_CHECK (mcpwm_timer_disable (visortimer));
       while (revk_gpio_get (button[0]))
          usleep (100000);       // Button release
