@@ -9,7 +9,7 @@ The *button* can be pressed mutliple times if needed, and after half a second it
 |Part|Presses|Action|
 |----|-------|------|
 |Helmet|1|Toggle visor up/down - plays `OPEN` or `CLOSE`|
-|Helmet|2|Glitch LEDs to simulate a fault|
+|Helmet|2|Glitch LEDs to simulate a fault, then off for 10 seconds|
 |Helmet|3|Toggle cylon mode (eyes cycle red, instead of static cyan) - plays `CYLON` when activated|
 |Glove|1|Light pulse effect|
 
@@ -27,7 +27,7 @@ Audio files all end `.WAV` and should be WAV PCM format using a standard sample 
 |----|-------|
 |`POWERON`|Suit power on|
 |`POWEROFF`|Suit power off|
-|`UPGRADE`|Suit software upgrade|
+|`UPGRADE`|Suit software upgrade (all LEDs pale blue)|
 |`RESTART`|Suit restart (after s/w upgrade)|
 |`OPEN`|Visor open|
 |`CLOSE`|Visor close|

@@ -31,8 +31,6 @@ led_strip_handle_t strip[STRIPS] = { 0 };
 
 #define	CPS	40
 
-uint64_t glitch = 0;
-
 #define SERVO_TIMEBASE_RESOLUTION_HZ 1000000    // 1MHz, 1us per tick
 #define SERVO_TIMEBASE_PERIOD        20000      // 20000 ticks, 20ms
 #define SERVO_MIN_PULSEWIDTH_US 1000    // Minimum pulse width in microsecond
@@ -488,7 +486,9 @@ app_main ()
       else
          led_strip_set_pixel (strip[s], led, gamma8[r], gamma8[g], gamma8[b]);
    }
+   uint64_t glitch = 0;
    uint8_t charge = 0;
+   uint16_t dead = 0;
    while (!b.die && !revk_shutting_down (NULL))
    {
       usleep (1000000 / CPS);
@@ -528,7 +528,10 @@ app_main ()
             {                   // Released
                if (press[n] && pushtime[n]++ >= CPS / 2)
                {                // Action
-                  dobutton (n, press[n]);
+                  if (dead)
+                     dead = 0;
+                  else
+                     dobutton (n, press[n]);
                   press[n] = 0;
                }
             } else if (press[n] && pushtime[n]++ >= CPS * 3)
@@ -590,7 +593,9 @@ app_main ()
             b.glitch = 0;
             do_play ("GLITCH");
          }
-         if (!glitch || (glitch & 1))
+         if (dead)
+            dead--;
+         else if (!glitch || (glitch & 1))
          {
             // PWM (open/closed)
             if (ledpwm)
@@ -620,12 +625,16 @@ app_main ()
                   set_led (i - 1, 64 + cos8[cycle] / 2, ledpulsec);
             }
             // Charge spin
-            if (ledchg && ledchgs && b.usb && charge == 0xFF)
+            if (ledchg && ledchgs && b.usb)
             {
                static uint8_t cycle = 0;
                cycle++;
                cycle %= ledchgs;
-               set_led (ledchg + cycle - 1, 255, ledchgc);
+               if (charge == 0xFF)
+                  set_led (ledchg + cycle - 1, 255, ledchgc);
+               else if (charge)
+                  for (int i = 0; i < ledchgs; i++)
+                     set_led (ledchg + i - 1, 255, ledchgc);
             }
             // Spin
             if (ledspin && ledspins)
@@ -666,8 +675,8 @@ app_main ()
          for (int s = 0; s < STRIPS; s++)
             if (strip[s])
                led_strip_refresh (strip[s]);
-         if (glitch)
-            glitch >>= 1ULL;
+         if (glitch && !(glitch >>= 1ULL))
+            dead = CPS * 10;
       }
       if (blink[0].set)
          revk_blink_do ();      // Library blink
