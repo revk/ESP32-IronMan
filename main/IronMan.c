@@ -140,7 +140,7 @@ void
 spk_task (void *arg)
 {
    esp_err_t e = 0;
-   revk_gpio_input (chg);
+   revk_gpio_input (sdcd);
    sdmmc_slot_config_t slot = SDMMC_SLOT_CONFIG_DEFAULT ();
    slot.clk = sdclk.num;
    slot.cmd = sdcmd.num;
@@ -374,7 +374,7 @@ app_main ()
    for (int n = 0; n < BUTTONS; n++)
       revk_gpio_input (button[n]);
    revk_gpio_input (usb);
-   revk_gpio_input (sdcd);
+   revk_gpio_input (chg);
    if (spklrc.set && spkbclk.set && spkdata.set && sdcmd.set)
       revk_task ("spk", spk_task, NULL, 8);
    int leds = 0;
@@ -620,7 +620,7 @@ app_main ()
                   set_led (i - 1, 64 + cos8[cycle] / 2, ledpulsec);
             }
             // Charge spin
-            if (ledchg && ledchgs && b.usb && charge && charge != 0xFF)
+            if (ledchg && ledchgs && b.usb && charge == 0xFF)
             {
                static uint8_t cycle = 0;
                cycle++;
