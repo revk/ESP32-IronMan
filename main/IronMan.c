@@ -511,7 +511,8 @@ app_main ()
             if (((debounce >> n) & 1) != push)
             {
                debounce = ((debounce & ~(1 << n)) | (push << n));
-               continue;
+               if (!b.init)
+                  continue;
             }
             if (b.init || ((pushlast >> n) & 1) != push)
             {                   // Change
@@ -556,6 +557,8 @@ app_main ()
          if (b.init && pwmangle == visoropen)
             b.open = 1;
          int newangle = b.open ? visoropen : visorclose;
+         if (b.init)
+            pwmangle = newangle;
          static int8_t step = 0;
          if (newangle != pwmangle)
          {
