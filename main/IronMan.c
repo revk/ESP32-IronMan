@@ -567,6 +567,7 @@ app_main ()
                b.wasopen = b.open;
                if (!b.init)
                   do_play (b.open ? "OPEN" : "CLOSE");
+               set_heart_rate (b.open);
             }
             if (newangle > pwmangle && step < 100)
                step++;
@@ -635,7 +636,7 @@ app_main ()
                cycle %= ledchgs;
                if (charge == 0xFF)
                   set_led (ledchg + cycle - 1, 255, ledchgc);
-               else if (charge)
+               else if (!charge)
                   for (int i = ledchg; i < ledchg + ledchgs; i++)
                      set_led (i - 1, 128, ledchgc);
             }

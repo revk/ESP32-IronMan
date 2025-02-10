@@ -31,3 +31,4 @@ void do_ble_server (void);
 void do_ble_client (void);
 void ble_control (const char *);
 void do_play (const char *);
+void set_heart_rate(int rate);
