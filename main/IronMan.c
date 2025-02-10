@@ -140,7 +140,7 @@ void
 spk_task (void *arg)
 {
    esp_err_t e = 0;
-   revk_gpio_input (sdcd);
+   revk_gpio_input (chg);
    sdmmc_slot_config_t slot = SDMMC_SLOT_CONFIG_DEFAULT ();
    slot.clk = sdclk.num;
    slot.cmd = sdcmd.num;
@@ -366,12 +366,15 @@ dobutton (uint8_t button, uint8_t press)
 void
 app_main ()
 {
+   ESP_LOGE (TAG, "IronMan Start");
    revk_boot (&app_callback);
    revk_start ();
    if (blink[0].set)
       revk_blink_init ();       // Library blink
    for (int n = 0; n < BUTTONS; n++)
       revk_gpio_input (button[n]);
+   revk_gpio_input (usb);
+   revk_gpio_input (sdcd);
    if (spklrc.set && spkbclk.set && spkdata.set && sdcmd.set)
       revk_task ("spk", spk_task, NULL, 8);
    int leds = 0;
@@ -616,6 +619,14 @@ app_main ()
                for (int i = ledpulse; i < ledpulse + ledpulses; i++)
                   set_led (i - 1, 64 + cos8[cycle] / 2, ledpulsec);
             }
+            // Charge spin
+            if (ledchg && ledchgs && b.usb && charge && charge != 0xFF)
+            {
+               static uint8_t cycle = 0;
+               cycle++;
+               cycle %= ledchgs;
+               set_led (ledchg + cycle - 1, 255, ledchgc);
+            }
             // Spin
             if (ledspin && ledspins)
             {
@@ -665,7 +676,7 @@ app_main ()
    if (leds)
    {                            // Dark
       for (int i = 0; i < leds; i++)
-         set_led (i, 255, b.die ? REVK_SETTINGS_LEDEYEC_BLACK : REVK_SETTINGS_LEDEYEC_BLUE);    // Clear
+         set_led (i, b.die ? 0 : 64, REVK_SETTINGS_LEDEYEC_BLUE);       // Clear
       for (int s = 0; s < STRIPS; s++)
          if (strip[s])
             led_strip_refresh (strip[s]);

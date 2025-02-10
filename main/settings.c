@@ -56,6 +56,9 @@ revk_settings_t const revk_settings[]={
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledspin",.comment="LED number start of spin LEDs",.group=5,.len=7,.dot=3,.ptr=&ledspin,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledspins",.comment="How many LED in spin LED",.group=5,.len=8,.dot=3,.ptr=&ledspins,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledspinc",.comment="spin LED colour",.group=5,.len=8,.dot=3,.def="1",.ptr=&ledspinc,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledchg",.comment="LED number start of chg LEDs",.group=5,.len=6,.dot=3,.ptr=&ledchg,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.name="ledchgs",.comment="How many LED in chg LED",.group=5,.len=7,.dot=3,.ptr=&ledchgs,.size=sizeof(uint8_t),.live=1},
+ {.type=REVK_SETTINGS_UNSIGNED,.isenum=1,.name="ledchgc",.comment="chg LED colour",.group=5,.len=7,.dot=3,.def="1",.ptr=&ledchgc,.size=sizeof(uint8_t),.live=1,.enums="Black,Red,Green,Yellow,Blue,Magenta,Cyan,White,W,W+Red,W+Green,W+Yellow,W+Blue,W+Magenta,W+Cyan,W+White"		},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledpwm",.comment="LED number for servo PWM status",.group=5,.len=6,.dot=3,.ptr=&ledpwm,.size=sizeof(uint8_t),.live=1},
  {.type=REVK_SETTINGS_UNSIGNED,.name="ledbutton",.comment="LED number for button status",.group=5,.len=9,.dot=3,.ptr=&ledbutton,.size=sizeof(uint8_t),.live=1,.array=BUTTONS},
  {.type=REVK_SETTINGS_UNSIGNED,.gpio=1,.name="visorpwm",.comment="Visor servo PWM",.group=6,.len=8,.dot=5,.def="42",.ptr=&visorpwm,.size=sizeof(revk_gpio_t),.fix=1,.set=1,.flags="- ~↓↕⇕",.old="pwm"		},
@@ -198,6 +201,9 @@ uint8_t ledcylonc=0;
 uint8_t ledspin=0;
 uint8_t ledspins=0;
 uint8_t ledspinc=0;
+uint8_t ledchg=0;
+uint8_t ledchgs=0;
+uint8_t ledchgc=0;
 uint8_t ledpwm=0;
 uint8_t ledbutton[BUTTONS]={0};
 revk_gpio_t visorpwm={0};

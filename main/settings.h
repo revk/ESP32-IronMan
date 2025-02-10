@@ -217,6 +217,24 @@ enum {
  REVK_SETTINGS_LEDSPINC_W_CYAN,
  REVK_SETTINGS_LEDSPINC_W_WHITE,
 };
+enum {
+ REVK_SETTINGS_LEDCHGC_BLACK,
+ REVK_SETTINGS_LEDCHGC_RED,
+ REVK_SETTINGS_LEDCHGC_GREEN,
+ REVK_SETTINGS_LEDCHGC_YELLOW,
+ REVK_SETTINGS_LEDCHGC_BLUE,
+ REVK_SETTINGS_LEDCHGC_MAGENTA,
+ REVK_SETTINGS_LEDCHGC_CYAN,
+ REVK_SETTINGS_LEDCHGC_WHITE,
+ REVK_SETTINGS_LEDCHGC_W,
+ REVK_SETTINGS_LEDCHGC_W_RED,
+ REVK_SETTINGS_LEDCHGC_W_GREEN,
+ REVK_SETTINGS_LEDCHGC_W_YELLOW,
+ REVK_SETTINGS_LEDCHGC_W_BLUE,
+ REVK_SETTINGS_LEDCHGC_W_MAGENTA,
+ REVK_SETTINGS_LEDCHGC_W_CYAN,
+ REVK_SETTINGS_LEDCHGC_W_WHITE,
+};
 typedef struct revk_settings_blob_s revk_settings_blob_t;
 struct revk_settings_blob_s {
  uint16_t len;
@@ -355,6 +373,9 @@ extern uint8_t ledcylonc;	// cylon LED colour
 extern uint8_t ledspin;	// LED number start of spin LEDs
 extern uint8_t ledspins;	// How many LED in spin LED
 extern uint8_t ledspinc;	// spin LED colour
+extern uint8_t ledchg;	// LED number start of chg LEDs
+extern uint8_t ledchgs;	// How many LED in chg LED
+extern uint8_t ledchgc;	// chg LED colour
 extern uint8_t ledpwm;	// LED number for servo PWM status
 extern uint8_t ledbutton[BUTTONS];	// LED number for button status
 extern revk_gpio_t visorpwm;	// Visor servo PWM
