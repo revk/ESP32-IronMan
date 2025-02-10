@@ -25,7 +25,7 @@ static const char __attribute__((unused)) TAG[] = "BLES";
 
 static uint8_t adv_config_done = 0;
 
-static uint8_t manufacturer[] = { 0xE5, 0x02 }; // Esspressif
+static uint8_t manufacturer[] = { 0x9C, 0x0E }; // A&A
 
 static uint8_t sec_service_uuid[] = {
    /* LSB <--------------------------------------------------------------------------------> MSB */

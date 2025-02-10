@@ -496,13 +496,20 @@ app_main ()
             charge = (charge << 1) | revk_gpio_get (chg);
          revk_blink (0, 0, !b.usb ? "C" : charge == 0xFF ? "Y" : charge ? "O" : "C");
       }
-      static uint8_t pushlast = 0;      // Last button state
-      static uint8_t press[BUTTONS] = { 0 };    // Press count
-      static uint8_t pushtime[BUTTONS] = { 0 }; // Push time
       if (!b.dying)
+      {
+         static uint8_t pushlast = 0;   // Last button state
+         static uint8_t debounce = 0;   // Last button state
+         static uint8_t press[BUTTONS] = { 0 }; // Press count
+         static uint8_t pushtime[BUTTONS] = { 0 };      // Push time
          for (int n = 0; n < BUTTONS; n++)
          {
             uint8_t push = revk_gpio_get (button[n]);
+            if (((debounce >> n) & 1) != push)
+            {
+               debounce = ((debounce & ~(1 << n)) | (push << n));
+               continue;
+            }
             if (b.init || ((pushlast >> n) & 1) != push)
             {                   // Change
                pushlast = ((pushlast & ~(1 << n)) | (push << n));
@@ -532,6 +539,7 @@ app_main ()
                }
             }
          }
+      }
       if (b.connect)
       {
          b.connected = 1;
@@ -543,7 +551,7 @@ app_main ()
             b.open = 1;
          int newangle = b.open ? visoropen : visorclose;
          static int8_t step = 0;
-         if (b.init || newangle != pwmangle)
+         if (newangle != pwmangle)
          {
             if (b.open != b.wasopen)
             {
@@ -657,7 +665,7 @@ app_main ()
    if (leds)
    {                            // Dark
       for (int i = 0; i < leds; i++)
-         set_led (i, 255, REVK_SETTINGS_LEDEYEC_BLACK); // Clear
+         set_led (i, 255, b.die ? REVK_SETTINGS_LEDEYEC_BLACK : REVK_SETTINGS_LEDEYEC_BLUE);    // Clear
       for (int s = 0; s < STRIPS; s++)
          if (strip[s])
             led_strip_refresh (strip[s]);
