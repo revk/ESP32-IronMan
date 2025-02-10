@@ -637,7 +637,7 @@ app_main ()
                   set_led (ledchg + cycle - 1, 255, ledchgc);
                else if (charge)
                   for (int i = 0; i < ledchgs; i++)
-                     set_led (ledchg + i - 1, 255, ledchgc);
+                     set_led (ledchg + i, 255, ledchgc);
             }
             // Spin
             if (ledspin && ledspins)
